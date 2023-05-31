@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/akronim</item>
+        <item>@font/bad_script</item>
+        <item>@font/baloo_bhaina</item>
+        <item>@font/bangers</item>
+        <item>@font/caveat_brush</item>
+        <item>@font/finger_paint</item>
+        <item>@font/give_you_glory</item>
+        <item>@font/mali_extralight</item>
+        <item>@font/margarine</item>
+        <item>@font/rationale</item>
+        <item>@font/vidaloka</item>
+        <item>@font/wendy_one</item>
+        <item>@font/yusei_magic</item>
+    </array>
+</resources>
