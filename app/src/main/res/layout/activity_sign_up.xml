@@ -7,7 +7,7 @@
     tools:context=".sign_up_activity">
 
     <Button
-        android:id="@+id/getStartedBtn3"
+        android:id="@+id/signUpBtn1"
         android:layout_width="155dp"
         android:layout_height="59dp"
         android:layout_marginTop="708dp"
@@ -31,7 +31,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/userNameEt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="144dp"
@@ -46,7 +46,7 @@
         android:autofillHints="" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName2"
+        android:id="@+id/phoneEt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="212dp"
@@ -61,7 +61,7 @@
         android:autofillHints="" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName3"
+        android:id="@+id/addressEt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="352dp"
@@ -76,7 +76,7 @@
         android:autofillHints="" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName5"
+        android:id="@+id/emailEt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="280dp"
@@ -90,7 +90,7 @@
         android:autofillHints="" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/kidsSpinner"
         android:layout_width="116dp"
         android:layout_height="50dp"
         android:layout_marginTop="440dp"
@@ -101,7 +101,7 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <Spinner
-        android:id="@+id/spinner2"
+        android:id="@+id/maritalSpinner"
         android:layout_width="122dp"
         android:layout_height="48dp"
         android:layout_marginTop="512dp"
@@ -112,7 +112,7 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <Spinner
-        android:id="@+id/spinner3"
+        android:id="@+id/genderSpinner"
         android:layout_width="121dp"
         android:layout_height="52dp"
         android:layout_marginTop="576dp"

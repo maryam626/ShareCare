@@ -15,6 +15,14 @@
     <string name="sign_up1">Sign Up</string>
     <string name="marital_status">Marital Status :</string>
     <string name="gender">Gender :</string>
+    <string name="continue">Continue</string>
+    <string name="first_name">first name</string>
+    <string name="age">Age</string>
+    <string name="last_name">last name</string>
+    <string name="create_children_profile">Create Children profile</string>
+    <string name="grade">Grade</string>
+    <string name="birthday">Birthday</string>
+    <string name="id">id</string>
     <string-array name="Number_Of_Kids">
         <item>1</item>
         <item>2</item>
