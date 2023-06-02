@@ -38,8 +38,22 @@ public class sign_up_activity extends AppCompatActivity {
         signUpBtn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(userNameEt.getText().toString().equals("")){
+                    userNameEt.setError("Enter your User Name");
+                }
+                if(phoneEt.getText().toString().equals("")){
+                    phoneEt.setError("Enter your phone number");
+                }
+                if(emailEt.getText().toString().equals("")){
+                    emailEt.setError("Enter your Email");
+                }
+                if(addressEt.getText().toString().equals("")){
+                    addressEt.setError("Enter your Address");
+                }
+                else{
                 Intent intent = new Intent(sign_up_activity.this, create_children_profiles_activity.class);
                 startActivity(intent);
+                }
             }
         });
 

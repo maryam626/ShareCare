@@ -16,6 +16,9 @@ public class log_in_activity extends AppCompatActivity {
     private TextView SignUpBtn;
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
+    private EditText EtUserName;
+    private EditText EtPassword;
+    private Button logInBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +26,9 @@ public class log_in_activity extends AppCompatActivity {
         setContentView(R.layout.activity_log_in);
 
         SignUpBtn = (TextView) findViewById(R.id.SignUpBtn);
+        EtPassword = (EditText) findViewById(R.id.EtPassword);
+        EtUserName = (EditText) findViewById(R.id.EtUserName);
+        logInBtn = (Button) findViewById(R.id.logInBtn);
 
 
 
@@ -32,7 +38,24 @@ public class log_in_activity extends AppCompatActivity {
                 buildDialog();
             }
         });
+
+        logInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(EtPassword.getText().toString().equals("")){
+                    EtPassword.setError("Enter Your Password");
+                }
+                if(EtUserName.getText().toString().equals("")){
+                    EtUserName.setError("Enter Your Email");
+                }
+                else{
+                    Intent intent = new Intent(log_in_activity.this, home_page_parent_activity.class);
+                    startActivity(intent);
+                }
+            }
+        });
     }
+
 
     private void buildDialog() {
         dialogBuilder = new AlertDialog.Builder(this);
