@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "172364541742",
+    "project_id": "sharecare-651d3",
+    "storage_bucket": "sharecare-651d3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172364541742:android:77072533b51130af1554bf",
+        "android_client_info": {
+          "package_name": "com.example.sharecare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "172364541742-vs31lgar8g15k76d5rhnu9gfnf93qu27.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sharecare",
+            "certificate_hash": "b3e4cc76a07e17ca5703e3afdaa1ee5186b7a59e"
+          }
+        },
+        {
+          "client_id": "172364541742-tiq1hjj1q29rqhp4n9hgfptpdf57qhk1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdudRNRH_n47_dxIyRjG6UykT5OZontd0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "172364541742-tiq1hjj1q29rqhp4n9hgfptpdf57qhk1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
