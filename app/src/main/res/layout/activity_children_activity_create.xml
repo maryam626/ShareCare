@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".ChildrenActivityCreateActivity">
+
+    <TextView
+        android:id="@+id/text_activity_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Activity Name" />
+
+    <EditText
+        android:id="@+id/edit_activity_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_activity_name"
+        android:hint="Enter activity name" />
+
+    <TextView
+        android:id="@+id/text_choose_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_activity_name"
+        android:layout_marginTop="16dp"
+        android:text="Choose Activity" />
+
+    <Spinner
+        android:id="@+id/spinner_choose_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_choose_activity" />
+
+    <TextView
+        android:id="@+id/text_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinner_choose_activity"
+        android:layout_marginTop="16dp"
+        android:text="Date" />
+
+    <Button
+        android:id="@+id/btn_select_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_date"
+        android:text="Select Date" />
+
+    <EditText
+        android:id="@+id/edit_selected_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_select_date"
+        android:hint="Selected Date"
+        android:inputType="none"
+        android:enabled="false" />
+
+    <TextView
+        android:id="@+id/text_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_selected_date"
+        android:layout_marginTop="16dp"
+        android:text="Time" />
+
+    <Button
+        android:id="@+id/btn_select_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_time"
+        android:text="Select Time" />
+
+    <EditText
+        android:id="@+id/edit_selected_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_select_time"
+        android:hint="Selected Time"
+        android:inputType="none"
+        android:enabled="false" />
+
+    <TextView
+        android:id="@+id/text_capacity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_selected_time"
+        android:layout_marginTop="16dp"
+        android:text="Capacity" />
+
+    <EditText
+        android:id="@+id/edit_capacity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_capacity"
+        android:hint="Enter capacity" />
+
+    <TextView
+        android:id="@+id/text_age_of_child"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_capacity"
+        android:layout_marginTop="16dp"
+        android:text="Age of Child" />
+
+    <EditText
+        android:id="@+id/edit_age_from"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_age_of_child"
+        android:hint="From"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/edit_age_to"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_age_from"
+        android:layout_marginTop="8dp"
+        android:hint="To"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="16dp"
+        android:text="Save" />
+
+</RelativeLayout>

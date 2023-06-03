@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "172364541742",
-    "project_id": "sharecare-651d3",
-    "storage_bucket": "sharecare-651d3.appspot.com"
+    "project_number": "310990602956",
+    "project_id": "sharecare-androidproject",
+    "storage_bucket": "sharecare-androidproject.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:172364541742:android:77072533b51130af1554bf",
+        "mobilesdk_app_id": "1:310990602956:android:b87907dd71600cebdab869",
         "android_client_info": {
           "package_name": "com.example.sharecare"
         }
       },
       "oauth_client": [
         {
-          "client_id": "172364541742-vs31lgar8g15k76d5rhnu9gfnf93qu27.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.sharecare",
-            "certificate_hash": "b3e4cc76a07e17ca5703e3afdaa1ee5186b7a59e"
-          }
-        },
-        {
-          "client_id": "172364541742-tiq1hjj1q29rqhp4n9hgfptpdf57qhk1.apps.googleusercontent.com",
+          "client_id": "310990602956-hkstta6itteqg2nuigo811gfoc5l1o9s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCdudRNRH_n47_dxIyRjG6UykT5OZontd0"
+          "current_key": "AIzaSyDvB2M9wohMtBBXxsW07XyobeMtcoJcKuQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "172364541742-tiq1hjj1q29rqhp4n9hgfptpdf57qhk1.apps.googleusercontent.com",
+              "client_id": "310990602956-hkstta6itteqg2nuigo811gfoc5l1o9s.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
