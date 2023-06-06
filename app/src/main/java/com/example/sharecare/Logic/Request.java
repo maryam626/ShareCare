@@ -1,5 +1,7 @@
 package com.example.sharecare.Logic;
 
+import com.example.sharecare.models.User;
+
 import java.sql.Date;
 
 public class Request {
