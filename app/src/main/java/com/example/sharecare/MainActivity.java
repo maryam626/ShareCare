@@ -21,11 +21,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //this code only for debug
-                Intent intent = new Intent(MainActivity.this, ChildrenActivityCreateActivity.class);
-                startActivity(intent);
+                /*Intent intent = new Intent(MainActivity.this, ChildrenActivityCreateActivity.class);
+                startActivity(intent);*/
 
-                //Intent intent = new Intent(MainActivity.this, log_in_activity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, log_in_activity.class);
+                startActivity(intent);
             }
         });
     }

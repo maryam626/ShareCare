@@ -3,6 +3,7 @@ package com.example.sharecare;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -37,6 +38,27 @@ public class parent_profile_activity extends AppCompatActivity {
         genderEt = (EditText) findViewById(R.id.genderEt);
         updateBtn = (Button) findViewById(R.id.updateBtn);
         saveBtn = (Button) findViewById(R.id.saveBtn);
+
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                phoneEt1.setEnabled(true);
+                passwordEt1.setEnabled(true);
+                addressEt3.setEnabled(true);
+                numKidsEt.setEnabled(true);
+                maritalEt.setEnabled(true);
+                genderEt.setEnabled(true);
+
+
+            }
+        });
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
 
     }

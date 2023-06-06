@@ -75,6 +75,7 @@
         android:autofillHints=""
         android:ems="10"
         android:minHeight="48dp"
+        android:editable="false"
         android:text="@string/address"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -90,6 +91,7 @@
         android:ems="10"
         android:inputType="text"
         android:minHeight="48dp"
+        android:editable="false"
         android:text="@string/gender1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -104,6 +106,7 @@
         android:ems="10"
         android:inputType="number"
         android:minHeight="48dp"
+        android:editable="false"
         android:text="@string/number_of_kids"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -118,6 +121,7 @@
         android:ems="10"
         android:inputType="text"
         android:minHeight="48dp"
+        android:editable="false"
         android:text="@string/marital_status1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -205,6 +209,7 @@
         android:inputType="textPersonName|textEmailAddress"
         android:minHeight="48dp"
         android:text="@string/email1"
+        android:editable="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="DuplicateSpeakableTextCheck" />
@@ -218,6 +223,7 @@
         android:autofillHints=""
         android:ems="10"
         android:inputType="phone"
+        android:editable="false"
         android:minHeight="48dp"
         android:text="@string/phone3"
         app:layout_constraintEnd_toEndOf="parent"
@@ -232,6 +238,7 @@
         android:layout_marginEnd="56dp"
         android:autofillHints=""
         android:ems="10"
+        android:editable="false"
         android:inputType="textPassword"
         android:minHeight="48dp"
         android:text="@string/password"
