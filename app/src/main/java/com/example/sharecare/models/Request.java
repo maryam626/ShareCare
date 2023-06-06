@@ -1,5 +1,6 @@
-package com.example.sharecare.Logic;
+package com.example.sharecare.models;
 
+import com.example.sharecare.models.Group;
 import com.example.sharecare.models.User;
 
 import java.sql.Date;
