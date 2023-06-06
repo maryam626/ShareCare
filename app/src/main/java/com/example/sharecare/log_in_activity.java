@@ -30,12 +30,11 @@ public class log_in_activity extends AppCompatActivity {
         EtUserName = (EditText) findViewById(R.id.EtUserName);
         logInBtn = (Button) findViewById(R.id.logInBtn);
 
-
-
         SignUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buildDialog();
+                Intent intent = new Intent(log_in_activity.this, sign_up_activity.class);
+                startActivity(intent);
             }
         });
 
@@ -54,46 +53,5 @@ public class log_in_activity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-
-    private void buildDialog() {
-        dialogBuilder = new AlertDialog.Builder(this);
-        final View chooseDialog = getLayoutInflater().inflate(R.layout.choose_type_pop_up, null);
-
-         Button parent;
-         Button hostParent;
-
-         parent = (Button) chooseDialog.findViewById(R.id.parentt);
-         hostParent = (Button) chooseDialog.findViewById(R.id.hostParent);
-
-
-
-
-        dialogBuilder.setView(chooseDialog);
-        dialog = dialogBuilder.create();
-
-        parent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                Intent intent = new Intent(log_in_activity.this, sign_up_activity.class);
-                startActivity(intent);
-
-            }
-        });
-        hostParent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                Intent intent = new Intent(log_in_activity.this, sign_up_activity.class);
-                startActivity(intent);
-
-            }
-        });
-
-
-        dialog.show();
-
     }
 }

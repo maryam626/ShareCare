@@ -1,0 +1,80 @@
+package com.example.sharecare.Logic;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import com.example.sharecare.models.User;
+
+public class DatabaseHelper extends SQLiteOpenHelper {
+    private static final String DATABASE_NAME = "users.db";
+    private static final int DATABASE_VERSION = 1;
+
+    private static final String TABLE_NAME = "users";
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_USERNAME = "username";
+    private static final String COLUMN_PHONE_NUMBER = "phone_number";
+    private static final String COLUMN_EMAIL = "email";
+    private static final String COLUMN_ADDRESS = "address";
+    private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_NUMBER_OF_KIDS = "number_of_kids";
+    private static final String COLUMN_MARITAL_STATUS = "marital_status";
+    private static final String COLUMN_GENDER = "gender";
+    private static final String COLUMN_LANGUAGE = "language";
+    private static final String COLUMN_RELIGION = "religion";
+
+    private static final String CREATE_TABLE =
+            "CREATE TABLE " + TABLE_NAME + " (" +
+                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_USERNAME + " TEXT, " +
+                    COLUMN_PHONE_NUMBER + " TEXT, " +
+                    COLUMN_EMAIL + " TEXT, " +
+                    COLUMN_ADDRESS + " TEXT, " +
+                    COLUMN_PASSWORD + " TEXT, " +
+                    COLUMN_NUMBER_OF_KIDS + " INTEGER, " +
+                    COLUMN_MARITAL_STATUS + " TEXT, " +
+                    COLUMN_GENDER + " TEXT, " +
+                    COLUMN_LANGUAGE + " TEXT, " +
+                    COLUMN_RELIGION + " TEXT)";
+
+    public DatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_TABLE);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        onCreate(db);
+    }
+
+    public long  insertUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USERNAME, user.getUsername());
+        values.put(COLUMN_PHONE_NUMBER, user.getPhoneNumber());
+        values.put(COLUMN_EMAIL, user.getEmail());
+        values.put(COLUMN_ADDRESS, user.getAddress());
+        values.put(COLUMN_PASSWORD, user.getPassword());
+        values.put(COLUMN_NUMBER_OF_KIDS, user.getNumberOfKids());
+        values.put(COLUMN_MARITAL_STATUS, user.getMaritalStatus());
+        values.put(COLUMN_GENDER, user.getGender());
+        values.put(COLUMN_LANGUAGE, user.getLanguage());
+        values.put(COLUMN_RELIGION, user.getReligion());
+
+        long rowId=-1;
+        try{
+              rowId= db.insertOrThrow(TABLE_NAME, null, values);
+        }catch(Exception ex)
+        {
+            long d=2;
+        }
+
+        db.close();
+        return rowId;
+    }
+}

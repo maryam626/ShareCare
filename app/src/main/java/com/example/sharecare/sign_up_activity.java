@@ -1,22 +1,17 @@
 package com.example.sharecare;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.sharecare.Logic.DatabaseHelper;
+import com.example.sharecare.models.User;
 
 public class sign_up_activity extends AppCompatActivity {
     private static final String TAG = "sign up activity";
@@ -29,10 +24,14 @@ public class sign_up_activity extends AppCompatActivity {
     private Spinner kidsSpinner;
     private Spinner maritalSpinner;
     private Spinner genderSpinner;
+
+    private Spinner languagesSpinner;
+
+    private Spinner religionSpinner;
     private Button signUpBtn1;
     private EditText passwordEt;
 
-    private FirebaseAuth mAuth;
+    private DatabaseHelper databaseHelper;
 
 
     @Override
@@ -40,76 +39,78 @@ public class sign_up_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        userNameEt = (EditText) findViewById(R.id.userNameEt);
-        phoneEt = (EditText) findViewById(R.id.phoneEt);
-        emailEt = (EditText) findViewById(R.id.emailEt);
-        addressEt = (EditText) findViewById(R.id.addressEt);
-        kidsSpinner = (Spinner) findViewById(R.id.kidsSpinner);
-        maritalSpinner = (Spinner) findViewById(R.id.maritalSpinner);
-        genderSpinner = (Spinner) findViewById(R.id.genderSpinner);
-        signUpBtn1 = (Button) findViewById(R.id.signUpBtn1);
-        passwordEt = (EditText) findViewById(R.id.passwordEt);
+        userNameEt = findViewById(R.id.userNameEt);
+        phoneEt = findViewById(R.id.phoneEt);
+        emailEt = findViewById(R.id.emailEt);
+        addressEt = findViewById(R.id.addressEt);
+        kidsSpinner = findViewById(R.id.kidsSpinner);
+        maritalSpinner = findViewById(R.id.maritalSpinner);
+        genderSpinner = findViewById(R.id.GenderSpinner);
+        languagesSpinner = findViewById(R.id.LanguagesSpinner);
+        religionSpinner = findViewById(R.id.ReligionsSpinner);
+        signUpBtn1 = findViewById(R.id.signUpBtn1);
+        passwordEt = findViewById(R.id.passwordEt);
+        databaseHelper = new DatabaseHelper(this);
+        // Set up spinner adapters
+        ArrayAdapter<CharSequence> numberOfKidsAdapter = ArrayAdapter.createFromResource(
+                this, R.array.Number_Of_Kids, android.R.layout.simple_spinner_item);
+        kidsSpinner.setAdapter(numberOfKidsAdapter);
 
-        // ...
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
+        ArrayAdapter<CharSequence> maritalStatusAdapter = ArrayAdapter.createFromResource(
+                this, R.array.Marital_Status, android.R.layout.simple_spinner_item);
+        maritalSpinner.setAdapter(maritalStatusAdapter);
 
+        ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(
+                this, R.array.Gender, android.R.layout.simple_spinner_item);
+        genderSpinner.setAdapter(genderAdapter);
+
+        ArrayAdapter<CharSequence> languageAdapter = ArrayAdapter.createFromResource(
+                this, R.array.Languages, android.R.layout.simple_spinner_item);
+        languagesSpinner.setAdapter(languageAdapter);
+
+        ArrayAdapter<CharSequence> religionAdapter = ArrayAdapter.createFromResource(
+                this, R.array.Religions, android.R.layout.simple_spinner_item);
+        religionSpinner.setAdapter(religionAdapter);
+
+
+        // Register button click listener
         signUpBtn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (userNameEt.getText().toString().equals("")) {
-                    userNameEt.setError("Enter your User Name");
-                }
-                if (phoneEt.getText().toString().equals("")) {
-                    phoneEt.setError("Enter your phone number");
-                }
-                if (emailEt.getText().toString().equals("")) {
-                    emailEt.setError("Enter your Email");
-                }
-                if (addressEt.getText().toString().equals("")) {
-                    addressEt.setError("Enter your Address");
+                // Retrieve user input
+                String username = userNameEt.getText().toString().trim();
+                String phoneNumber = phoneEt.getText().toString().trim();
+                String email = emailEt.getText().toString().trim();
+                String address = addressEt.getText().toString().trim();
+                String password = passwordEt.getText().toString().trim();
+                int numberOfKids = Integer.parseInt(kidsSpinner.getSelectedItem().toString());
+                String maritalStatus = maritalSpinner.getSelectedItem().toString();
+                String gender = genderSpinner.getSelectedItem().toString();
+                String language = languagesSpinner.getSelectedItem().toString();
+                String religion = religionSpinner.getSelectedItem().toString();
+
+
+                // Create a new User object
+                User user = new User(username, phoneNumber, email, address, password, numberOfKids,
+                        maritalStatus, gender, language, religion);
+
+                // Store user data in SQLite database
+                long rowId =databaseHelper.insertUser(user);
+
+                if (rowId != -1) {
+                    // Successful message
+                    Toast.makeText(sign_up_activity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
                 } else {
-                    registerUser(emailEt.getText().toString(),passwordEt.getText().toString());
-                  
-                    /*Intent intent = new Intent(sign_up_activity.this, create_children_profiles_activity.class);
-                    startActivity(intent);*/
+                    // Error message
+                    Toast.makeText(sign_up_activity.this, "Registration failed. Please try again.", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
 
-    }
 
-    private void registerUser(String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(sign_up_activity.this , new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(sign_up_activity.this,"successfull!!!!!",Toast.LENGTH_SHORT).show();
-                }else{
-                    try {
-                        throw task.getException();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    Toast.makeText(sign_up_activity.this,"Faild------",Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            currentUser.reload();
-        }
 
     }
-
 
 
 
