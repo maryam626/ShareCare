@@ -24,10 +24,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="136dp"
-        android:layout_marginEnd="200dp"
         android:text="Hello,"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.387"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -35,10 +36,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="136dp"
-        android:layout_marginEnd="128dp"
         android:text="name"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.586"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -46,10 +48,10 @@
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:layout_marginTop="540dp"
-        android:layout_marginEnd="104dp"
         android:backgroundTint="#24978C"
         android:text="My Groups"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -57,10 +59,10 @@
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:layout_marginTop="452dp"
-        android:layout_marginEnd="104dp"
         android:backgroundTint="#24978C"
         android:text="Search Group"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -68,10 +70,10 @@
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:layout_marginTop="288dp"
-        android:layout_marginEnd="104dp"
         android:backgroundTint="#24978C"
         android:text="My Profile"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -79,10 +81,10 @@
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:layout_marginTop="620dp"
-        android:layout_marginEnd="104dp"
         android:backgroundTint="#24978C"
         android:text="Tasks"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -90,10 +92,10 @@
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:layout_marginTop="372dp"
-        android:layout_marginEnd="104dp"
         android:backgroundTint="#24978C"
         android:text="My Children"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -101,9 +103,9 @@
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:layout_marginTop="220dp"
-        android:layout_marginEnd="104dp"
         android:backgroundTint="#24978C"
         android:text="Joining Requests"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

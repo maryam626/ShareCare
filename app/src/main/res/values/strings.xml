@@ -40,6 +40,7 @@
     <string name="email1">Email</string>
     <string name="phone3">Phone</string>
     <string name="todo">TODO</string>
+    <string name="joining_requests">Joining Requests</string>
     <string-array name="Number_Of_Kids">
         <item>1</item>
         <item>2</item>

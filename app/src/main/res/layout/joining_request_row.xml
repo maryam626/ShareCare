@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp">
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Group"
+        android:textStyle="bold"
+        android:id="@+id/group"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Approved"
+        android:id="@+id/approved"
+        android:textStyle="bold"
+        android:layout_toEndOf="@id/group"/>
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Request Date"
+        android:id="@+id/date"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_below="@id/approved"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/date"
+        android:background="#817F7F"/>
+
+
+
+</RelativeLayout>
