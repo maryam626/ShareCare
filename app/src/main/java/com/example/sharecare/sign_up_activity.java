@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.sharecare.Logic.DatabaseHelper;
+import com.example.sharecare.Logic.UsersDatabaseHelper;
 import com.example.sharecare.models.User;
 
 public class sign_up_activity extends AppCompatActivity {
@@ -31,7 +31,7 @@ public class sign_up_activity extends AppCompatActivity {
     private Button signUpBtn1;
     private EditText passwordEt;
 
-    private DatabaseHelper databaseHelper;
+    private UsersDatabaseHelper usersDatabaseHelper;
 
 
     @Override
@@ -50,7 +50,7 @@ public class sign_up_activity extends AppCompatActivity {
         religionSpinner = findViewById(R.id.ReligionsSpinner);
         signUpBtn1 = findViewById(R.id.signUpBtn1);
         passwordEt = findViewById(R.id.passwordEt);
-        databaseHelper = new DatabaseHelper(this);
+        usersDatabaseHelper = new UsersDatabaseHelper(this);
         // Set up spinner adapters
         ArrayAdapter<CharSequence> numberOfKidsAdapter = ArrayAdapter.createFromResource(
                 this, R.array.Number_Of_Kids, android.R.layout.simple_spinner_item);
@@ -95,7 +95,7 @@ public class sign_up_activity extends AppCompatActivity {
                         maritalStatus, gender, language, religion);
 
                 // Store user data in SQLite database
-                long rowId =databaseHelper.insertUser(user);
+                long rowId = usersDatabaseHelper.insertUser(user);
 
                 if (rowId != -1) {
                     // Successful message

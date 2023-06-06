@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.sharecare.models.User;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class UsersDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "users.db";
     private static final int DATABASE_VERSION = 1;
 
@@ -37,7 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_LANGUAGE + " TEXT, " +
                     COLUMN_RELIGION + " TEXT)";
 
-    public DatabaseHelper(Context context) {
+    public UsersDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

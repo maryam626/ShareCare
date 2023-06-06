@@ -14,9 +14,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sharecare.Logic.ActivityDatabaseHelper;
+import com.example.sharecare.Logic.UsersDatabaseHelper;
 import com.example.sharecare.models.Activity;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.example.sharecare.models.User;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,21 +29,16 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
     private EditText editActivityName, editSelectedDate, editSelectedTime, editCapacity, editAgeFrom, editAgeTo;
     private Spinner spinnerChooseActivity;
     private Button btnSelectDate, btnSelectTime, btnSave;
-
-    private DatabaseReference databaseReference;
-
     private Calendar calendar;
     private SimpleDateFormat dateFormatter, timeFormatter;
 
     private String selectedActivity;
     private String[] activityOptions;
-
+    private ActivityDatabaseHelper databaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_children_activity_create);
-
-        databaseReference = FirebaseDatabase.getInstance().getReference("activities");
 
         // Initialize views
         editActivityName = findViewById(R.id.edit_activity_name);
@@ -66,7 +63,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
 
         // Initialize activity options
         activityOptions = getResources().getStringArray(R.array.activity_options);
-
+        databaseHelper = new ActivityDatabaseHelper(this);
         // Set up spinner with activity options
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, activityOptions);
@@ -152,10 +149,16 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         Activity activity = new Activity(activityName, selectedActivity, selectedDate, selectedTime,
                 capacityValue, ageFromValue, ageToValue);
 
-        // Save activity to Firebase
-        databaseReference.push().setValue(activity);
+        // Store user data in SQLite database
+        long rowId = databaseHelper.insertActivity(activity);
 
-        Toast.makeText(this, "Activity saved successfully", Toast.LENGTH_SHORT).show();
+        if (rowId != -1) {
+            // Successful message
+            Toast.makeText(ChildrenActivityCreateActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+        } else {
+            // Error message
+            Toast.makeText(ChildrenActivityCreateActivity.this, "Registration failed. Please try again.", Toast.LENGTH_SHORT).show();
+        }
 
         // Reset fields
         editActivityName.setText("");
