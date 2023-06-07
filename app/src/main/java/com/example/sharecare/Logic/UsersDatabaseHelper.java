@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.sharecare.models.User;
 
 public class UsersDatabaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "users.db";
+    private static final String DATABASE_NAME = "ShareCare.db";
     private static final int DATABASE_VERSION = 1;
 
     private static final String TABLE_NAME = "users";
