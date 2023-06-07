@@ -45,12 +45,14 @@ public class sign_up_activity extends AppCompatActivity {
         addressEt = findViewById(R.id.addressEt);
         kidsSpinner = findViewById(R.id.kidsSpinner);
         maritalSpinner = findViewById(R.id.maritalSpinner);
-        genderSpinner = findViewById(R.id.GenderSpinner);
-        languagesSpinner = findViewById(R.id.LanguagesSpinner);
-        religionSpinner = findViewById(R.id.ReligionsSpinner);
+        genderSpinner = findViewById(R.id.genderSpinner);
         signUpBtn1 = findViewById(R.id.signUpBtn1);
+        languagesSpinner = findViewById(R.id.languageSpinner);
+        religionSpinner = findViewById(R.id.religionSpinner);
         passwordEt = findViewById(R.id.passwordEt);
         usersDatabaseHelper = new UsersDatabaseHelper(this);
+
+
         // Set up spinner adapters
         ArrayAdapter<CharSequence> numberOfKidsAdapter = ArrayAdapter.createFromResource(
                 this, R.array.Number_Of_Kids, android.R.layout.simple_spinner_item);
