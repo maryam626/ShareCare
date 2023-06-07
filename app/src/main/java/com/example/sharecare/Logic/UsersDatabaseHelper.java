@@ -3,10 +3,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.example.sharecare.models.User;
 
 public class UsersDatabaseHelper extends SQLiteOpenHelper {
+    private static final String TAG = "database";
+
     private static final String DATABASE_NAME = "ShareCare.db";
     private static final int DATABASE_VERSION = 1;
 
@@ -76,5 +80,25 @@ public class UsersDatabaseHelper extends SQLiteOpenHelper {
 
         db.close();
         return rowId;
+    }
+
+    public void updateUser(String rowId,String username, String phone, String email, String address, String password, int numKids, String marital, String gender, String language, String religion ){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_USERNAME, username);
+        values.put(COLUMN_PHONE_NUMBER, phone);
+        values.put(COLUMN_EMAIL, email);
+        values.put(COLUMN_ADDRESS, address);
+        values.put(COLUMN_PASSWORD, password);
+        values.put(COLUMN_NUMBER_OF_KIDS, numKids);
+        values.put(COLUMN_MARITAL_STATUS, marital);
+        values.put(COLUMN_GENDER, gender);
+        values.put(COLUMN_LANGUAGE, language);
+        values.put(COLUMN_RELIGION, religion);
+
+        long result = db.update(TABLE_NAME,values,"id=?", new String[]{rowId});
+
+
     }
 }

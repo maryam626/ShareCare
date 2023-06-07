@@ -156,7 +156,7 @@ public class log_in_activity extends AppCompatActivity {
             }
             int columnIndex4 = cursor.getColumnIndex("address");
             if(columnIndex4 != -1){
-                email = cursor.getString(columnIndex4);
+                address = cursor.getString(columnIndex4);
             }
             else{
                 Log.e("CursorError", "Column not found");
@@ -164,7 +164,7 @@ public class log_in_activity extends AppCompatActivity {
             }
             int columnIndex5 = cursor.getColumnIndex("password");
             if(columnIndex5 != -1){
-                email = cursor.getString(columnIndex5);
+                password = cursor.getString(columnIndex5);
             }
             else{
                 Log.e("CursorError", "Column not found");
@@ -172,7 +172,7 @@ public class log_in_activity extends AppCompatActivity {
             }
             int columnIndex6 = cursor.getColumnIndex("number_of_kids");
             if(columnIndex6 != -1){
-                email = cursor.getString(columnIndex6);
+                numberOfKids = cursor.getString(columnIndex6);
             }
             else{
                 Log.e("CursorError", "Column not found");
@@ -180,7 +180,7 @@ public class log_in_activity extends AppCompatActivity {
             }
             int columnIndex7 = cursor.getColumnIndex("marital_status");
             if(columnIndex7 != -1){
-                email = cursor.getString(columnIndex7);
+                maritalStatus = cursor.getString(columnIndex7);
             }
             else{
                 Log.e("CursorError", "Column not found");
@@ -189,7 +189,7 @@ public class log_in_activity extends AppCompatActivity {
 
             int columnIndex8 = cursor.getColumnIndex("gender");
             if(columnIndex8 != -1){
-                email = cursor.getString(columnIndex8);
+                gender = cursor.getString(columnIndex8);
             }
             else{
                 Log.e("CursorError", "Column not found");
@@ -198,7 +198,7 @@ public class log_in_activity extends AppCompatActivity {
 
             int columnIndex9 = cursor.getColumnIndex("language");
             if(columnIndex9 != -1){
-                email = cursor.getString(columnIndex9);
+                language = cursor.getString(columnIndex9);
             }
             else{
                 Log.e("CursorError", "Column not found");
@@ -207,7 +207,7 @@ public class log_in_activity extends AppCompatActivity {
 
             int columnIndex10 = cursor.getColumnIndex("religion");
             if(columnIndex10 != -1){
-                email = cursor.getString(columnIndex10);
+                religion = cursor.getString(columnIndex10);
             }
             else{
                 Log.e("CursorError", "Column not found");
