@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import com.example.sharecare.Logic.Request;
+import com.example.sharecare.models.Request;
 import java.util.ArrayList;
 import java.util.List;
 

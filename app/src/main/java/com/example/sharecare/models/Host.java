@@ -1,6 +1,6 @@
-package com.example.sharecare.Logic;
+package com.example.sharecare.models;
 
-public class Host extends Parent{
+public class Host extends Parent {
 
 
     public Host(String username, String phoneNumber, String email, String address, String password, int numberOfKids, String maritalStatus, String gender, String language, String religion) {

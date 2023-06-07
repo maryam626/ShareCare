@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.sharecare.Logic.Request;
+import com.example.sharecare.models.Request;
 
 import java.util.List;
 

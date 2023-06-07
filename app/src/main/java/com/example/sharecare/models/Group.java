@@ -1,4 +1,4 @@
-package com.example.sharecare.Logic;
+package com.example.sharecare.models;
 
 import java.util.ArrayList;
 
@@ -8,6 +8,12 @@ public class Group {
     private String briefInformation;
     private Host host;
     private ArrayList<Parent> participants;
+    private ArrayList<Activity> activities;
+    private int capacity;
+    private int ageFrom;
+    private int ageTo;
+
+
 
 
 
