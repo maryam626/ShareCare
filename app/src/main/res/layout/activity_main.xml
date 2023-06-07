@@ -10,7 +10,7 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="44dp"
         android:layout_marginEnd="92dp"
         android:fontFamily="@font/vidaloka"
         android:text="@string/share_care"
@@ -24,12 +24,21 @@
         android:id="@+id/getStartedBtn"
         android:layout_width="155dp"
         android:layout_height="59dp"
-        android:layout_marginTop="564dp"
+        android:layout_marginTop="612dp"
         android:layout_marginEnd="128dp"
         android:backgroundTint="#24978C"
         android:text="@string/get_started"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="TextContrastCheck,TextSizeCheck" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/welcomephoto2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
