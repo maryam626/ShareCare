@@ -30,6 +30,6 @@
         android:text="@string/get_started"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="TextContrastCheck" />
+        tools:ignore="TextContrastCheck,TextSizeCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

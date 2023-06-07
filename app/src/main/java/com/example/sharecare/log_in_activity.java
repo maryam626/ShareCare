@@ -62,7 +62,7 @@ public class log_in_activity extends AppCompatActivity {
                 }
 
                 if (validateCredentials(username, password)) {
-                    Intent intent = new Intent(log_in_activity.this, home_page_parent_activity.class);
+                    Intent intent = new Intent(log_in_activity.this, Search_activity.class);
                     startActivity(intent);
                     finish();
                 } else {

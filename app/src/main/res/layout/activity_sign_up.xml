@@ -6,13 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".sign_up_activity">
 
-
     <Button
         android:id="@+id/signUpBtn1"
-        android:layout_width="95dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="336dp"
-        android:layout_marginEnd="4dp"
+        android:layout_width="155dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="708dp"
+        android:layout_marginEnd="128dp"
         android:backgroundTint="#24978C"
         android:text="@string/sign_up"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,17 +34,16 @@
         android:id="@+id/userNameEt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
-        android:autofillHints=""
+        android:layout_marginTop="144dp"
+        android:layout_marginEnd="100dp"
         android:ems="10"
         android:hint="@string/user_name"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:textColorHint="#757575"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.529"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/phoneEt"
@@ -78,7 +76,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/passwordEt"
+        android:id="@+id/addressEt2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="392dp"
@@ -121,7 +119,7 @@
         android:id="@+id/maritalSpinner"
         android:layout_width="122dp"
         android:layout_height="48dp"
-        android:layout_marginTop="500dp"
+        android:layout_marginTop="512dp"
         android:layout_marginEnd="64dp"
         android:entries="@array/Marital_Status"
         app:layout_constraintEnd_toEndOf="parent"
@@ -129,34 +127,12 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <Spinner
-        android:id="@+id/GenderSpinner"
+        android:id="@+id/genderSpinner"
         android:layout_width="121dp"
         android:layout_height="52dp"
-        android:layout_marginTop="560dp"
+        android:layout_marginTop="576dp"
         android:layout_marginEnd="64dp"
         android:entries="@array/Gender"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
-
-    <Spinner
-        android:id="@+id/LanguagesSpinner"
-        android:layout_width="121dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="624dp"
-        android:layout_marginEnd="64dp"
-        android:entries="@array/Languages"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
-
-    <Spinner
-        android:id="@+id/ReligionsSpinner"
-        android:layout_width="121dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="684dp"
-        android:layout_marginEnd="64dp"
-        android:entries="@array/Religions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="SpeakableTextPresentCheck" />
@@ -178,7 +154,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
-        android:layout_marginTop="512dp"
+        android:layout_marginTop="524dp"
         android:text="@string/marital_status"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -190,32 +166,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
-        android:layout_marginTop="576dp"
+        android:layout_marginTop="596dp"
         android:text="@string/gender"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView13"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="700dp"
-        android:text="Religion :"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView21"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="640dp"
-        android:text="Language :"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"

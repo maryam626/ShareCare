@@ -16,15 +16,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         button = findViewById(R.id.getStartedBtn);
 
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //this code only for debug
-                /*Intent intent = new Intent(MainActivity.this, ChildrenActivityCreateActivity.class);
-                startActivity(intent);*/
-
-                Intent intent = new Intent(MainActivity.this, log_in_activity.class);
+                Intent intent = new Intent(MainActivity.this, ChildrenActivityCreateActivity.class);
                 startActivity(intent);
+
+                //Intent intent = new Intent(MainActivity.this, log_in_activity.class);
+                //startActivity(intent);
             }
         });
     }

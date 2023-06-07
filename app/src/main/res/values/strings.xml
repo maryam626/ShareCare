@@ -1,10 +1,21 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">ShareCare</string>
+    <string-array name="Languages">
+        <item>Arabic</item>
+        <item>English</item>
+        <item>Hebrew</item>
+    </string-array>
+
+    <string-array name="Religion">
+        <item>Islam</item>
+        <item>christianity</item>
+        <item>Judaism</item>
+    </string-array>
     <string name="user_name">User Name</string>
     <string name="password">Password</string>
     <string name="log_in">Log In</string>
     <string name="sign_up">Sign up</string>
-    <string-array name="Languages">
+    <string-array name="Languages" tools:ignore="DuplicateDefinition">
         <item>Arabic</item>
         <item>English</item>
         <item>Hebrew</item>
