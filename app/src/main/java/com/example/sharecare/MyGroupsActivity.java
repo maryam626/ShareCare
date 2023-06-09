@@ -26,7 +26,7 @@ public class MyGroupsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_groups);
-        loggedInUserId = getIntent().getStringExtra("id");
+        loggedInUserId = getIntent().getStringExtra("userid");
         loggedInUsername = getIntent().getStringExtra("username");
 
 
@@ -42,7 +42,7 @@ public class MyGroupsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MyGroupsActivity.this, CreateGroupActivity.class);
                 Bundle extras = new Bundle();
-                extras.putString("id", loggedInUserId);
+                extras.putString("userid", loggedInUserId);
                 extras.putString("username", loggedInUsername);
 
                 intent.putExtras(extras);
@@ -57,18 +57,14 @@ public class MyGroupsActivity extends AppCompatActivity {
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
 
         // Retrieve groups where the logged-in user is the host
-        Cursor hostCursor = db.rawQuery("SELECT id as groupid,groupname as groupname  FROM groups" +
-                "  WHERE hostUserId = ?", new String[]{String.valueOf(getLoggedInUserId())});
+        Cursor hostCursor = db.rawQuery("select distinct groupid,groupname from (SELECT id as groupid,groupname as groupname  FROM groups" +
+                "  WHERE hostUserId = ? union all SELECT groups.id as groupid, groups.groupname as groupname" +
+                " FROM groups INNER JOIN groupParticipants ON groups.id = groupParticipants.groupId " +
+                " WHERE groupParticipants.userId = ?)", new String[]{String.valueOf(getLoggedInUserId()),String.valueOf(getLoggedInUserId())});
         addGroupsToTable(hostCursor);
 
-        // Retrieve groups where the logged-in user is a participant
-        Cursor participantCursor = db.rawQuery("SELECT groups.id as groupid, groups.groupname as groupname" +
-                " FROM groups INNER JOIN groupParticipants ON groups.id = groupParticipants.groupId " +
-                " WHERE groupParticipants.userId = ?", new String[]{String.valueOf(getLoggedInUserId())});
-        addGroupsToTable(participantCursor);
-
         hostCursor.close();
-        participantCursor.close();
+
         db.close();
     }
 
@@ -79,7 +75,7 @@ public class MyGroupsActivity extends AppCompatActivity {
         if (cursor.moveToFirst()) {
             do {
                 int groupId = cursor.getInt(cursor.getColumnIndex("groupid"));
-                String groupName = cursor.getString(cursor.getColumnIndex("groupid"));
+                String groupName = cursor.getString(cursor.getColumnIndex("groupname"));
 
                 // Create a new row in the table
                 TableRow row = new TableRow(this);

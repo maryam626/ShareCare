@@ -25,6 +25,10 @@ public class GroupInfoActivity extends AppCompatActivity {
     private boolean isHost;
     private TableLayout tableLayout;
 
+    private Button createActivityButton;
+    private String loggedInUserId;
+    private String loggedInUsername;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +37,7 @@ public class GroupInfoActivity extends AppCompatActivity {
         activityDatabase = activityDatabaseHelper.getReadableDatabase();
         //create table if not exist
         activityDatabaseHelper.onCreate(activityDatabase);
-
+        createActivityButton = findViewById(R.id.createActivityButton);
         groupsDatabaseHelper = new GroupsDatabaseHelper(this);
         groupsDatabase = groupsDatabaseHelper.getReadableDatabase();
         //create table if not exist
@@ -44,8 +48,23 @@ public class GroupInfoActivity extends AppCompatActivity {
         // Retrieve the group ID and isHost value from the intent
         Intent intent = getIntent();
         groupId = intent.getIntExtra("groupid", -1);
+        loggedInUserId = getIntent().getStringExtra("userid");
+        loggedInUsername = getIntent().getStringExtra("username");
        // isHost = intent.getBooleanExtra("isHost", false);
 
+        createActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupInfoActivity.this, ChildrenActivityCreateActivity.class);
+                Bundle extras = new Bundle();
+                extras.putString("userid", loggedInUserId);
+                extras.putInt("groupid", groupId);
+                extras.putString("username", loggedInUsername);
+
+                intent.putExtras(extras);
+                startActivity(intent);
+            }
+        });
         loadGroupData();
         loadGroupActivityData();
     }
