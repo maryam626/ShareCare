@@ -16,6 +16,7 @@ import com.example.sharecare.Logic.GroupsDatabaseHelper;
 public class MyGroupsActivity extends AppCompatActivity {
 
     private Button createGroupButton;
+
     private TableLayout groupsTableLayout;
     private GroupsDatabaseHelper databaseHelper;
 
@@ -23,6 +24,12 @@ public class MyGroupsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_groups);
+<<<<<<< Updated upstream
+=======
+        loggedInUserId = getIntent().getStringExtra("userid");
+        loggedInUsername = getIntent().getStringExtra("username");
+
+>>>>>>> Stashed changes
 
         databaseHelper = new GroupsDatabaseHelper(this);
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
@@ -35,6 +42,14 @@ public class MyGroupsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MyGroupsActivity.this, CreateGroupActivity.class);
+<<<<<<< Updated upstream
+=======
+                Bundle extras = new Bundle();
+                extras.putString("userid", loggedInUserId);
+                extras.putString("username", loggedInUsername);
+
+                intent.putExtras(extras);
+>>>>>>> Stashed changes
                 startActivity(intent);
             }
         });
@@ -70,8 +85,19 @@ public class MyGroupsActivity extends AppCompatActivity {
                 TextView groupNameTextView = new TextView(this);
                 TextView hostUserIdTextView = new TextView(this);
 
+<<<<<<< Updated upstream
                 groupNameTextView.setText(groupName);
                 hostUserIdTextView.setText(String.valueOf(hostUserId));
+=======
+                        Intent intent = new Intent(MyGroupsActivity.this, GroupInfoActivity.class);
+                        Bundle extras = new Bundle();
+                        extras.putInt("groupid", groupId);
+                        extras.putString("isHost","true");
+                        extras.putString("userid", loggedInUserId);
+                        extras.putString("username", loggedInUsername);
+                        intent.putExtras(extras);
+                        startActivity(intent);
+>>>>>>> Stashed changes
 
                 row.addView(groupNameTextView);
                 row.addView(hostUserIdTextView);

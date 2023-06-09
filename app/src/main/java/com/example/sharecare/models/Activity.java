@@ -14,7 +14,7 @@ public class Activity {
     }
 
     public Activity(String activityName, String selectedActivity, String selectedDate, String selectedTime,
-                    int capacity, int ageFrom, int ageTo) {
+                    int capacity, int ageFrom, int ageTo,int groupid) {
         this.activityName = activityName;
         this.selectedActivity = selectedActivity;
         this.selectedDate = selectedDate;
@@ -22,6 +22,7 @@ public class Activity {
         this.capacity = capacity;
         this.ageFrom = ageFrom;
         this.ageTo = ageTo;
+        this.groupId=groupid;
     }
 
     // Getter methods

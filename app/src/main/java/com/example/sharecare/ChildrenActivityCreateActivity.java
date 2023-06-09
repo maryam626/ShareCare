@@ -2,6 +2,7 @@ package com.example.sharecare;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -31,15 +32,20 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
     private Button btnSelectDate, btnSelectTime, btnSave;
     private Calendar calendar;
     private SimpleDateFormat dateFormatter, timeFormatter;
-
+    private String loggedInUserId;
+    private String loggedInUsername;
     private String selectedActivity;
     private String[] activityOptions;
+    private int groupId;
     private ActivityDatabaseHelper databaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_children_activity_create);
-
+        Intent intent = getIntent();
+        groupId = intent.getIntExtra("groupid", -1);
+        loggedInUserId = intent.getStringExtra("userid");
+        loggedInUsername = intent.getStringExtra("username");
         // Initialize views
         editActivityName = findViewById(R.id.edit_activity_name);
         editSelectedDate = findViewById(R.id.edit_selected_date);
@@ -56,6 +62,9 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         btnSelectDate.setOnClickListener(this);
         btnSelectTime.setOnClickListener(this);
         btnSave.setOnClickListener(this);
+
+
+
 
         // Initialize date and time formatters
         dateFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
@@ -91,6 +100,15 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
             showTimePickerDialog();
         } else if (v == btnSave) {
             saveActivity();
+            Intent intent = new Intent(ChildrenActivityCreateActivity.this, MyGroupsActivity.class);
+            Bundle extras = new Bundle();
+            extras.putInt("groupid", groupId);
+            extras.putString("userid", loggedInUserId);
+            extras.putString("username", loggedInUsername);
+
+
+            intent.putExtras(extras);
+            startActivity(intent);
         }
     }
 
@@ -147,7 +165,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
 
         // Create Activity object
         Activity activity = new Activity(activityName, selectedActivity, selectedDate, selectedTime,
-                capacityValue, ageFromValue, ageToValue);
+                capacityValue, ageFromValue, ageToValue,groupId);
 
         // Store user data in SQLite database
         long rowId = databaseHelper.insertActivity(activity);

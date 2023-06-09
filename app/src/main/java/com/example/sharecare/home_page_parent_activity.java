@@ -60,7 +60,16 @@ public class home_page_parent_activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                   Intent intent = new Intent(home_page_parent_activity.this, MyGroupsActivity.class);
+<<<<<<< Updated upstream
                   startActivity(intent);
+=======
+                Bundle extras = new Bundle();
+                extras.putString("userid", id);
+                extras.putString("username", userName);
+
+                intent.putExtras(extras);
+                startActivity(intent);
+>>>>>>> Stashed changes
                 }
             }
         );

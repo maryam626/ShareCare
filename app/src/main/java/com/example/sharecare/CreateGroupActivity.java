@@ -35,7 +35,12 @@ public class CreateGroupActivity extends AppCompatActivity {
         descriptionEditText = findViewById(R.id.descriptionEditText);
         participantsSpinner = findViewById(R.id.participantsSpinner);
         createButton = findViewById(R.id.createButton);
+<<<<<<< Updated upstream
 
+=======
+        loggedInUserId = Integer.parseInt(getIntent().getStringExtra("userid"));
+        loggedInUsername = getIntent().getStringExtra("username");
+>>>>>>> Stashed changes
         loadParticipants();
 
         createButton.setOnClickListener(new View.OnClickListener() {
@@ -73,8 +78,13 @@ public class CreateGroupActivity extends AppCompatActivity {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
         // Insert group into groups table
+<<<<<<< Updated upstream
         String groupInsertQuery = "INSERT INTO groups (groupName, hostUserId) VALUES (?, ?)";
         db.execSQL(groupInsertQuery, new String[]{groupName, String.valueOf(getLoggedInUserId())});
+=======
+        String groupInsertQuery = "INSERT INTO groups (groupName,description, hostUserId) VALUES (?,?, ?)";
+        db.execSQL(groupInsertQuery, new String[]{groupName, description,String.valueOf(loggedInUserId)});
+>>>>>>> Stashed changes
 
         // Retrieve the ID of the newly inserted group
         Cursor cursor = db.rawQuery("SELECT last_insert_rowid()", null);
@@ -94,9 +104,5 @@ public class CreateGroupActivity extends AppCompatActivity {
         finish();
     }
 
-    private int getLoggedInUserId() {
-        // Retrieve the logged-in user's ID from your authentication/session mechanism
-        // Replace this with your actual implementation
-        return 1;
-    }
+
 }
