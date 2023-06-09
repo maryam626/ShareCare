@@ -37,10 +37,12 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
     private String[] activityOptions;
     private ActivityDatabaseHelper databaseHelper;
 
-    private String loggedInUserId;
+    private int loggedInUserId;
     private String loggedInUsername;
 
     private int groupId;
+    private int ishost;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +62,8 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
 
         Intent intent = getIntent();
         groupId = intent.getIntExtra("groupid", -1);
-        loggedInUserId = getIntent().getStringExtra("userid");
+        ishost = intent.getIntExtra("ishost", -1);
+        loggedInUserId =  getIntent().getIntExtra("userid",-1);
         loggedInUsername = getIntent().getStringExtra("username");
 
         // Set click listeners
@@ -105,9 +108,10 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
 
             Intent intent = new Intent(ChildrenActivityCreateActivity.this, MyGroupsActivity.class);
             Bundle extras = new Bundle();
-            extras.putString("userid", loggedInUserId);
+            extras.putInt("userid", loggedInUserId);
             extras.putString("username", loggedInUsername);
             extras.putInt("groupid", groupId);
+            extras.putInt("ishost", ishost);
 
             intent.putExtras(extras);
             startActivity(intent);
@@ -167,7 +171,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
 
         // Create Activity object
         Activity activity = new Activity(activityName, selectedActivity, selectedDate, selectedTime,
-                capacityValue, ageFromValue, ageToValue,groupId);
+                capacityValue, ageFromValue, ageToValue,groupId,loggedInUserId);
 
         // Store user data in SQLite database
         long rowId = databaseHelper.insertActivity(activity);
