@@ -9,6 +9,16 @@ public class Activity {
     private int ageFrom;
     private int ageTo;
 
+    public int getOwnerUserId() {
+        return ownerUserId;
+    }
+
+    public void setOwnerUserId(int ownerUserId) {
+        this.ownerUserId = ownerUserId;
+    }
+
+    private int ownerUserId;
+
     public int getGroupId() {
         return groupId;
     }
@@ -24,7 +34,7 @@ public class Activity {
     }
 
     public Activity(String activityName, String selectedActivity, String selectedDate, String selectedTime,
-                    int capacity, int ageFrom, int ageTo,int groupId) {
+                    int capacity, int ageFrom, int ageTo,int groupId,int ownerUserId) {
         this.activityName = activityName;
         this.selectedActivity = selectedActivity;
         this.selectedDate = selectedDate;
@@ -33,6 +43,7 @@ public class Activity {
         this.ageFrom = ageFrom;
         this.ageTo = ageTo;
         this.groupId = groupId;
+        this.ownerUserId = ownerUserId;
     }
 
     // Getter methods

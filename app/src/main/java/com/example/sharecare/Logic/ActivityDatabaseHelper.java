@@ -20,6 +20,7 @@ public class ActivityDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_CAPACITY = "capcaity";
     private static final String COLUMN_AGE_FROM = "child_age_from";
     private static final String COLUMN_AGE_TO = "child_age_to";
+    private static final String OWNER_ID = "owner_user_id";
 
     private static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS  " + TABLE_NAME + " (" +
@@ -30,8 +31,14 @@ public class ActivityDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_ACTIVITY_DATE + " TEXT, " +
                     COLUMN_ACTIVITY_TIME + " TEXT, " +
                     COLUMN_CAPACITY + " INTEGER, " +
+                    OWNER_ID + " INTEGER, " +
                     COLUMN_AGE_FROM + " INTEGER, " +
                     COLUMN_AGE_TO + " INTEGER)";
+
+
+    private static final String CREATE_TABLE_PENDING_REQUESTS =
+            "CREATE TABLE IF NOT EXISTS   activitiesRequest (userid INTEGER, activityid INTEGER, requestDate TEXT, isaccept INTEGER)";
+
 
     public ActivityDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -40,11 +47,13 @@ public class ActivityDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE);
+        db.execSQL(CREATE_TABLE_PENDING_REQUESTS);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + "activitiesRequest");
         onCreate(db);
     }
 
@@ -59,6 +68,7 @@ public class ActivityDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_AGE_FROM, activity.getAgeFrom());
         values.put(COLUMN_AGE_TO, activity.getAgeTo());
         values.put(GROUP_ID, activity.getGroupId());
+        values.put(OWNER_ID, activity.getOwnerUserId());
 
         long rowId=-1;
         try{

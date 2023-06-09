@@ -61,7 +61,7 @@ public class home_page_parent_activity extends AppCompatActivity {
             public void onClick(View v) {
                   Intent intent = new Intent(home_page_parent_activity.this, MyGroupsActivity.class);
                 Bundle extras = new Bundle();
-                extras.putString("userid", id);
+                extras.putInt("userid", Integer.parseInt(id));
                 extras.putString("username", userName);
 
                 intent.putExtras(extras);

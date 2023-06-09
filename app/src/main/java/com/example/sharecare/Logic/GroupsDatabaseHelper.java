@@ -14,6 +14,7 @@ public class GroupsDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
         String createGroupsTableQuery = "CREATE TABLE IF NOT EXISTS  groups (id INTEGER PRIMARY KEY AUTOINCREMENT, groupName TEXT,description TEXT, hostUserId INTEGER)";
         db.execSQL(createGroupsTableQuery);
 

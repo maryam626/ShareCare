@@ -1,4 +1,5 @@
 package com.example.sharecare;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,19 +16,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.sharecare.Logic.ActivityDatabaseHelper;
 import com.example.sharecare.Logic.GroupsDatabaseHelper;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class GroupInfoActivity extends AppCompatActivity {
     private ActivityDatabaseHelper activityDatabaseHelper;
     private SQLiteDatabase groupsDatabase;
     private SQLiteDatabase activityDatabase;
     private GroupsDatabaseHelper groupsDatabaseHelper;
 
-    private int groupId;
-    private boolean isHost;
+
+    private int ishost;
     private TableLayout tableLayout;
 
     private Button createActivityButton;
-    private String loggedInUserId;
+    private int loggedInUserId;
     private String loggedInUsername;
+    private int groupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,18 +54,20 @@ public class GroupInfoActivity extends AppCompatActivity {
         // Retrieve the group ID and isHost value from the intent
         Intent intent = getIntent();
         groupId = intent.getIntExtra("groupid", -1);
-        loggedInUserId = getIntent().getStringExtra("userid");
+        loggedInUserId = getIntent().getIntExtra("userid",-1);
         loggedInUsername = getIntent().getStringExtra("username");
-       // isHost = intent.getBooleanExtra("isHost", false);
+        ishost = intent.getIntExtra("ishost", -1);
+
 
         createActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(GroupInfoActivity.this, ChildrenActivityCreateActivity.class);
                 Bundle extras = new Bundle();
-                extras.putString("userid", loggedInUserId);
+                extras.putInt("userid", loggedInUserId);
                 extras.putInt("groupid", groupId);
                 extras.putString("username", loggedInUsername);
+                extras.putInt("ishost", ishost);
 
                 intent.putExtras(extras);
                 startActivity(intent);
@@ -83,10 +91,23 @@ public class GroupInfoActivity extends AppCompatActivity {
     }
 
     private void loadGroupActivityData() {
-        // Query the groupActivity table to retrieve rows with matching group ID
-        Cursor cursor = activityDatabase.rawQuery("SELECT    activity_name,activity_type,date,time," +
-                "capcaity,child_age_from,child_age_to FROM activities WHERE groupid = ?", new String[]{String.valueOf(groupId)});
+        // you will see activity if :
+        // you created the group , you are in the group
+        //you will see edit, delete , mange request if you are the owner of the activity
+        // you will join button if you are not joined in the activity
+
+        Cursor cursor = activityDatabase.rawQuery(
+                "SELECT  activities.id as  activity_id ,  activity_name,activity_type,date,time,capcaity,child_age_from,child_age_to,1 as  isaccept," +
+                        "case when activities.owner_user_id=? then 1 else 0 end  as isowner" +
+                " from activities inner join groups on activities.groupid=groups.id where groups.id=?  " +
+                " union all " +
+                " SELECT  activities.id as activity_id , activity_name,activity_type,date,time, " +
+                " capcaity,child_age_from,child_age_to ,ar.isaccept as isaccept ,0 as isowner FROM activities " +
+                " inner join  activitiesRequest ar on ar.activityid =activities.id where groupid = ?"
+                , new String[]{String.valueOf(loggedInUserId),String.valueOf(groupId),String.valueOf(groupId)});
+
         while (cursor.moveToNext()) {
+            int activity_id = cursor.getInt(cursor.getColumnIndex("activity_id"));
             String activity_name = cursor.getString(cursor.getColumnIndex("activity_name"));
             String activity_type = cursor.getString(cursor.getColumnIndex("activity_type"));
             String date = cursor.getString(cursor.getColumnIndex("date"));
@@ -94,8 +115,8 @@ public class GroupInfoActivity extends AppCompatActivity {
             String capcaity = cursor.getString(cursor.getColumnIndex("capcaity"));
             String child_age_from = cursor.getString(cursor.getColumnIndex("child_age_from"));
             String child_age_to = cursor.getString(cursor.getColumnIndex("child_age_to"));
-
-
+            int isaccept = cursor.getInt(cursor.getColumnIndex("isaccept"));
+            int isowner = cursor.getInt(cursor.getColumnIndex("isowner"));
 
             // Create a new row in the table
             TableRow row = new TableRow(this);
@@ -103,59 +124,137 @@ public class GroupInfoActivity extends AppCompatActivity {
             // Create TextViews for name and activity
             TextView nameTextView = new TextView(this);
             nameTextView.setText(activity_name);
-            nameTextView.setPadding(8, 8, 8, 8);
+           // nameTextView.setPadding(8, 8, 8, 8);
             row.addView(nameTextView);
 
-            TextView activityTextView = new TextView(this);
-            activityTextView.setText(activity_type);
-            activityTextView.setPadding(8, 8, 8, 8);
-            row.addView(activityTextView);
-
-            // Create buttons for delete, edit, and manage requests
-            Button deleteButton = new Button(this);
-            deleteButton.setText("Delete");
-            deleteButton.setPadding(8, 8, 8, 8);
-            row.addView(deleteButton);
-
-            Button editButton = new Button(this);
-            editButton.setText("Edit");
-            editButton.setPadding(8, 8, 8, 8);
-            row.addView(editButton);
-
-            Button manageRequestsButton = new Button(this);
-            manageRequestsButton.setText("Manage Requests");
-            manageRequestsButton.setPadding(8, 8, 8, 8);
-            row.addView(manageRequestsButton);
-
-            // Set click listeners for the buttons
-            deleteButton.setOnClickListener(new View.OnClickListener() {
+            // Create a Button for "More Info"
+            Button moreInfoButton = new Button(this);
+            moreInfoButton.setText("More Info");
+            moreInfoButton.setPadding(8, 8, 8, 8);
+            moreInfoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Handle delete button click
-                    Toast.makeText(GroupInfoActivity.this, "Delete button clicked for " + activity_name, Toast.LENGTH_SHORT).show();
+                    // Handle the button click event
+                    openActivityDialog(activity_name,activity_type,date,time,capcaity,child_age_from,child_age_to);
                 }
             });
+            row.addView(moreInfoButton);
 
-            editButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Handle edit button click
-                    Toast.makeText(GroupInfoActivity.this, "Edit button clicked for " + activity_name, Toast.LENGTH_SHORT).show();
-                }
-            });
+            if(isowner ==1)
+            {
+                // Create buttons for delete, edit, and manage requests
+                Button deleteButton = new Button(this);
+                deleteButton.setText("Delete");
+                deleteButton.setPadding(8, 8, 8, 8);
+                row.addView(deleteButton);
 
-            manageRequestsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Handle manage requests button click
-                    Toast.makeText(GroupInfoActivity.this, "Manage Requests button clicked for " + activity_name, Toast.LENGTH_SHORT).show();
-                }
-            });
+                Button editButton = new Button(this);
+                editButton.setText("Edit");
+                editButton.setPadding(8, 8, 8, 8);
+                row.addView(editButton);
+
+                Button manageRequestsButton = new Button(this);
+                manageRequestsButton.setText("Manage Requests");
+              //  manageRequestsButton.setPadding(8, 8, 8, 8);
+                row.addView(manageRequestsButton);
+
+                // Set click listeners for the buttons
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        activityDatabase.delete("activities","id = ?", new String[]{String.valueOf(activity_id)});
+                        Toast.makeText(GroupInfoActivity.this, "successfully deleted " + activity_name, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(GroupInfoActivity.this, GroupInfoActivity.class);
+                        Bundle extras = new Bundle();
+                        extras.putInt("userid", loggedInUserId);
+                        extras.putInt("groupid", groupId);
+                        extras.putString("username", loggedInUsername);
+                        extras.putInt("ishost", ishost);
+                        intent.putExtras(extras);
+                        startActivity(intent);
+                    }
+                });
+
+                editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Handle edit button click
+                        Toast.makeText(GroupInfoActivity.this, "Edit button clicked for " + activity_name, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                manageRequestsButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(GroupInfoActivity.this, PendingRequestsActivity.class);
+                        Bundle extras = new Bundle();
+                        extras.putInt("userid", loggedInUserId);
+                        extras.putInt("groupid", groupId);
+                        extras.putString("username", loggedInUsername);
+                        extras.putInt("ishost", ishost);
+
+
+                        intent.putExtras(extras);
+                        startActivity(intent);
+
+                        // Handle manage requests button click
+                        Toast.makeText(GroupInfoActivity.this, "Manage Requests button clicked for " + activity_name, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }else if(isaccept==1)
+            {
+                TextView activityjoinedTextView = new TextView(this);
+                activityjoinedTextView.setText("joined");
+               // activityTextView.setPadding(8, 8, 8, 8);
+                row.addView(activityjoinedTextView);
+            }
+            else if(isaccept==0)
+            {
+                Button joinButton = new Button(this);
+                joinButton.setText("Join");
+               // joinButton.setPadding(8, 8, 8, 8);
+                row.addView(joinButton);
+
+                joinButton.setOnClickListener(new View.OnClickListener() {
+
+                    public void insertActivityRequest(int userId, int activityId) {
+
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                        String date = dateFormat.format(new Date());
+
+                        ContentValues values = new ContentValues();
+                        values.put("userid", userId);
+                        values.put("activityid", activityId);
+                        values.put("requestDate", date);
+                        values.put("isaccept", false);
+
+                        activityDatabase.insert("activitiesRequest", null, values);
+                    }
+
+                    @Override
+                    public void onClick(View v) {
+                        insertActivityRequest(loggedInUserId,activity_id);
+                        Toast.makeText(GroupInfoActivity.this, "Your request submitted to activity owner ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
 
             // Add the row to the table
             tableLayout.addView(row);
         }
         cursor.close();
+    }
+
+    private void openActivityDialog(String activity_name,String activity_type,
+           String date,String time,String capcaity,String child_age_from,String child_age_to) {
+
+        // Create an instance of the ActivityDialog and display it
+        ActivityDialog activityDialog = new ActivityDialog(this, activity_name, activity_type,
+                date,time,capcaity,child_age_from,child_age_to);
+        activityDialog.show();
     }
 
     @Override

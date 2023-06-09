@@ -39,7 +39,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         descriptionEditText = findViewById(R.id.descriptionEditText);
         participantsSpinner = findViewById(R.id.participantsSpinner);
         createButton = findViewById(R.id.createButton);
-        loggedInUserId = Integer.parseInt(getIntent().getStringExtra("userid"));
+        loggedInUserId =  getIntent().getIntExtra("userid",-1);
         loggedInUsername = getIntent().getStringExtra("username");
         loadParticipants();
 
@@ -49,7 +49,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                 createGroup();
                 Intent intent = new Intent(CreateGroupActivity.this, MyGroupsActivity.class);
                 Bundle extras = new Bundle();
-                extras.putString("userid", String.valueOf(loggedInUserId));
+                extras.putInt("userid", loggedInUserId);
                 extras.putString("username", loggedInUsername);
 
                 intent.putExtras(extras);
