@@ -28,7 +28,7 @@ public class UsersDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_RELIGION = "religion";
 
     private static final String CREATE_TABLE =
-            "CREATE TABLE " + TABLE_NAME + " (" +
+            "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_USERNAME + " TEXT, " +
                     COLUMN_PHONE_NUMBER + " TEXT, " +

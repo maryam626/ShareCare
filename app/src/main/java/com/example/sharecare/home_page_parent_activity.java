@@ -60,7 +60,12 @@ public class home_page_parent_activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                   Intent intent = new Intent(home_page_parent_activity.this, MyGroupsActivity.class);
-                  startActivity(intent);
+                Bundle extras = new Bundle();
+                extras.putString("id", id);
+                extras.putString("username", userName);
+
+                intent.putExtras(extras);
+                startActivity(intent);
                 }
             }
         );
@@ -88,5 +93,6 @@ public class home_page_parent_activity extends AppCompatActivity {
         });
 
     }
+
 }
 

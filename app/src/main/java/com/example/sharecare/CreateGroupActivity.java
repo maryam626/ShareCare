@@ -24,6 +24,9 @@ public class CreateGroupActivity extends AppCompatActivity {
     private GroupsDatabaseHelper databaseHelper;
     private UsersDatabaseHelper usersDatabaseHelper;
 
+    private int loggedInUserId;
+    private String loggedInUsername;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +38,8 @@ public class CreateGroupActivity extends AppCompatActivity {
         descriptionEditText = findViewById(R.id.descriptionEditText);
         participantsSpinner = findViewById(R.id.participantsSpinner);
         createButton = findViewById(R.id.createButton);
-
+        loggedInUserId = Integer.parseInt(getIntent().getStringExtra("id"));
+        loggedInUsername = getIntent().getStringExtra("username");
         loadParticipants();
 
         createButton.setOnClickListener(new View.OnClickListener() {
@@ -48,7 +52,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
     private void loadParticipants() {
         SQLiteDatabase db = usersDatabaseHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT username FROM users", null);
+        Cursor cursor = db.rawQuery("SELECT username FROM users where id<>? ", new String[]{String.valueOf(loggedInUserId)});
 
         List<String> participantList = new ArrayList<>();
         if (cursor.moveToFirst()) {
@@ -73,8 +77,8 @@ public class CreateGroupActivity extends AppCompatActivity {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
         // Insert group into groups table
-        String groupInsertQuery = "INSERT INTO groups (groupName, hostUserId) VALUES (?, ?)";
-        db.execSQL(groupInsertQuery, new String[]{groupName, String.valueOf(getLoggedInUserId())});
+        String groupInsertQuery = "INSERT INTO groups (groupName,description, hostUserId) VALUES (?,?, ?)";
+        db.execSQL(groupInsertQuery, new String[]{groupName, description,String.valueOf(getLoggedInUserId())});
 
         // Retrieve the ID of the newly inserted group
         Cursor cursor = db.rawQuery("SELECT last_insert_rowid()", null);
