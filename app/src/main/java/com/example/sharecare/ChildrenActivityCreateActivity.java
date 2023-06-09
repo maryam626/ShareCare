@@ -2,6 +2,7 @@ package com.example.sharecare;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -35,6 +36,11 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
     private String selectedActivity;
     private String[] activityOptions;
     private ActivityDatabaseHelper databaseHelper;
+
+    private String loggedInUserId;
+    private String loggedInUsername;
+
+    private int groupId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +57,11 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         btnSelectDate = findViewById(R.id.btn_select_date);
         btnSelectTime = findViewById(R.id.btn_select_time);
         btnSave = findViewById(R.id.btn_save);
+
+        Intent intent = getIntent();
+        groupId = intent.getIntExtra("groupid", -1);
+        loggedInUserId = getIntent().getStringExtra("userid");
+        loggedInUsername = getIntent().getStringExtra("username");
 
         // Set click listeners
         btnSelectDate.setOnClickListener(this);
@@ -91,6 +102,15 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
             showTimePickerDialog();
         } else if (v == btnSave) {
             saveActivity();
+
+            Intent intent = new Intent(ChildrenActivityCreateActivity.this, MyGroupsActivity.class);
+            Bundle extras = new Bundle();
+            extras.putString("userid", loggedInUserId);
+            extras.putString("username", loggedInUsername);
+            extras.putInt("groupid", groupId);
+
+            intent.putExtras(extras);
+            startActivity(intent);
         }
     }
 
@@ -147,7 +167,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
 
         // Create Activity object
         Activity activity = new Activity(activityName, selectedActivity, selectedDate, selectedTime,
-                capacityValue, ageFromValue, ageToValue);
+                capacityValue, ageFromValue, ageToValue,groupId);
 
         // Store user data in SQLite database
         long rowId = databaseHelper.insertActivity(activity);

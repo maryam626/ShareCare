@@ -1,4 +1,5 @@
 package com.example.sharecare;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -38,7 +39,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         descriptionEditText = findViewById(R.id.descriptionEditText);
         participantsSpinner = findViewById(R.id.participantsSpinner);
         createButton = findViewById(R.id.createButton);
-        loggedInUserId = Integer.parseInt(getIntent().getStringExtra("id"));
+        loggedInUserId = Integer.parseInt(getIntent().getStringExtra("userid"));
         loggedInUsername = getIntent().getStringExtra("username");
         loadParticipants();
 
@@ -46,6 +47,14 @@ public class CreateGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 createGroup();
+                Intent intent = new Intent(CreateGroupActivity.this, MyGroupsActivity.class);
+                Bundle extras = new Bundle();
+                extras.putString("userid", String.valueOf(loggedInUserId));
+                extras.putString("username", loggedInUsername);
+
+                intent.putExtras(extras);
+                startActivity(intent);
+
             }
         });
     }
@@ -78,7 +87,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
         // Insert group into groups table
         String groupInsertQuery = "INSERT INTO groups (groupName,description, hostUserId) VALUES (?,?, ?)";
-        db.execSQL(groupInsertQuery, new String[]{groupName, description,String.valueOf(getLoggedInUserId())});
+        db.execSQL(groupInsertQuery, new String[]{groupName, description,String.valueOf(loggedInUserId)});
 
         // Retrieve the ID of the newly inserted group
         Cursor cursor = db.rawQuery("SELECT last_insert_rowid()", null);
@@ -98,9 +107,5 @@ public class CreateGroupActivity extends AppCompatActivity {
         finish();
     }
 
-    private int getLoggedInUserId() {
-        // Retrieve the logged-in user's ID from your authentication/session mechanism
-        // Replace this with your actual implementation
-        return 1;
-    }
+
 }
