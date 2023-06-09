@@ -14,10 +14,7 @@ public class GroupsDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-//        String createUsersTableQuery = "CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT)";
-//        db.execSQL(createUsersTableQuery);
-
-        String createGroupsTableQuery = "CREATE TABLE IF NOT EXISTS  groups (id INTEGER PRIMARY KEY, groupName TEXT, hostUserId INTEGER)";
+        String createGroupsTableQuery = "CREATE TABLE IF NOT EXISTS  groups (id INTEGER PRIMARY KEY, groupName TEXT,description TEXT, hostUserId INTEGER)";
         db.execSQL(createGroupsTableQuery);
 
         String createGroupParticipantsTableQuery = "CREATE TABLE IF NOT EXISTS  groupParticipants (groupId INTEGER, userId INTEGER)";
@@ -26,7 +23,6 @@ public class GroupsDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS users");
         db.execSQL("DROP TABLE IF EXISTS groups");
         db.execSQL("DROP TABLE IF EXISTS groupParticipants");
         onCreate(db);

@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,11 +19,16 @@ public class MyGroupsActivity extends AppCompatActivity {
     private Button createGroupButton;
     private TableLayout groupsTableLayout;
     private GroupsDatabaseHelper databaseHelper;
+    private String loggedInUserId;
+    private String loggedInUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_groups);
+        loggedInUserId = getIntent().getStringExtra("id");
+        loggedInUsername = getIntent().getStringExtra("username");
+
 
         databaseHelper = new GroupsDatabaseHelper(this);
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
@@ -35,6 +41,11 @@ public class MyGroupsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MyGroupsActivity.this, CreateGroupActivity.class);
+                Bundle extras = new Bundle();
+                extras.putString("id", loggedInUserId);
+                extras.putString("username", loggedInUsername);
+
+                intent.putExtras(extras);
                 startActivity(intent);
             }
         });
@@ -46,12 +57,14 @@ public class MyGroupsActivity extends AppCompatActivity {
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
 
         // Retrieve groups where the logged-in user is the host
-        Cursor hostCursor = db.rawQuery("SELECT * FROM groups WHERE hostUserId = ?", new String[]{String.valueOf(getLoggedInUserId())});
+        Cursor hostCursor = db.rawQuery("SELECT id as groupid,groupname as groupname  FROM groups" +
+                "  WHERE hostUserId = ?", new String[]{String.valueOf(getLoggedInUserId())});
         addGroupsToTable(hostCursor);
 
         // Retrieve groups where the logged-in user is a participant
-        Cursor participantCursor = db.rawQuery("SELECT groups.* FROM groups INNER JOIN groupParticipants " +
-                "ON groups.id = groupParticipants.groupId WHERE groupParticipants.userId = ?", new String[]{String.valueOf(getLoggedInUserId())});
+        Cursor participantCursor = db.rawQuery("SELECT groups.id as groupid, groups.groupname as groupname" +
+                " FROM groups INNER JOIN groupParticipants ON groups.id = groupParticipants.groupId " +
+                " WHERE groupParticipants.userId = ?", new String[]{String.valueOf(getLoggedInUserId())});
         addGroupsToTable(participantCursor);
 
         hostCursor.close();
@@ -59,31 +72,56 @@ public class MyGroupsActivity extends AppCompatActivity {
         db.close();
     }
 
+
+
+
     private void addGroupsToTable(Cursor cursor) {
         if (cursor.moveToFirst()) {
             do {
-                int groupId = cursor.getInt(cursor.getColumnIndex("id"));
-                String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
-                int hostUserId = cursor.getInt(cursor.getColumnIndex("hostUserId"));
+                int groupId = cursor.getInt(cursor.getColumnIndex("groupid"));
+                String groupName = cursor.getString(cursor.getColumnIndex("groupid"));
 
+                // Create a new row in the table
                 TableRow row = new TableRow(this);
+
+                // Create TextViews for group name and group ID
                 TextView groupNameTextView = new TextView(this);
-                TextView hostUserIdTextView = new TextView(this);
-
                 groupNameTextView.setText(groupName);
-                hostUserIdTextView.setText(String.valueOf(hostUserId));
-
+                groupNameTextView.setPadding(8, 8, 8, 8);
                 row.addView(groupNameTextView);
-                row.addView(hostUserIdTextView);
 
+                TextView groupIdTextView = new TextView(this);
+                groupIdTextView.setText(String.valueOf(groupId));
+                groupIdTextView.setPadding(8, 8, 8, 8);
+                row.addView(groupIdTextView);
+
+                // Create a Button for "Open Group"
+                Button openGroupButton = new Button(this);
+                openGroupButton.setText("Open Group");
+                openGroupButton.setPadding(8, 8, 8, 8);
+                openGroupButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(MyGroupsActivity.this, GroupInfoActivity.class);
+                        Bundle extras = new Bundle();
+                        extras.putInt("groupid", groupId);
+                        extras.putString("isHost","true");
+
+                        intent.putExtras(extras);
+                        startActivity(intent);
+
+                    }
+                });
+                row.addView(openGroupButton);
+
+                // Add the row to the table
                 groupsTableLayout.addView(row);
             } while (cursor.moveToNext());
         }
     }
 
     private int getLoggedInUserId() {
-        // Retrieve the logged-in user's ID from your authentication/session mechanism
-        // Replace this with your actual implementation
-        return 1;
+        return Integer.parseInt(loggedInUserId);
     }
 }

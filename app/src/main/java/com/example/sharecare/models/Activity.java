@@ -9,6 +9,16 @@ public class Activity {
     private int ageFrom;
     private int ageTo;
 
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
+
+    private int groupId;
+
     public Activity() {
         // Empty constructor needed for Firebase
     }
