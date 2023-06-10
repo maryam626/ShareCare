@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,8 +16,7 @@ public class home_page_parent_activity extends AppCompatActivity {
     private Button buttonMyGroups;
     private Button myProfileBtn;
     private Button buttonSearchGroups;
-
-
+    private Button myChildrenButton;
 
     private String id;
     private String userName;
@@ -42,13 +42,15 @@ public class home_page_parent_activity extends AppCompatActivity {
 //        setSupportActionBar(toolbar);
 
         buttonSearchGroups = findViewById(R.id.buttonSearchGroups);
+        myChildrenButton = findViewById(R.id.myChildrenButton);
+
         buttonMyGroups = findViewById(R.id.buttonMyGroups);
         myProfileBtn = findViewById(R.id.myProfileBtn);
         nameTv = (TextView) findViewById(R.id.nameTv);
         id = getIntent().getStringExtra("id");
         userName = getIntent().getStringExtra("username");
         userName = userName.substring(0,1).toUpperCase(Locale.ROOT) + userName.substring(1);
-        nameTv.setText(userName.substring(0,1).toUpperCase(Locale.ROOT) + userName.substring(1));
+        nameTv.setText("     "+userName.substring(0,1).toUpperCase(Locale.ROOT) +  userName.substring(1));
         phoneNumber = getIntent().getStringExtra("phone_number");
         email = getIntent().getStringExtra("email");
         address = getIntent().getStringExtra("address");
@@ -71,9 +73,16 @@ public class home_page_parent_activity extends AppCompatActivity {
               intent.putExtras(extras);
               startActivity(intent);
           }
-      }
+         }
         );
 
+        myChildrenButton.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View v) {
+                                                  Toast.makeText(home_page_parent_activity.this, "Sorry ,This Feature Will Be Enabled Next Release", Toast.LENGTH_SHORT).show();
+                                              }
+                                          }
+        );
         buttonMyGroups.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

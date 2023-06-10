@@ -163,8 +163,10 @@ public class GroupInfoActivity extends AppCompatActivity {
 
                 // Set click listeners for the buttons
                 deleteButton.setOnClickListener(new View.OnClickListener() {
+
                     @Override
                     public void onClick(View v) {
+
                         activityDatabase.delete("activities","id = ?", new String[]{String.valueOf(activity_id)});
                         Toast.makeText(GroupInfoActivity.this, "successfully deleted " + activity_name, Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(GroupInfoActivity.this, GroupInfoActivity.class);
@@ -267,4 +269,5 @@ public class GroupInfoActivity extends AppCompatActivity {
         activityDatabaseHelper.close();
         groupsDatabaseHelper.close();
     }
+
 }

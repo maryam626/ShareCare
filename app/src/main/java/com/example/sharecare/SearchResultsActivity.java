@@ -70,7 +70,6 @@ public class SearchResultsActivity extends AppCompatActivity {
         selectQuery += ")";
         Cursor hostCursor = db.rawQuery(selectQuery,new String[]{String.valueOf(loggedInUserId),String.valueOf(loggedInUserId),String.valueOf(loggedInUserId)});
 
-
         addGroupsToTable(hostCursor);
 
         hostCursor.close();
@@ -79,9 +78,10 @@ public class SearchResultsActivity extends AppCompatActivity {
 
 
     private void addGroupsToTable(Cursor cursor) {
-
+boolean first=true;
         if (cursor.moveToFirst()) {
             do {
+
                 int groupId = cursor.getInt(cursor.getColumnIndex("groupid"));
                 String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
                 String description = cursor.getString(cursor.getColumnIndex("description"));
@@ -91,6 +91,33 @@ public class SearchResultsActivity extends AppCompatActivity {
                 // Create a new row in the table
                 TableRow row = new TableRow(this);
 
+
+                if(first)
+                {
+                    // Create TextViews for group name and group ID
+                    TextView groupNameLabelTextView = new TextView(this);
+                    groupNameLabelTextView.setText("Group Name");
+                    groupNameLabelTextView.setPadding(8, 8, 8, 8);
+                    row.addView(groupNameLabelTextView);
+
+                    TextView  descriptionLabelTextView = new TextView(this);
+                    descriptionLabelTextView.setText(String.valueOf("Description"));
+                    descriptionLabelTextView.setPadding(8, 8, 8, 8);
+                    row.addView(descriptionLabelTextView);
+
+                    TextView  cityLabelTextView = new TextView(this);
+                    cityLabelTextView.setText(String.valueOf("City"));
+                    cityLabelTextView.setPadding(8, 8, 8, 8);
+                    row.addView(cityLabelTextView);
+
+                    TextView  streetLabelTextView = new TextView(this);
+                    streetLabelTextView.setText(String.valueOf("Street"));
+                    streetLabelTextView.setPadding(8, 8, 8, 8);
+                    row.addView(streetLabelTextView);
+                    resultTable.addView(row);
+                    row = new TableRow(this);
+                    first=false;
+                }
                 // Create TextViews for group name and group ID
                 TextView groupNameTextView = new TextView(this);
                 groupNameTextView.setText(groupName);

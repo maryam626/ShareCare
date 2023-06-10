@@ -29,7 +29,7 @@ public class PendingGroupRequestsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pending_requests);
+        setContentView(R.layout.activity_group_pending_requests);
 
         groupsDatabaseHelper= new GroupsDatabaseHelper(this);
 
@@ -57,7 +57,6 @@ public class PendingGroupRequestsActivity extends AppCompatActivity {
         while (cursor.moveToNext()) {
             int userid = cursor.getInt(cursor.getColumnIndex("userid"));
             String username = cursor.getString(cursor.getColumnIndex("username"));
-            String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
             String requestDate = cursor.getString(cursor.getColumnIndex("requestDate"));
 
             // Create a new row in the table
@@ -67,10 +66,6 @@ public class PendingGroupRequestsActivity extends AppCompatActivity {
             TextView usernameTextView = new TextView(this);
             usernameTextView.setText(username);
             row.addView(usernameTextView);
-
-            TextView groupNameTextView = new TextView(this);
-            groupNameTextView.setText(groupName);
-            row.addView(groupNameTextView);
 
             TextView dateTextView = new TextView(this);
             dateTextView.setText(requestDate);

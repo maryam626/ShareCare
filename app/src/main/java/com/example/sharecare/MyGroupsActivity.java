@@ -1,4 +1,8 @@
 package com.example.sharecare;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -84,12 +88,12 @@ public class MyGroupsActivity extends AppCompatActivity {
                 // Create TextViews for group name and group ID
                 TextView groupNameTextView = new TextView(this);
                 groupNameTextView.setText(groupName);
-                groupNameTextView.setPadding(8, 8, 8, 8);
+                groupNameTextView.setPadding(1, 1, 1, 1);
                 row.addView(groupNameTextView);
 
                 TextView groupIdTextView = new TextView(this);
                 groupIdTextView.setText(String.valueOf(groupId));
-                groupIdTextView.setPadding(8, 8, 8, 8);
+                groupIdTextView.setPadding(1, 1, 1, 1);
                 row.addView(groupIdTextView);
 
                 // Create a Button for "Open Group"
@@ -118,7 +122,7 @@ public class MyGroupsActivity extends AppCompatActivity {
                     // Create buttons for delete, and manage requests
                     Button deleteButton = new Button(this);
                     deleteButton.setText("Delete");
-                    deleteButton.setPadding(8, 8, 8, 8);
+                  //  deleteButton.setPadding(2, 2, 2, 2);
                     row.addView(deleteButton);
 
                     //for now we will not support edit button
@@ -134,20 +138,10 @@ public class MyGroupsActivity extends AppCompatActivity {
 
                     // Set click listeners for the buttons
                     deleteButton.setOnClickListener(new View.OnClickListener() {
+
                         @Override
                         public void onClick(View v) {
-                            SQLiteDatabase db = databaseHelper.getReadableDatabase();
-
-                            db.delete("groupsRequest","groupid = ?", new String[]{String.valueOf(groupId)});
-                            db.delete("groupParticipants","groupId = ?", new String[]{String.valueOf(groupId)});
-                            db.delete("groups","id = ?", new String[]{String.valueOf(groupId)});
-                            Toast.makeText(MyGroupsActivity.this, "successfully deleted " + groupName, Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(MyGroupsActivity.this, MyGroupsActivity.class);
-                            Bundle extras = new Bundle();
-                            extras.putInt("userid", loggedInUserId);
-                            extras.putString("username", loggedInUsername);
-                            intent.putExtras(extras);
-                            startActivity(intent);
+                            showDeleteConfirmationDialog(groupId,groupName);
                         }
                     });
 
@@ -175,6 +169,31 @@ public class MyGroupsActivity extends AppCompatActivity {
         }
     }
 
+    private void showDeleteConfirmationDialog(int groupId,String groupName) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete Confirmation")
+                .setMessage("Are you sure you want to delete this row?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Perform the delete operation here
+                        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+
+                        db.delete("groupsRequest","groupid = ?", new String[]{String.valueOf(groupId)});
+                        db.delete("groupParticipants","groupId = ?", new String[]{String.valueOf(groupId)});
+                        db.delete("groups","id = ?", new String[]{String.valueOf(groupId)});
+                        Toast.makeText(MyGroupsActivity.this, "successfully deleted " + groupName, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MyGroupsActivity.this, MyGroupsActivity.class);
+                        Bundle extras = new Bundle();
+                        extras.putInt("userid", loggedInUserId);
+                        extras.putString("username", loggedInUsername);
+                        intent.putExtras(extras);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
     private int getLoggedInUserId() {
         return loggedInUserId;
     }
