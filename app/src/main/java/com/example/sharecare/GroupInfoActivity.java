@@ -97,14 +97,15 @@ public class GroupInfoActivity extends AppCompatActivity {
         // you will join button if you are not joined in the activity
 
         Cursor cursor = activityDatabase.rawQuery(
-                "SELECT  activities.id as  activity_id ,  activity_name,activity_type,date,time,capcaity,child_age_from,child_age_to,1 as  isaccept," +
+                "select distinct activity_id,activity_name,activity_type,date,time,capcaity,child_age_from,child_age_to,isaccept,isowner from ( " +
+                        "SELECT  activities.id as  activity_id ,  activity_name,activity_type,date,time,capcaity,child_age_from,child_age_to,case when activities.owner_user_id=? then 1 else 0 end  as  isaccept," +
                         "case when activities.owner_user_id=? then 1 else 0 end  as isowner" +
                 " from activities inner join groups on activities.groupid=groups.id where groups.id=?  " +
                 " union all " +
                 " SELECT  activities.id as activity_id , activity_name,activity_type,date,time, " +
                 " capcaity,child_age_from,child_age_to ,ar.isaccept as isaccept ,0 as isowner FROM activities " +
-                " inner join  activitiesRequest ar on ar.activityid =activities.id where groupid = ?"
-                , new String[]{String.valueOf(loggedInUserId),String.valueOf(groupId),String.valueOf(groupId)});
+                " inner join  activitiesRequest ar on ar.activityid =activities.id where groupid = ? and activities.owner_user_id<>? ) "
+                , new String[]{String.valueOf(loggedInUserId),String.valueOf(loggedInUserId),String.valueOf(groupId),String.valueOf(groupId),String.valueOf(loggedInUserId)});
 
         while (cursor.moveToNext()) {
             int activity_id = cursor.getInt(cursor.getColumnIndex("activity_id"));
