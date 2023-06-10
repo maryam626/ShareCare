@@ -1,0 +1,38 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tableLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Table header -->
+    <TableRow>
+        <TextView
+            android:text="Username"
+            android:textStyle="bold"
+            android:padding="8dp" />
+        <TextView
+            android:text="Group Name"
+            android:textStyle="bold"
+            android:padding="8dp" />
+        <TextView
+            android:text="Request Date"
+            android:textStyle="bold"
+            android:padding="8dp" />
+        <TextView
+            android:text=""
+            android:padding="8dp" />
+        <TextView
+            android:text=""
+            android:padding="8dp" />
+    </TableRow>
+
+    <!-- Table rows will be added dynamically -->
+
+    <!-- Button to return to the previous activity -->
+    <Button
+        android:id="@+id/returnButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Return"
+        android:onClick="returnToPreviousActivity" />
+
+</TableLayout>

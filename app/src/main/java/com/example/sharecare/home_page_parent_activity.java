@@ -14,6 +14,10 @@ public class home_page_parent_activity extends AppCompatActivity {
     private androidx.appcompat.widget.Toolbar toolbar;
     private Button buttonMyGroups;
     private Button myProfileBtn;
+    private Button buttonSearchGroups;
+
+
+
     private String id;
     private String userName;
     private String phoneNumber;
@@ -37,6 +41,7 @@ public class home_page_parent_activity extends AppCompatActivity {
 //
 //        setSupportActionBar(toolbar);
 
+        buttonSearchGroups = findViewById(R.id.buttonSearchGroups);
         buttonMyGroups = findViewById(R.id.buttonMyGroups);
         myProfileBtn = findViewById(R.id.myProfileBtn);
         nameTv = (TextView) findViewById(R.id.nameTv);
@@ -55,6 +60,19 @@ public class home_page_parent_activity extends AppCompatActivity {
         religion = getIntent().getStringExtra("religion");
 
 
+        buttonSearchGroups.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              Intent intent = new Intent(home_page_parent_activity.this, SearchGroupsActivity.class);
+              Bundle extras = new Bundle();
+              extras.putInt("userid", Integer.parseInt(id));
+              extras.putString("username", userName);
+
+              intent.putExtras(extras);
+              startActivity(intent);
+          }
+      }
+        );
 
         buttonMyGroups.setOnClickListener(new View.OnClickListener() {
             @Override

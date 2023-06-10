@@ -1,5 +1,6 @@
 package com.example.sharecare;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -102,6 +103,8 @@ public class sign_up_activity extends AppCompatActivity {
                 if (rowId != -1) {
                     // Successful message
                     Toast.makeText(sign_up_activity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(sign_up_activity.this, log_in_activity.class);
+                    startActivity(intent);
                 } else {
                     // Error message
                     Toast.makeText(sign_up_activity.this, "Registration failed. Please try again.", Toast.LENGTH_SHORT).show();
