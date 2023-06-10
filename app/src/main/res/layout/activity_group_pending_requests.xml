@@ -1,16 +1,22 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tableLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".PendingGroupRequestsActivity">
+
+    <Button
+        android:id="@+id/returnButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Return"
+        android:onClick="returnToPreviousActivity" />
 
     <!-- Table header -->
     <TableRow>
         <TextView
             android:text="Username"
-            android:textStyle="bold"
-            android:padding="8dp" />
-        <TextView
-            android:text="Group Name"
             android:textStyle="bold"
             android:padding="8dp" />
         <TextView
@@ -28,11 +34,6 @@
     <!-- Table rows will be added dynamically -->
 
     <!-- Button to return to the previous activity -->
-    <Button
-        android:id="@+id/returnButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Return"
-        android:onClick="returnToPreviousActivity" />
+
 
 </TableLayout>
