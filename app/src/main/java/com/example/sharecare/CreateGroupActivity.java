@@ -19,8 +19,11 @@ import java.util.List;
 
 public class CreateGroupActivity extends AppCompatActivity {
 
-    private EditText groupNameEditText, descriptionEditText;
-    private Spinner participantsSpinner;
+    private EditText groupNameEditText, descriptionEditText,streetEditText;
+
+
+
+    private Spinner participantsSpinner,CitySpinner;
     private Button createButton;
     private GroupsDatabaseHelper databaseHelper;
     private UsersDatabaseHelper usersDatabaseHelper;
@@ -37,11 +40,15 @@ public class CreateGroupActivity extends AppCompatActivity {
         usersDatabaseHelper= new UsersDatabaseHelper(this);
         groupNameEditText = findViewById(R.id.groupNameEditText);
         descriptionEditText = findViewById(R.id.descriptionEditText);
+        streetEditText = findViewById(R.id.streetEditText);
+
         participantsSpinner = findViewById(R.id.participantsSpinner);
+        CitySpinner = findViewById(R.id.CitySpinner);
         createButton = findViewById(R.id.createButton);
         loggedInUserId =  getIntent().getIntExtra("userid",-1);
         loggedInUsername = getIntent().getStringExtra("username");
         loadParticipants();
+        loadCities();
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +64,25 @@ public class CreateGroupActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void loadCities() {
+        SQLiteDatabase db = usersDatabaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT distinct name from cities order by name asc ", new String[]{});
+
+        List<String> cityList = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                String city = cursor.getString(cursor.getColumnIndex("name"));
+                cityList.add(city);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, cityList);
+        CitySpinner.setAdapter(adapter);
     }
 
     private void loadParticipants() {
@@ -83,11 +109,14 @@ public class CreateGroupActivity extends AppCompatActivity {
         String description = descriptionEditText.getText().toString();
         String participant = participantsSpinner.getSelectedItem().toString();
 
+        String city = CitySpinner.getSelectedItem().toString();
+        String street = streetEditText.getText().toString();
+
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
         // Insert group into groups table
-        String groupInsertQuery = "INSERT INTO groups (groupName,description, hostUserId) VALUES (?,?, ?)";
-        db.execSQL(groupInsertQuery, new String[]{groupName, description,String.valueOf(loggedInUserId)});
+        String groupInsertQuery = "INSERT INTO groups (groupName,description,city,street, hostUserId) VALUES (?,?,?,?,?)";
+        db.execSQL(groupInsertQuery, new String[]{groupName, description,city,street,String.valueOf(loggedInUserId)});
 
         // Retrieve the ID of the newly inserted group
         Cursor cursor = db.rawQuery("SELECT last_insert_rowid()", null);

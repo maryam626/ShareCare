@@ -28,7 +28,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".PendingRequestsActivity"
+            android:name=".PendingGroupRequestsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -92,6 +92,21 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity
+            android:name=".SearchGroupsActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".SearchResultsActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
 
         <activity
             android:name=".MainActivity"

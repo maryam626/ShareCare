@@ -10,22 +10,17 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.sharecare.Logic.ActivityDatabaseHelper;
 import com.example.sharecare.Logic.GroupsDatabaseHelper;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class GroupInfoActivity extends AppCompatActivity {
     private ActivityDatabaseHelper activityDatabaseHelper;
-    private SQLiteDatabase groupsDatabase;
-    private SQLiteDatabase activityDatabase;
-    private GroupsDatabaseHelper groupsDatabaseHelper;
 
+    private GroupsDatabaseHelper groupsDatabaseHelper;
 
     private int ishost;
     private TableLayout tableLayout;
@@ -40,12 +35,12 @@ public class GroupInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_info);
         activityDatabaseHelper= new ActivityDatabaseHelper(this);
-        activityDatabase = activityDatabaseHelper.getReadableDatabase();
+        SQLiteDatabase activityDatabase = activityDatabaseHelper.getReadableDatabase();
         //create table if not exist
         activityDatabaseHelper.onCreate(activityDatabase);
         createActivityButton = findViewById(R.id.createActivityButton);
         groupsDatabaseHelper = new GroupsDatabaseHelper(this);
-        groupsDatabase = groupsDatabaseHelper.getReadableDatabase();
+        SQLiteDatabase groupsDatabase = groupsDatabaseHelper.getReadableDatabase();
         //create table if not exist
         groupsDatabaseHelper.onCreate(groupsDatabase);
 
@@ -75,9 +70,13 @@ public class GroupInfoActivity extends AppCompatActivity {
         });
         loadGroupData();
         loadGroupActivityData();
+
+        activityDatabase.close();
+        groupsDatabase.close();
     }
 
     private void loadGroupData() {
+        SQLiteDatabase groupsDatabase = groupsDatabaseHelper.getReadableDatabase();
         // Query the groups table to retrieve group ID and group name
         Cursor cursor = groupsDatabase.rawQuery("SELECT id as groupdid, groupName  as groupname FROM groups WHERE id = ?", new String[]{String.valueOf(groupId)});
         if (cursor.moveToFirst()) {
@@ -85,9 +84,10 @@ public class GroupInfoActivity extends AppCompatActivity {
 
             // Display the group name in a label
             TextView groupNameTextView = findViewById(R.id.groupNameTextView);
-            groupNameTextView.setText(groupName);
+            groupNameTextView.setText("Group Name : "+ groupName);
         }
         cursor.close();
+        groupsDatabase.close();
     }
 
     private void loadGroupActivityData() {
@@ -95,7 +95,7 @@ public class GroupInfoActivity extends AppCompatActivity {
         // you created the group , you are in the group
         //you will see edit, delete , mange request if you are the owner of the activity
         // you will join button if you are not joined in the activity
-
+        SQLiteDatabase activityDatabase = activityDatabaseHelper.getReadableDatabase();
         Cursor cursor = activityDatabase.rawQuery(
                 "select distinct activity_id,activity_name,activity_type,date,time,capcaity,child_age_from,child_age_to,isaccept,isowner from ( " +
                         "SELECT  activities.id as  activity_id ,  activity_name,activity_type,date,time,capcaity,child_age_from,child_age_to,case when activities.owner_user_id=? then 1 else 0 end  as  isaccept," +
@@ -149,10 +149,12 @@ public class GroupInfoActivity extends AppCompatActivity {
                 deleteButton.setPadding(8, 8, 8, 8);
                 row.addView(deleteButton);
 
-                Button editButton = new Button(this);
-                editButton.setText("Edit");
-                editButton.setPadding(8, 8, 8, 8);
-                row.addView(editButton);
+
+                //for now we will not support edit
+//                Button editButton = new Button(this);
+//                editButton.setText("Edit");
+//                editButton.setPadding(8, 8, 8, 8);
+//                row.addView(editButton);
 
                 Button manageRequestsButton = new Button(this);
                 manageRequestsButton.setText("Manage Requests");
@@ -176,19 +178,19 @@ public class GroupInfoActivity extends AppCompatActivity {
                     }
                 });
 
-                editButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Handle edit button click
-                        Toast.makeText(GroupInfoActivity.this, "Edit button clicked for " + activity_name, Toast.LENGTH_SHORT).show();
-                    }
-                });
+//                editButton.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        // Handle edit button click
+//                        Toast.makeText(GroupInfoActivity.this, "Edit button clicked for " + activity_name, Toast.LENGTH_SHORT).show();
+//                    }
+//                });
 
                 manageRequestsButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        Intent intent = new Intent(GroupInfoActivity.this, PendingRequestsActivity.class);
+                        Intent intent = new Intent(GroupInfoActivity.this, PendingGroupRequestsActivity.class);
                         Bundle extras = new Bundle();
                         extras.putInt("userid", loggedInUserId);
                         extras.putInt("groupid", groupId);
@@ -247,6 +249,7 @@ public class GroupInfoActivity extends AppCompatActivity {
             tableLayout.addView(row);
         }
         cursor.close();
+        activityDatabase.close();
     }
 
     private void openActivityDialog(String activity_name,String activity_type,
@@ -262,8 +265,6 @@ public class GroupInfoActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         activityDatabaseHelper.close();
-        groupsDatabase.close();
         groupsDatabaseHelper.close();
-        activityDatabase.close();
     }
 }
