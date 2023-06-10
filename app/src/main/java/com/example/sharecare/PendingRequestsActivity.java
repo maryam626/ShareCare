@@ -60,7 +60,7 @@ public class PendingRequestsActivity extends AppCompatActivity {
 
         while (cursor.moveToNext()) {
             String username = cursor.getString(cursor.getColumnIndex("username"));
-            String activityName = cursor.getString(cursor.getColumnIndex("activityname"));
+            String activityName = cursor.getString(cursor.getColumnIndex("activity_name"));
             String requestDate = cursor.getString(cursor.getColumnIndex("requestDate"));
             int userid = cursor.getInt(cursor.getColumnIndex("userid"));
             int activityid = cursor.getInt(cursor.getColumnIndex("activityid"));
