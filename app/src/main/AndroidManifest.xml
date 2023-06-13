@@ -13,6 +13,13 @@
         android:theme="@style/Theme.ShareCare"
         tools:targetApi="31">
         <activity
+            android:name=".FillKidsInformation"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".joining_requests_activity"
             android:exported="false">
             <meta-data
@@ -34,8 +41,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
-
         <activity
             android:name=".create_children_profiles_activity"
             android:exported="false">
@@ -106,8 +111,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
