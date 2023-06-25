@@ -57,6 +57,18 @@
     <string name="email2">Email :</string>
     <string name="phone1">Phone :</string>
     <string name="password1">Password :</string>
+    <string name="fill_kids_information">Fill Kids Information</string>
+    <string name="kid_1">Kid 1</string>
+    <string name="kid_2">Kid 2</string>
+    <string name="kid_3">Kid 3</string>
+    <string name="kid_4">Kid 4</string>
+    <string name="kid_5">Kid 5</string>
+    <string name="kid_6">Kid 6</string>
+    <string name="kid_7">Kid 7</string>
+    <string name="kid_8">Kid 8</string>
+    <string name="kid_9">Kid 9</string>
+    <string name="kid_10">kid 10</string>
+    <string name="finish">Finish</string>
     <string-array name="Number_Of_Kids">
         <item>1</item>
         <item>2</item>

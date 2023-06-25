@@ -35,6 +35,7 @@ public class sign_up_activity extends AppCompatActivity {
     private UsersDatabaseHelper usersDatabaseHelper;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +104,21 @@ public class sign_up_activity extends AppCompatActivity {
                 if (rowId != -1) {
                     // Successful message
                     Toast.makeText(sign_up_activity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(sign_up_activity.this, log_in_activity.class);
+                    Intent intent = new Intent(sign_up_activity.this, FillKidsInformation.class);
+                    //Sending Data To Home Page Using Bundle
+                    Bundle extras = new Bundle();
+                    extras.putString("username", username);
+                    extras.putString("phone_number", phoneNumber);
+                    extras.putString("email", email);
+                    extras.putString("address",address);
+                    extras.putString("password", password);
+                    extras.putString("number_of_kids", String.valueOf(numberOfKids));
+                    extras.putString("marital_status", maritalStatus);
+                    extras.putString("gender", gender);
+                    extras.putString("language", language);
+                    extras.putString("religion", religion);
+
+                    intent.putExtras(extras);
                     startActivity(intent);
                 } else {
                     // Error message
