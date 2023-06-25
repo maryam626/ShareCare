@@ -93,6 +93,9 @@ public class FillKidsInformation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
+                Bundle extras = new Bundle();
+                extras.putInt("kid number", 1);
+                intent.putExtras(extras);
                 startActivity(intent);
             }
         });
@@ -100,6 +103,9 @@ public class FillKidsInformation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
+                Bundle extras = new Bundle();
+                extras.putInt("kid number", 2);
+                intent.putExtras(extras);
                 startActivity(intent);
             }
         });
@@ -107,6 +113,9 @@ public class FillKidsInformation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
+                Bundle extras = new Bundle();
+                extras.putInt("kid number", 3);
+                intent.putExtras(extras);
                 startActivity(intent);
             }
         });
@@ -114,6 +123,9 @@ public class FillKidsInformation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
+                Bundle extras = new Bundle();
+                extras.putInt("kid number", 4);
+                intent.putExtras(extras);
                 startActivity(intent);
             }
         });
@@ -121,6 +133,9 @@ public class FillKidsInformation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
+                Bundle extras = new Bundle();
+                extras.putInt("kid number", 5);
+                intent.putExtras(extras);
                 startActivity(intent);
             }
         });
@@ -128,6 +143,9 @@ public class FillKidsInformation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
+                Bundle extras = new Bundle();
+                extras.putInt("kid number", 6);
+                intent.putExtras(extras);
                 startActivity(intent);
             }
         });
@@ -136,6 +154,9 @@ public class FillKidsInformation extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
+                        Bundle extras = new Bundle();
+                        extras.putInt("kid number", 7);
+                        intent.putExtras(extras);
                         startActivity(intent);
                     }
                 }
@@ -145,6 +166,9 @@ public class FillKidsInformation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
+                Bundle extras = new Bundle();
+                extras.putInt("kid number", 8);
+                intent.putExtras(extras);
                 startActivity(intent);
             }
         });
@@ -152,6 +176,9 @@ public class FillKidsInformation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
+                Bundle extras = new Bundle();
+                extras.putInt("kid number", 9);
+                intent.putExtras(extras);
                 startActivity(intent);
             }
         });
@@ -160,6 +187,9 @@ public class FillKidsInformation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
+                Bundle extras = new Bundle();
+                extras.putInt("kid number", 10);
+                intent.putExtras(extras);
                 startActivity(intent);
             }
         });
