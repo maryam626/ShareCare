@@ -69,6 +69,11 @@
     <string name="kid_9">Kid 9</string>
     <string name="kid_10">kid 10</string>
     <string name="finish">Finish</string>
+    <string name="create_kid_profile">Create Kid Profile</string>
+    <string name="kid_number">Kid Number</string>
+    <string name="age1">Age</string>
+    <string name="school_name">School Name</string>
+    <string name="name22">Name</string>
     <string-array name="Number_Of_Kids">
         <item>1</item>
         <item>2</item>
