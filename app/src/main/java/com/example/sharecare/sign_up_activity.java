@@ -13,6 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.Logic.UsersDatabaseHelper;
 import com.example.sharecare.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class sign_up_activity extends AppCompatActivity {
     private static final String TAG = "sign up activity";
@@ -32,8 +37,9 @@ public class sign_up_activity extends AppCompatActivity {
     private Button signUpBtn1;
     private EditText passwordEt;
 
-    private UsersDatabaseHelper usersDatabaseHelper;
+    private FirebaseAuth mAuth;
 
+    private UsersDatabaseHelper usersDatabaseHelper;
 
 
     @Override
@@ -52,6 +58,10 @@ public class sign_up_activity extends AppCompatActivity {
         languagesSpinner = findViewById(R.id.languageSpinner);
         religionSpinner = findViewById(R.id.religionSpinner);
         passwordEt = findViewById(R.id.passwordEt);
+
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+
         usersDatabaseHelper = new UsersDatabaseHelper(this);
 
 
@@ -98,28 +108,46 @@ public class sign_up_activity extends AppCompatActivity {
                 User user = new User(username, phoneNumber, email, address, password, numberOfKids,
                         maritalStatus, gender, language, religion);
 
+
+
                 // Store user data in SQLite database
                 long rowId = usersDatabaseHelper.insertUser(user);
 
                 if (rowId != -1) {
-                    // Successful message
-                    Toast.makeText(sign_up_activity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(sign_up_activity.this, FillKidsInformation.class);
-                    //Sending Data To Home Page Using Bundle
-                    Bundle extras = new Bundle();
-                    extras.putString("username", username);
-                    extras.putString("phone_number", phoneNumber);
-                    extras.putString("email", email);
-                    extras.putString("address",address);
-                    extras.putString("password", password);
-                    extras.putString("number_of_kids", String.valueOf(numberOfKids));
-                    extras.putString("marital_status", maritalStatus);
-                    extras.putString("gender", gender);
-                    extras.putString("language", language);
-                    extras.putString("religion", religion);
+                    registerUser(emailEt.getText().toString(), passwordEt.getText().toString());
 
-                    intent.putExtras(extras);
-                    startActivity(intent);
+                    if (userNameEt.getText().toString().equals("")) {
+                        userNameEt.setError("Enter your User Name");
+                    }
+                    if (phoneEt.getText().toString().equals("")) {
+                        phoneEt.setError("Enter your phone number");
+                    }
+                    if (emailEt.getText().toString().equals("")) {
+                        emailEt.setError("Enter your Email");
+                    }
+                    if (addressEt.getText().toString().equals("")) {
+                        addressEt.setError("Enter your Address");
+                    } else {
+
+                        // Successful message
+                        Toast.makeText(sign_up_activity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(sign_up_activity.this, FillKidsInformation.class);
+                        //Sending Data To Home Page Using Bundle
+                        Bundle extras = new Bundle();
+                        extras.putString("username", username);
+                        extras.putString("phone_number", phoneNumber);
+                        extras.putString("email", email);
+                        extras.putString("address", address);
+                        extras.putString("password", password);
+                        extras.putString("number_of_kids", String.valueOf(numberOfKids));
+                        extras.putString("marital_status", maritalStatus);
+                        extras.putString("gender", gender);
+                        extras.putString("language", language);
+                        extras.putString("religion", religion);
+
+                        intent.putExtras(extras);
+                        startActivity(intent);
+                    }
                 } else {
                     // Error message
                     Toast.makeText(sign_up_activity.this, "Registration failed. Please try again.", Toast.LENGTH_SHORT).show();
@@ -129,9 +157,35 @@ public class sign_up_activity extends AppCompatActivity {
         });
 
 
-
     }
 
+    private void registerUser (String email, String password){
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(sign_up_activity.this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(sign_up_activity.this, "successfull!!!!!", Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        throw task.getException();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(sign_up_activity.this, "Faild------", Toast.LENGTH_SHORT).show();
 
+                }
+            }
+        });
 
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            currentUser.reload();
+        }
+
+    }
 }
