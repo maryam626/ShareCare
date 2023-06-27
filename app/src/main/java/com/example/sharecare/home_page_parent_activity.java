@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ public class home_page_parent_activity extends AppCompatActivity {
     private Button myProfileBtn;
     private Button buttonSearchGroups;
     private Button myChildrenButton;
+    private ImageView logOutIv;
 
     private String id;
     private String userName;
@@ -47,6 +49,7 @@ public class home_page_parent_activity extends AppCompatActivity {
         buttonMyGroups = findViewById(R.id.buttonMyGroups);
         myProfileBtn = findViewById(R.id.myProfileBtn);
         nameTv = (TextView) findViewById(R.id.nameTv);
+        logOutIv = (ImageView) findViewById(R.id.logOutIv);
         id = getIntent().getStringExtra("id");
         userName = getIntent().getStringExtra("username");
         userName = userName.substring(0,1).toUpperCase(Locale.ROOT) + userName.substring(1);
@@ -96,6 +99,14 @@ public class home_page_parent_activity extends AppCompatActivity {
                 }
             }
         );
+        logOutIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(home_page_parent_activity.this, log_in_activity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
         myProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

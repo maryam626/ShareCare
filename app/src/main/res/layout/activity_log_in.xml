@@ -16,7 +16,7 @@
         android:text="@string/log_in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="TextContrastCheck" />
+        tools:ignore="TextContrastCheck,DuplicateSpeakableTextCheck" />
 
     <EditText
         android:id="@+id/EtUserName"
@@ -43,7 +43,7 @@
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/password"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:minHeight="48dp"
         android:textColorHint="#757575"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,12 +53,12 @@
         android:id="@+id/messageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#FF0000"
         android:layout_marginTop="600dp"
         android:layout_marginEnd="96dp"
+        android:textColor="#FF0000"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"  />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView"
@@ -79,7 +79,7 @@
         android:layout_marginTop="52dp"
         android:layout_marginEnd="92dp"
         android:fontFamily="@font/vidaloka"
-        android:text="Share Care"
+        android:text="@string/share_care1"
         android:textColor="#24978C"
         android:textSize="48sp"
         android:textStyle="bold"
@@ -90,20 +90,22 @@
         android:id="@+id/SignUpBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="532dp"
-        android:layout_marginEnd="52dp"
+        android:layout_marginTop="572dp"
+        android:layout_marginEnd="60dp"
         android:text="@string/sign_up"
+        android:textColor="@color/teal_700"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/signUpBtn"
+        android:id="@+id/forgetTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="456dp"
         android:layout_marginEnd="92dp"
-        android:text="forget password"
+        android:text="@string/forget_password"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -113,13 +115,22 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="532dp"
+        android:layout_marginTop="572dp"
         android:layout_marginEnd="136dp"
         android:text="@string/don_t_have_an_account"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"  />
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <CheckBox
+        android:id="@+id/rememberCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="496dp"
+        android:layout_marginEnd="184dp"
+        android:text="@string/remember_me"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

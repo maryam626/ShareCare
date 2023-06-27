@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="136dp"
-        android:text="Hello, "
+        android:text="@string/hello"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.387"
@@ -36,10 +36,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="136dp"
-        android:text="name"
+        android:text="@string/name"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.586"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/nameTv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:text="@string/log_out"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.954"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,11 +61,12 @@
         android:layout_height="60dp"
         android:layout_marginTop="508dp"
         android:backgroundTint="#24978C"
-        android:text="My Groups"
+        android:text="@string/my_groups"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextContrastCheck" />
 
     <Button
         android:id="@+id/buttonSearchGroups"
@@ -61,11 +74,12 @@
         android:layout_height="60dp"
         android:layout_marginTop="416dp"
         android:backgroundTint="#24978C"
-        android:text="Search Group"
+        android:text="@string/search_group"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextContrastCheck" />
 
     <Button
         android:id="@+id/myProfileBtn"
@@ -73,11 +87,12 @@
         android:layout_height="60dp"
         android:layout_marginTop="240dp"
         android:backgroundTint="#24978C"
-        android:text="My Profile"
+        android:text="@string/my_profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextContrastCheck" />
 
     <Button
         android:id="@+id/myChildrenButton"
@@ -85,10 +100,23 @@
         android:layout_height="60dp"
         android:layout_marginTop="328dp"
         android:backgroundTint="#24978C"
-        android:text="My Children"
+        android:text="@string/my_children"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextContrastCheck" />
+
+    <ImageView
+        android:id="@+id/logOutIv"
+        android:layout_width="39dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:srcCompat="@android:drawable/ic_menu_set_as"
+        app:tint="@color/black"
+        android:contentDescription="@string/todo44" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

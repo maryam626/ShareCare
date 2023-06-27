@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -19,12 +20,14 @@ import com.example.sharecare.Logic.UsersDatabaseHelper;
 public class log_in_activity extends AppCompatActivity {
 
     private TextView messageTextView;
+    private TextView forgetTv;
     private TextView SignUpBtn;
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
     private EditText EtUserName;
     private EditText EtPassword;
     private Button logInBtn;
+    private CheckBox rememberCheckBox;
     private String id;
     private String username;
     private String phoneNumber;
@@ -45,11 +48,21 @@ public class log_in_activity extends AppCompatActivity {
         setContentView(R.layout.activity_log_in);
 
         databaseHelper = new UsersDatabaseHelper(this);
-        SignUpBtn = (TextView) findViewById(R.id.SignUpBtn);
+        forgetTv = (TextView) findViewById(R.id.forgetTv);
         EtPassword = (EditText) findViewById(R.id.EtPassword);
         EtUserName = (EditText) findViewById(R.id.EtUserName);
         messageTextView =  findViewById(R.id.messageTextView);
         logInBtn = (Button) findViewById(R.id.logInBtn);
+        rememberCheckBox = (CheckBox) findViewById(R.id.rememberCheckBox);
+        SignUpBtn = (TextView) findViewById(R.id.SignUpBtn);
+
+        forgetTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(log_in_activity.this, ForgetPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
 
         SignUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,8 +71,6 @@ public class log_in_activity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
         logInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

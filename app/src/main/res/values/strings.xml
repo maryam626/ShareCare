@@ -74,6 +74,21 @@
     <string name="age1">Age</string>
     <string name="school_name">School Name</string>
     <string name="name22">Name</string>
+    <string name="share_care1">Share Care</string>
+    <string name="forget_password">forget password</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="todo33">TODO</string>
+    <string name="provide_your_email_to_reset_your_password">Provide your email to reset your password</string>
+    <string name="reset_password">reset password</string>
+    <string name="back">back</string>
+    <string name="hello">Hello,</string>
+    <string name="name">name</string>
+    <string name="my_groups">My Groups</string>
+    <string name="search_group">Search Group</string>
+    <string name="my_profile">My Profile</string>
+    <string name="my_children">My Children</string>
+    <string name="log_out">Log Out</string>
+    <string name="todo44">TODO</string>
     <string-array name="Number_Of_Kids">
         <item>1</item>
         <item>2</item>
