@@ -1,12 +1,18 @@
 package com.example.sharecare.Logic;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.sharecare.models.User;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class UsersDatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "database";
@@ -41,8 +47,20 @@ public class UsersDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_LANGUAGE + " TEXT, " +
                     COLUMN_RELIGION + " TEXT)";
 
+    private Context mContext;
+
     public UsersDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context;
+
+        // Check if the database exists, if not, copy it from assets
+        if (!checkDatabaseExists()) {
+            try {
+                copyDatabase();
+            } catch (IOException e) {
+                Log.e(TAG, "Error copying database", e);
+            }
+        }
     }
 
     @Override
@@ -56,7 +74,29 @@ public class UsersDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long  insertUser(User user) {
+    private boolean checkDatabaseExists() {
+        File databasePath = mContext.getDatabasePath(DATABASE_NAME);
+        return databasePath.exists();
+    }
+
+    private void copyDatabase() throws IOException {
+        AssetManager assetManager = mContext.getAssets();
+        InputStream myInput = assetManager.open(DATABASE_NAME);
+        String outFileName = mContext.getDatabasePath(DATABASE_NAME).getPath();
+        OutputStream myOutput = new FileOutputStream(outFileName);
+
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = myInput.read(buffer)) > 0) {
+            myOutput.write(buffer, 0, length);
+        }
+
+        myOutput.flush();
+        myOutput.close();
+        myInput.close();
+    }
+
+    public long insertUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_USERNAME, user.getUsername());
