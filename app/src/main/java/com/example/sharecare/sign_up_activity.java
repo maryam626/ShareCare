@@ -41,9 +41,7 @@ public class sign_up_activity extends AppCompatActivity {
     private Spinner kidsSpinner;
     private Spinner maritalSpinner;
     private Spinner genderSpinner;
-
     private Spinner languagesSpinner;
-
     private Spinner religionSpinner;
     private Button signUpBtn1;
     private EditText passwordEt;
@@ -148,6 +146,8 @@ public class sign_up_activity extends AppCompatActivity {
 
                         addingUserDataToFirebase(username, phoneNumber, email, address, password, numberOfKids,
                                 maritalStatus, gender, language, religion);
+                        addingParentDataToFirebase(username, phoneNumber, email, address, password, numberOfKids,
+                                maritalStatus, gender, language, religion);
 
                         Intent intent = new Intent(sign_up_activity.this, FillKidsInformation.class);
                         //Sending Data To Home Page Using Bundle
@@ -175,6 +175,84 @@ public class sign_up_activity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void addingParentDataToFirebase(String username, String phoneNumber, String email, String address, String password, int numberOfKids, String maritalStatus, String gender, String language, String religion) {
+        Map<String, Object> parent = new HashMap<>();
+        parent.put("id","0");
+        parent.put("username",username);
+        parent.put("phoneNumber",phoneNumber);
+        parent.put("email",email);
+        parent.put("address",address);
+        parent.put("password",password);
+        parent.put("numberOfKids",String.valueOf(numberOfKids));
+        parent.put("maritalStatus",maritalStatus);
+        parent.put("gender",gender);
+        parent.put("language",language);
+        parent.put("religion",religion);
+
+        Task<DocumentReference> referenceTask =  db.collection("Parents")
+                .add(parent)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        updateIdForParent(documentReference.getId());
+                        id = documentReference.getId();
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("name", "first kid");
+                        db.collection("Parents").document(id).collection("myKids").add(data);
+
+                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
+
+        while(!referenceTask.isComplete()){
+
+        }
+    }
+
+    private void updateIdForParent(String id) {
+        Map<String,Object> parentDetail = new HashMap<String, Object>();
+        parentDetail.put("id", id);
+
+
+        db.collection("Parents")
+                .whereEqualTo("email", emailEt.getText().toString())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() && !task.getResult().isEmpty()) {
+
+                            DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                            String documentId = documentSnapshot.getId();
+                            db.collection("Parents").document(documentId).update(parentDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+
+                                    Toast.makeText(sign_up_activity.this, "id updated Successfully", Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(sign_up_activity.this, "Some error happened", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+
+                        }
+                        else {
+                            Log.d(TAG, "Error changing data", task.getException());
+
+                        }
+                    }
+                });
     }
 
     private void addingUserDataToFirebase(String username, String phoneNumber, String email, String address, String password, int numberOfKids, String maritalStatus, String gender, String language, String religion) {
