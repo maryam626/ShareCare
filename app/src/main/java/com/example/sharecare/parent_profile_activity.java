@@ -1,19 +1,34 @@
 package com.example.sharecare;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sharecare.Logic.UsersDatabaseHelper;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class parent_profile_activity extends AppCompatActivity {
+    private static final String TAG = "profile activity";
+
+
     private TextView userNameTv;
     private EditText phoneEt1;
     private EditText emailEt1;
@@ -39,6 +54,8 @@ public class parent_profile_activity extends AppCompatActivity {
     private String religion;
 
     private UsersDatabaseHelper usersDatabaseHelper;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
 
     @Override
@@ -97,7 +114,6 @@ public class parent_profile_activity extends AppCompatActivity {
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                emailEt1.setEnabled(true);
                 phoneEt1.setEnabled(true);
                 passwordEt1.setEnabled(true);
                 addressEt3.setEnabled(true);
@@ -126,10 +142,109 @@ public class parent_profile_activity extends AppCompatActivity {
 
                 usersDatabaseHelper = new UsersDatabaseHelper(parent_profile_activity.this);
                 usersDatabaseHelper.updateUser(id, userNameTv.getText().toString(), phoneEt1.getText().toString(),emailEt1.getText().toString(), addressEt3.getText().toString(), passwordEt1.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
-
+                updateUserInFirebase(userNameTv.getText().toString(), phoneEt1.getText().toString(),emailEt1.getText().toString(), addressEt3.getText().toString(), passwordEt1.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
+                updateParentInFirebase(userNameTv.getText().toString(), phoneEt1.getText().toString(),emailEt1.getText().toString(), addressEt3.getText().toString(), passwordEt1.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
             }
         });
 
 
+    }
+
+    private void updateParentInFirebase(String username, String phone, String email, String address, String password, int numOfKids, String maritalStatus, String gender, String language, String religion) {
+        Map<String,Object> parentDetail = new HashMap<String, Object>();
+        parentDetail.put("username", username);
+        parentDetail.put("phoneNumber", phone);
+        parentDetail.put("email", email);
+        parentDetail.put("address", address);
+        parentDetail.put("password", password);
+        parentDetail.put("numberOfKids", numOfKids);
+        parentDetail.put("maritalStatus", maritalStatus);
+        parentDetail.put("gender", gender);
+        parentDetail.put("language", language);
+        parentDetail.put("religion", religion);
+
+
+
+
+        db.collection("Parents")
+                .whereEqualTo("email", emailEt1.getText().toString())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() && !task.getResult().isEmpty()) {
+
+                            DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                            String documentId = documentSnapshot.getId();
+                            db.collection("Parents").document(documentId).update(parentDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+
+                                    Toast.makeText(parent_profile_activity.this, "details updated Successfully", Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(parent_profile_activity.this, "Some error happened", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+
+                        }
+                        else {
+                            Log.d(TAG, "Error changing data", task.getException());
+
+                        }
+                    }
+                });
+    }
+
+    private void updateUserInFirebase(String username, String phone, String email, String address, String password, int numOfKids, String maritalStatus, String gender, String language, String religion) {
+        Map<String,Object> userDetail = new HashMap<String, Object>();
+        userDetail.put("username", username);
+        userDetail.put("phoneNumber", phone);
+        userDetail.put("email", email);
+        userDetail.put("address", address);
+        userDetail.put("password", password);
+        userDetail.put("numberOfKids", numOfKids);
+        userDetail.put("maritalStatus", maritalStatus);
+        userDetail.put("gender", gender);
+        userDetail.put("language", language);
+        userDetail.put("religion", religion);
+
+
+
+
+        db.collection("Users")
+                .whereEqualTo("email", emailEt1.getText().toString())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() && !task.getResult().isEmpty()) {
+
+                            DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                            String documentId = documentSnapshot.getId();
+                            db.collection("Users").document(documentId).update(userDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+
+                                    Toast.makeText(parent_profile_activity.this, "details updated Successfully", Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(parent_profile_activity.this, "Some error happened", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+
+                        }
+                        else {
+                            Log.d(TAG, "Error changing data", task.getException());
+
+                        }
+                    }
+                });
     }
 }
