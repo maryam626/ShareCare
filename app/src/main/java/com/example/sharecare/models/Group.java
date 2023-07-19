@@ -3,7 +3,7 @@ package com.example.sharecare.models;
 import java.util.ArrayList;
 
 public class Group {
-
+    private int id;
     private String groupName;
     private String briefInformation;
     private Host host;
@@ -26,6 +26,15 @@ public class Group {
         this.ageTo = ageTo;
         this.city = city;
         this.street = street;
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getGroupName() {

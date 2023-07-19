@@ -7,25 +7,34 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.sharecare.Logic.GroupsDatabaseHelper;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MyGroupsActivity extends AppCompatActivity {
+    private static final String TAG = "my groups activity";
+
 
     private Button createGroupButton;
     private TableLayout groupsTableLayout;
     private GroupsDatabaseHelper databaseHelper;
     private int loggedInUserId;
     private String loggedInUsername;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,6 +192,7 @@ public class MyGroupsActivity extends AppCompatActivity {
                         db.delete("groupParticipants","groupId = ?", new String[]{String.valueOf(groupId)});
                         db.delete("groups","id = ?", new String[]{String.valueOf(groupId)});
                         Toast.makeText(MyGroupsActivity.this, "successfully deleted " + groupName, Toast.LENGTH_SHORT).show();
+                        deleteGroupFromFirebase(groupId);
                         Intent intent = new Intent(MyGroupsActivity.this, MyGroupsActivity.class);
                         Bundle extras = new Bundle();
                         extras.putInt("userid", loggedInUserId);
@@ -194,6 +204,28 @@ public class MyGroupsActivity extends AppCompatActivity {
                 .setNegativeButton("Cancel", null)
                 .show();
     }
+
+    private void deleteGroupFromFirebase(int groupId) {
+
+        Task<Void> task = db.collection("Groups").document(String.valueOf(groupId)).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "DocumentSnapshot successfully deleted!");
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error deleting document", e);
+
+            }
+        });
+        while(!task.isComplete()){
+
+        }
+
+    }
+
     private int getLoggedInUserId() {
         return loggedInUserId;
     }

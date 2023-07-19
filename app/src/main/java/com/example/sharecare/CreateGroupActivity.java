@@ -9,17 +9,21 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.Logic.GroupsDatabaseHelper;
 import com.example.sharecare.Logic.UsersDatabaseHelper;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +48,8 @@ public class CreateGroupActivity extends AppCompatActivity {
 
     private int loggedInUserId;
     private String loggedInUsername;
+    int groupId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +89,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
     private void addingGroupToFirebase() {
         Map<String, Object> group = new HashMap<>();
+        group.put("id",String.valueOf(groupId));
         group.put("groupName",groupNameEditText.getText().toString());
         group.put("briefInformation",descriptionEditText.getText().toString());
         group.put("host",loggedInUsername);
@@ -91,27 +98,28 @@ public class CreateGroupActivity extends AppCompatActivity {
         group.put("street",streetEditText.getText().toString());
 
 
-        Task<DocumentReference> referenceTask =  db.collection("Groups")
-                .add(group)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        Task<Void> Task =  db.collection("Groups")
+                .document(String.valueOf(groupId)).set(group).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "DocumentSnapshot added");
 
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
+                }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error adding document", e);
+
                     }
                 });
 
-        while(!referenceTask.isComplete()){
+
+        while(!Task.isComplete()){
 
         }
 
     }
+
 
     private void loadCities() {
         SQLiteDatabase db = usersDatabaseHelper.getReadableDatabase();
@@ -167,7 +175,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
         // Retrieve the ID of the newly inserted group
         Cursor cursor = db.rawQuery("SELECT last_insert_rowid()", null);
-        int groupId = 0;
+        groupId = 0;
         if (cursor.moveToFirst()) {
             groupId = cursor.getInt(0);
         }
