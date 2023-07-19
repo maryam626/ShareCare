@@ -2,6 +2,7 @@ package com.example.sharecare;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -9,15 +10,25 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.Logic.UsersDatabaseHelper;
 import com.example.sharecare.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class sign_up_activity extends AppCompatActivity {
     private static final String TAG = "sign up activity";
@@ -40,6 +51,9 @@ public class sign_up_activity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private UsersDatabaseHelper usersDatabaseHelper;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private String id;
+
 
 
     @Override
@@ -131,6 +145,10 @@ public class sign_up_activity extends AppCompatActivity {
 
                         // Successful message
                         Toast.makeText(sign_up_activity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+
+                        addingUserDataToFirebase(username, phoneNumber, email, address, password, numberOfKids,
+                                maritalStatus, gender, language, religion);
+
                         Intent intent = new Intent(sign_up_activity.this, FillKidsInformation.class);
                         //Sending Data To Home Page Using Bundle
                         Bundle extras = new Bundle();
@@ -156,6 +174,89 @@ public class sign_up_activity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void addingUserDataToFirebase(String username, String phoneNumber, String email, String address, String password, int numberOfKids, String maritalStatus, String gender, String language, String religion) {
+
+        Map<String, Object> user = new HashMap<>();
+        user.put("id","0");
+        user.put("username",username);
+        user.put("phoneNumber",phoneNumber);
+        user.put("email",email);
+        user.put("address",address);
+        user.put("password",password);
+        user.put("numberOfKids",String.valueOf(numberOfKids));
+        user.put("maritalStatus",maritalStatus);
+        user.put("gender",gender);
+        user.put("language",language);
+        user.put("religion",religion);
+
+        Task<DocumentReference> referenceTask =  db.collection("Users")
+                .add(user)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        updateId(documentReference.getId());
+                        id = documentReference.getId();
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("name", "first kid");
+                        db.collection("Users").document(id).collection("myKids").add(data);
+
+                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
+
+        while(!referenceTask.isComplete()){
+
+        }
+
+
+
+    }
+
+    private void updateId(String id) {
+        Map<String,Object> userDetail = new HashMap<String, Object>();
+        userDetail.put("id", id);
+
+
+        db.collection("Users")
+                .whereEqualTo("email", emailEt.getText().toString())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() && !task.getResult().isEmpty()) {
+
+                            DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                            String documentId = documentSnapshot.getId();
+                            db.collection("Users").document(documentId).update(userDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+
+                                    Toast.makeText(sign_up_activity.this, "id updated Successfully", Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(sign_up_activity.this, "Some error happened", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+
+                        }
+                        else {
+                            Log.d(TAG, "Error changing data", task.getException());
+
+                        }
+                    }
+                });
 
     }
 
