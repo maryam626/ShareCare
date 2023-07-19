@@ -115,7 +115,6 @@ public class parent_profile_activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 phoneEt1.setEnabled(true);
-                passwordEt1.setEnabled(true);
                 addressEt3.setEnabled(true);
                 numKidsEt.setEnabled(true);
                 maritalEt.setEnabled(true);
@@ -142,21 +141,19 @@ public class parent_profile_activity extends AppCompatActivity {
 
                 usersDatabaseHelper = new UsersDatabaseHelper(parent_profile_activity.this);
                 usersDatabaseHelper.updateUser(id, userNameTv.getText().toString(), phoneEt1.getText().toString(),emailEt1.getText().toString(), addressEt3.getText().toString(), passwordEt1.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
-                updateUserInFirebase(userNameTv.getText().toString(), phoneEt1.getText().toString(),emailEt1.getText().toString(), addressEt3.getText().toString(), passwordEt1.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
-                updateParentInFirebase(userNameTv.getText().toString(), phoneEt1.getText().toString(),emailEt1.getText().toString(), addressEt3.getText().toString(), passwordEt1.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
+                updateUserInFirebase(userNameTv.getText().toString(), phoneEt1.getText().toString(), addressEt3.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
+                updateParentInFirebase(userNameTv.getText().toString(), phoneEt1.getText().toString(), addressEt3.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
             }
         });
 
 
     }
 
-    private void updateParentInFirebase(String username, String phone, String email, String address, String password, int numOfKids, String maritalStatus, String gender, String language, String religion) {
+    private void updateParentInFirebase(String username, String phone,String address,int numOfKids, String maritalStatus, String gender, String language, String religion) {
         Map<String,Object> parentDetail = new HashMap<String, Object>();
         parentDetail.put("username", username);
         parentDetail.put("phoneNumber", phone);
-        parentDetail.put("email", email);
         parentDetail.put("address", address);
-        parentDetail.put("password", password);
         parentDetail.put("numberOfKids", numOfKids);
         parentDetail.put("maritalStatus", maritalStatus);
         parentDetail.put("gender", gender);
@@ -199,13 +196,11 @@ public class parent_profile_activity extends AppCompatActivity {
                 });
     }
 
-    private void updateUserInFirebase(String username, String phone, String email, String address, String password, int numOfKids, String maritalStatus, String gender, String language, String religion) {
+    private void updateUserInFirebase(String username, String phone, String address,int numOfKids, String maritalStatus, String gender, String language, String religion) {
         Map<String,Object> userDetail = new HashMap<String, Object>();
         userDetail.put("username", username);
         userDetail.put("phoneNumber", phone);
-        userDetail.put("email", email);
         userDetail.put("address", address);
-        userDetail.put("password", password);
         userDetail.put("numberOfKids", numOfKids);
         userDetail.put("maritalStatus", maritalStatus);
         userDetail.put("gender", gender);
