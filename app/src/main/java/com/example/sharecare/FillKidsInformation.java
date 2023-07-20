@@ -56,13 +56,13 @@ public class FillKidsInformation extends AppCompatActivity {
         kid10Btn = (Button) findViewById(R.id.kid10Btn);
         FinishBtn = (Button) findViewById(R.id.FinishBtn);
 
+        numberOfKids = getIntent().getStringExtra("number_of_kids");
         id = getIntent().getStringExtra("id");
         userName = getIntent().getStringExtra("username");
         phoneNumber = getIntent().getStringExtra("phone_number");
         email = getIntent().getStringExtra("email");
         address = getIntent().getStringExtra("address");
         password = getIntent().getStringExtra("password");
-        numberOfKids = getIntent().getStringExtra("number_of_kids");
         maritalStatus = getIntent().getStringExtra("marital_status");
         gender = getIntent().getStringExtra("gender");
         language = getIntent().getStringExtra("language");
@@ -94,6 +94,7 @@ public class FillKidsInformation extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
                 Bundle extras = new Bundle();
+                extras.putString("number_of_kids",numberOfKids);
                 extras.putInt("kid number", 1);
                 intent.putExtras(extras);
                 startActivity(intent);
@@ -104,6 +105,7 @@ public class FillKidsInformation extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
                 Bundle extras = new Bundle();
+                extras.putString("number_of_kids",numberOfKids);
                 extras.putInt("kid number", 2);
                 intent.putExtras(extras);
                 startActivity(intent);
@@ -114,6 +116,7 @@ public class FillKidsInformation extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
                 Bundle extras = new Bundle();
+                extras.putString("number_of_kids",numberOfKids);
                 extras.putInt("kid number", 3);
                 intent.putExtras(extras);
                 startActivity(intent);
@@ -124,6 +127,7 @@ public class FillKidsInformation extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
                 Bundle extras = new Bundle();
+                extras.putString("number_of_kids",numberOfKids);
                 extras.putInt("kid number", 4);
                 intent.putExtras(extras);
                 startActivity(intent);
@@ -134,6 +138,7 @@ public class FillKidsInformation extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
                 Bundle extras = new Bundle();
+                extras.putString("number_of_kids",numberOfKids);
                 extras.putInt("kid number", 5);
                 intent.putExtras(extras);
                 startActivity(intent);
@@ -144,6 +149,7 @@ public class FillKidsInformation extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
                 Bundle extras = new Bundle();
+                extras.putString("number_of_kids",numberOfKids);
                 extras.putInt("kid number", 6);
                 intent.putExtras(extras);
                 startActivity(intent);
@@ -155,6 +161,7 @@ public class FillKidsInformation extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
                         Bundle extras = new Bundle();
+                        extras.putString("number_of_kids",numberOfKids);
                         extras.putInt("kid number", 7);
                         intent.putExtras(extras);
                         startActivity(intent);
@@ -167,6 +174,7 @@ public class FillKidsInformation extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
                 Bundle extras = new Bundle();
+                extras.putString("number_of_kids",numberOfKids);
                 extras.putInt("kid number", 8);
                 intent.putExtras(extras);
                 startActivity(intent);
@@ -177,6 +185,7 @@ public class FillKidsInformation extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
                 Bundle extras = new Bundle();
+                extras.putString("number_of_kids",numberOfKids);
                 extras.putInt("kid number", 9);
                 intent.putExtras(extras);
                 startActivity(intent);
@@ -188,6 +197,7 @@ public class FillKidsInformation extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(FillKidsInformation.this, CreateKidProfile.class);
                 Bundle extras = new Bundle();
+                extras.putString("number_of_kids",numberOfKids);
                 extras.putInt("kid number", 10);
                 intent.putExtras(extras);
                 startActivity(intent);

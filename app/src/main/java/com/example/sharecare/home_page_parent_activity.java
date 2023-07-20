@@ -20,17 +20,17 @@ public class home_page_parent_activity extends AppCompatActivity {
     private Button myChildrenButton;
     private ImageView logOutIv;
 
-    private String id;
-    private String userName;
-    private String phoneNumber;
-    private String email;
-    private String address;
-    private String password;
-    private String numberOfKids;
-    private String maritalStatus;
-    private String gender;
-    private String language;
-    private String religion;
+    public static String id;
+    public static String userName;
+    public static String phoneNumber;
+    public static String email;
+    public static String address;
+    public static String password;
+    public static String numberOfKids;
+    public static String maritalStatus;
+    public static String gender;
+    public static String language;
+    public static String religion;
     private TextView nameTv;
 
 

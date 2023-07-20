@@ -19,6 +19,8 @@ public class CreateKidProfile extends AppCompatActivity {
     private Spinner genderSpinner1;
     private TextView kidNumberTv;
     private Button finishBtn;
+    private String numberOfKids;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,8 @@ public class CreateKidProfile extends AppCompatActivity {
         finishBtn = (Button) findViewById(R.id.finishBtn);
 
         kidNumberTv.setText(String.valueOf(getIntent().getIntExtra("kid number",1)));
+
+        numberOfKids = getIntent().getStringExtra("number_of_kids");
 
         finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +61,7 @@ public class CreateKidProfile extends AppCompatActivity {
                 else{
                     Intent intent = new Intent(CreateKidProfile.this, FillKidsInformation.class);
                     Bundle extras = new Bundle();
-                    extras.putString("number_of_kids", kidNumberTv.getText().toString());
+                    extras.putString("number_of_kids", numberOfKids);
                     intent.putExtras(extras);
                     startActivity(intent);
                 }
