@@ -2,6 +2,7 @@ package com.example.sharecare.models;
 
 public class Kid {
 
+    private int id;
     private int age;
     private String name;
     private String gender;
@@ -15,6 +16,14 @@ public class Kid {
         this.gender = gender;
         this.parent = parent;
         this.schoolName = schoolName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getAge() {

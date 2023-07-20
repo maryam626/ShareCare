@@ -96,6 +96,21 @@
     <string name="description">Description</string>
     <string name="select_participants">Select Participants</string>
     <string name="create">Create</string>
+    <string name="activity_name">Activity Name</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="enter_activity_name">Enter activity name</string>
+    <string name="choose_activity">Choose Activity</string>
+    <string name="date">Date</string>
+    <string name="select_date">Select Date</string>
+    <string name="age_of_child">Age of Child</string>
+    <string name="time">Time</string>
+    <string name="select_time">Select Time</string>
+    <string name="capacity">Capacity</string>
+    <string name="save1">Save</string>
+    <string name="selected_date">Selected Date</string>
+    <string name="selected_time">Selected Time</string>
+    <string name="enter_capacity">Enter capacity</string>
     <string-array name="Number_Of_Kids">
         <item>1</item>
         <item>2</item>

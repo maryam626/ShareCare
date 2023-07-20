@@ -1,6 +1,8 @@
 package com.example.sharecare.models;
 
 public class Activity {
+
+    private int id;
     private String activityName;
     private String selectedActivity;
     private String selectedDate;
@@ -8,6 +10,44 @@ public class Activity {
     private int capacity;
     private int ageFrom;
     private int ageTo;
+    private int ownerUserId;
+    private int groupId;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setActivityName(String activityName) {
+        this.activityName = activityName;
+    }
+
+    public void setSelectedActivity(String selectedActivity) {
+        this.selectedActivity = selectedActivity;
+    }
+
+    public void setSelectedDate(String selectedDate) {
+        this.selectedDate = selectedDate;
+    }
+
+    public void setSelectedTime(String selectedTime) {
+        this.selectedTime = selectedTime;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public void setAgeFrom(int ageFrom) {
+        this.ageFrom = ageFrom;
+    }
+
+    public void setAgeTo(int ageTo) {
+        this.ageTo = ageTo;
+    }
 
     public int getOwnerUserId() {
         return ownerUserId;
@@ -17,8 +57,6 @@ public class Activity {
         this.ownerUserId = ownerUserId;
     }
 
-    private int ownerUserId;
-
     public int getGroupId() {
         return groupId;
     }
@@ -27,7 +65,6 @@ public class Activity {
         this.groupId = groupId;
     }
 
-    private int groupId;
 
     public Activity() {
         // Empty constructor needed for Firebase

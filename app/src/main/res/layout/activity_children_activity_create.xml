@@ -11,14 +11,18 @@
         android:id="@+id/text_activity_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Activity Name" />
+        android:text="@string/activity_name" />
 
     <EditText
         android:id="@+id/edit_activity_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_activity_name"
-        android:hint="Enter activity name" />
+        android:autofillHints=""
+        android:hint="@string/enter_activity_name"
+        android:inputType="text"
+        android:minHeight="48dp"
+        tools:ignore="TextContrastCheck" />
 
     <TextView
         android:id="@+id/text_choose_activity"
@@ -26,13 +30,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_activity_name"
         android:layout_marginTop="16dp"
-        android:text="Choose Activity" />
+        android:text="@string/choose_activity" />
 
     <Spinner
         android:id="@+id/spinner_choose_activity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text_choose_activity" />
+        android:layout_below="@id/text_choose_activity"
+        android:minHeight="48dp"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/text_date"
@@ -40,23 +46,25 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/spinner_choose_activity"
         android:layout_marginTop="16dp"
-        android:text="Date" />
+        android:text="@string/date" />
 
     <Button
         android:id="@+id/btn_select_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_date"
-        android:text="Select Date" />
+        android:text="@string/select_date" />
 
     <EditText
         android:id="@+id/edit_selected_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btn_select_date"
-        android:hint="Selected Date"
-        android:inputType="none"
-        android:enabled="false" />
+        android:autofillHints=""
+        android:enabled="false"
+        android:hint="@string/selected_date"
+        android:inputType="text"
+        android:minHeight="48dp" />
 
     <TextView
         android:id="@+id/text_time"
@@ -64,23 +72,25 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_selected_date"
         android:layout_marginTop="16dp"
-        android:text="Time" />
+        android:text="@string/time" />
 
     <Button
         android:id="@+id/btn_select_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_time"
-        android:text="Select Time" />
+        android:text="@string/select_time" />
 
     <EditText
         android:id="@+id/edit_selected_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btn_select_time"
-        android:hint="Selected Time"
-        android:inputType="none"
-        android:enabled="false" />
+        android:autofillHints=""
+        android:enabled="false"
+        android:hint="@string/selected_time"
+        android:inputType="text"
+        android:minHeight="48dp" />
 
     <TextView
         android:id="@+id/text_capacity"
@@ -88,14 +98,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_selected_time"
         android:layout_marginTop="16dp"
-        android:text="Capacity" />
+        android:text="@string/capacity" />
 
     <EditText
         android:id="@+id/edit_capacity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_capacity"
-        android:hint="Enter capacity" />
+        android:autofillHints=""
+        android:hint="@string/enter_capacity"
+        android:inputType="number"
+        android:minHeight="48dp" />
 
     <TextView
         android:id="@+id/text_age_of_child"
@@ -103,15 +116,18 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_capacity"
         android:layout_marginTop="16dp"
-        android:text="Age of Child" />
+        android:text="@string/age_of_child" />
 
     <EditText
         android:id="@+id/edit_age_from"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_age_of_child"
-        android:hint="From"
-        android:inputType="number" />
+        android:autofillHints=""
+        android:hint="@string/from"
+        android:inputType="number"
+        android:minHeight="48dp"
+        tools:ignore="TextContrastCheck" />
 
     <EditText
         android:id="@+id/edit_age_to"
@@ -119,8 +135,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_age_from"
         android:layout_marginTop="8dp"
-        android:hint="To"
-        android:inputType="number" />
+        android:autofillHints=""
+        android:hint="@string/to"
+        android:inputType="number"
+        android:minHeight="48dp" />
 
     <Button
         android:id="@+id/btn_save"
@@ -128,6 +146,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="16dp"
-        android:text="Save" />
+        android:text="@string/save1" />
 
 </RelativeLayout>
