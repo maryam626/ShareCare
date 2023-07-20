@@ -50,7 +50,8 @@ public class sign_up_activity extends AppCompatActivity {
 
     private UsersDatabaseHelper usersDatabaseHelper;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String id;
+    public static String id;
+
 
 
 
@@ -144,10 +145,10 @@ public class sign_up_activity extends AppCompatActivity {
                         // Successful message
                         Toast.makeText(sign_up_activity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
 
-                        addingUserDataToFirebase(username, phoneNumber, email, address, password, numberOfKids,
-                                maritalStatus, gender, language, religion);
                         addingParentDataToFirebase(username, phoneNumber, email, address, password, numberOfKids,
                                 maritalStatus, gender, language, religion);
+
+
 
                         Intent intent = new Intent(sign_up_activity.this, FillKidsInformation.class);
                         //Sending Data To Home Page Using Bundle
@@ -202,6 +203,10 @@ public class sign_up_activity extends AppCompatActivity {
                         data.put("name", "first kid");
                         db.collection("Parents").document(id).collection("myKids").add(data);
 
+
+                        addingUserDataToFirebase(username, phoneNumber, email, address, password, numberOfKids,
+                                maritalStatus, gender, language, religion);
+
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
                     }
                 })
@@ -215,6 +220,7 @@ public class sign_up_activity extends AppCompatActivity {
         while(!referenceTask.isComplete()){
 
         }
+
     }
 
     private void updateIdForParent(String id) {
@@ -270,18 +276,16 @@ public class sign_up_activity extends AppCompatActivity {
         user.put("language",language);
         user.put("religion",religion);
 
-        Task<DocumentReference> referenceTask =  db.collection("Users")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        Task<Void> referenceTask =  db.collection("Users").document(id)
+                .set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        updateId(documentReference.getId());
-                        id = documentReference.getId();
+                    public void onSuccess(Void unused) {
+                        updateId(id);
                         Map<String, Object> data = new HashMap<>();
                         data.put("name", "first kid");
                         db.collection("Users").document(id).collection("myKids").add(data);
 
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        Log.d(TAG, "DocumentSnapshot added with ID: " + id);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

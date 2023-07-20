@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sharecare.models.User;
+
 import java.util.Locale;
 
 public class home_page_parent_activity extends AppCompatActivity {
@@ -31,6 +33,9 @@ public class home_page_parent_activity extends AppCompatActivity {
     public static String gender;
     public static String language;
     public static String religion;
+
+    public static User loggedInUser;
+
     private TextView nameTv;
 
 
@@ -64,6 +69,8 @@ public class home_page_parent_activity extends AppCompatActivity {
         language = getIntent().getStringExtra("language");
         religion = getIntent().getStringExtra("religion");
 
+
+        loggedInUser = new User(userName,phoneNumber,email,address,password,Integer.parseInt(numberOfKids),maritalStatus,gender,language,religion);
 
         buttonSearchGroups.setOnClickListener(new View.OnClickListener() {
           @Override
@@ -131,6 +138,8 @@ public class home_page_parent_activity extends AppCompatActivity {
         });
 
     }
+
+
 
 }
 

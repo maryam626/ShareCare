@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -24,6 +25,18 @@ public class FillKidsInformation extends AppCompatActivity {
     private Button kid9Btn;
     private Button kid10Btn;
     private Button FinishBtn;
+
+    private ImageView checkedKid1;
+    private ImageView checkedKid2;
+    private ImageView checkedKid3;
+    private ImageView checkedKid4;
+    private ImageView checkedKid5;
+    private ImageView checkedKid6;
+    private ImageView checkedKid7;
+    private ImageView checkedKid8;
+    private ImageView checkedKid9;
+    private ImageView checkedKid10;
+
 
     private ArrayList<Button> kidsButtons;
 
@@ -56,6 +69,18 @@ public class FillKidsInformation extends AppCompatActivity {
         kid10Btn = (Button) findViewById(R.id.kid10Btn);
         FinishBtn = (Button) findViewById(R.id.FinishBtn);
 
+        checkedKid1 = (ImageView) findViewById(R.id.checkedKid1);
+        checkedKid2 = (ImageView) findViewById(R.id.checkedKid2);
+        checkedKid3 = (ImageView) findViewById(R.id.checkedKid3);
+        checkedKid4 = (ImageView) findViewById(R.id.checkedKid4);
+        checkedKid5 = (ImageView) findViewById(R.id.checkedKid5);
+        checkedKid6 = (ImageView) findViewById(R.id.checkedKid6);
+        checkedKid7 = (ImageView) findViewById(R.id.checkedKid7);
+        checkedKid8 = (ImageView) findViewById(R.id.checkedKid8);
+        checkedKid9 = (ImageView) findViewById(R.id.checkedKid9);
+        checkedKid10 = (ImageView) findViewById(R.id.checkedKid10);
+
+
         numberOfKids = getIntent().getStringExtra("number_of_kids");
         id = getIntent().getStringExtra("id");
         userName = getIntent().getStringExtra("username");
@@ -85,7 +110,6 @@ public class FillKidsInformation extends AppCompatActivity {
             kidsButtons.get(i).setClickable(true);
             kidsButtons.get(i).setVisibility(View.VISIBLE);
         }
-
 
 
 

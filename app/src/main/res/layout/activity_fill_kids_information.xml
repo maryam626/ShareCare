@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -157,6 +158,126 @@
         android:text="@string/kid_10"
         android:visibility="gone"
         tools:ignore="TextContrastCheck" />
+
+    <ImageView
+        android:id="@+id/checkedKid1"
+        android:layout_width="84dp"
+        android:layout_height="82dp"
+        android:layout_row="1"
+        android:layout_column="0"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp"
+        android:contentDescription="@string/todo20"
+        android:visibility="gone"
+        app:srcCompat="@drawable/checked" />
+
+    <ImageView
+        android:id="@+id/checkedKid2"
+        android:layout_width="84dp"
+        android:layout_height="82dp"
+        android:layout_row="1"
+        android:layout_column="0"
+        android:layout_marginStart="265dp"
+        android:layout_marginTop="50dp"
+        android:contentDescription="@string/todo22"
+        android:visibility="gone"
+        app:srcCompat="@drawable/checked" />
+
+    <ImageView
+        android:id="@+id/checkedKid3"
+        android:layout_width="84dp"
+        android:layout_height="82dp"
+        android:layout_row="2"
+        android:layout_column="0"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/todo26"
+        android:visibility="gone"
+        app:srcCompat="@drawable/checked" />
+
+    <ImageView
+        android:id="@+id/checkedKid4"
+        android:layout_width="84dp"
+        android:layout_height="82dp"
+        android:layout_row="2"
+        android:layout_column="0"
+        android:layout_marginStart="265dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/todo24"
+        android:visibility="gone"
+        app:srcCompat="@drawable/checked" />
+
+    <ImageView
+        android:id="@+id/checkedKid5"
+        android:layout_width="84dp"
+        android:layout_height="82dp"
+        android:layout_row="3"
+        android:layout_column="0"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/todo21"
+        android:visibility="gone"
+        app:srcCompat="@drawable/checked" />
+
+    <ImageView
+        android:id="@+id/checkedKid6"
+        android:layout_width="84dp"
+        android:layout_height="82dp"
+        android:layout_row="3"
+        android:layout_column="0"
+        android:layout_marginStart="265dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/todo27"
+        android:visibility="gone"
+        app:srcCompat="@drawable/checked" />
+
+    <ImageView
+        android:id="@+id/checkedKid7"
+        android:layout_width="84dp"
+        android:layout_height="82dp"
+        android:layout_row="4"
+        android:layout_column="0"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/todo23"
+        android:visibility="gone"
+        app:srcCompat="@drawable/checked" />
+
+    <ImageView
+        android:id="@+id/checkedKid8"
+        android:layout_width="84dp"
+        android:layout_height="82dp"
+        android:layout_row="4"
+        android:layout_column="0"
+        android:layout_marginStart="265dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/todo28"
+        android:visibility="gone"
+        app:srcCompat="@drawable/checked" />
+
+    <ImageView
+        android:id="@+id/checkedKid9"
+        android:layout_width="84dp"
+        android:layout_height="82dp"
+        android:layout_row="5"
+        android:layout_column="0"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/todo25"
+        android:visibility="gone"
+        app:srcCompat="@drawable/checked" />
+
+    <ImageView
+        android:id="@+id/checkedKid10"
+        android:layout_width="84dp"
+        android:layout_height="82dp"
+        android:layout_row="5"
+        android:layout_column="0"
+        android:layout_marginStart="265dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/todo29"
+        android:visibility="gone"
+        app:srcCompat="@drawable/checked" />
 
 
 </GridLayout>
