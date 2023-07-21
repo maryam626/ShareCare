@@ -110,6 +110,7 @@ public class CreateKidProfile extends AppCompatActivity {
                     public void onSuccess(DocumentReference documentReference) {
                         updateId(documentReference.getId());
                         kidId = documentReference.getId();
+                        addingKidsToParentCollection();
 
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
                     }
@@ -126,13 +127,24 @@ public class CreateKidProfile extends AppCompatActivity {
 
         }
 
-        Task<DocumentReference> referenceTask1 =  db.collection("Parents").document(sign_up_activity.id).collection("myKids").add(kid).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                updateIdInParentCollection(documentReference.getId());
-                kidId = documentReference.getId();
-                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
 
+    }
+
+    private void addingKidsToParentCollection() {
+        Map<String, Object> kid = new HashMap<>();
+        kid.put("id","0");
+        kid.put("age",ageEt1.getText().toString());
+        kid.put("name",nameEt.getText().toString());
+        kid.put("gender",genderSpinner1.getSelectedItem().toString());
+        kid.put("parent",sign_up_activity.id);
+        kid.put("schoolName",schoolNameEt.getText().toString());
+
+        Task<Void> referenceTask1 =  db.collection("Parents").document(sign_up_activity.id).collection("myKids").document(kidId).set(kid).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                updateIdInParentCollection(kidId);
+                addingKidToUsersCollection();
+                Log.d(TAG, "DocumentSnapshot added with ID: " + kidId);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -145,28 +157,34 @@ public class CreateKidProfile extends AppCompatActivity {
         while(!referenceTask1.isComplete()){
 
         }
+    }
 
-        Task<DocumentReference> referenceTask2 =  db.collection("Users").document(sign_up_activity.id).collection("myKids").add(kid).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+    private void addingKidToUsersCollection() {
+
+        Map<String, Object> kid = new HashMap<>();
+        kid.put("id","0");
+        kid.put("age",ageEt1.getText().toString());
+        kid.put("name",nameEt.getText().toString());
+        kid.put("gender",genderSpinner1.getSelectedItem().toString());
+        kid.put("parent",sign_up_activity.id);
+        kid.put("schoolName",schoolNameEt.getText().toString());
+
+        Task<Void> referenceTask2 =  db.collection("Users").document(sign_up_activity.id).collection("myKids").document(kidId).set(kid).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onSuccess(DocumentReference documentReference) {
-                updateIdInUsersCollection(documentReference.getId());
-                kidId = documentReference.getId();
-                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-
+            public void onSuccess(Void unused) {
+                updateIdInUsersCollection(kidId);
+                Log.d(TAG, "DocumentSnapshot added with ID: " + kidId);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(TAG, "Error adding document", e);
-
             }
         });
 
         while(!referenceTask2.isComplete()){
 
         }
-
-
     }
 
     private void updateIdInUsersCollection(String id) {
