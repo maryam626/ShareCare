@@ -80,7 +80,7 @@ public class CreateKidProfile extends AppCompatActivity {
                 else{
 
                     addingKidsDataToFirebase();
-
+                    changingDoneVariable();
                     Intent intent = new Intent(CreateKidProfile.this, FillKidsInformation.class);
                     Bundle extras = new Bundle();
                     extras.putString("number_of_kids", numberOfKids);
@@ -90,6 +90,39 @@ public class CreateKidProfile extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void changingDoneVariable() {
+        if(Integer.parseInt(kidNumberTv.getText().toString()) == 1){
+            FillKidsInformation.done1 = true;
+        }
+        if(Integer.parseInt(kidNumberTv.getText().toString()) == 2){
+            FillKidsInformation.done2 = true;
+        }
+        if(Integer.parseInt(kidNumberTv.getText().toString()) == 3){
+            FillKidsInformation.done3 = true;
+        }
+        if(Integer.parseInt(kidNumberTv.getText().toString()) == 4){
+            FillKidsInformation.done4 = true;
+        }
+        if(Integer.parseInt(kidNumberTv.getText().toString()) == 5){
+            FillKidsInformation.done5 = true;
+        }
+        if(Integer.parseInt(kidNumberTv.getText().toString()) == 6){
+            FillKidsInformation.done6 = true;
+        }
+        if(Integer.parseInt(kidNumberTv.getText().toString()) == 7){
+            FillKidsInformation.done7 = true;
+        }
+        if(Integer.parseInt(kidNumberTv.getText().toString()) == 8){
+            FillKidsInformation.done8 = true;
+        }
+        if(Integer.parseInt(kidNumberTv.getText().toString()) == 9){
+            FillKidsInformation.done9 = true;
+        }
+        if(Integer.parseInt(kidNumberTv.getText().toString()) == 10){
+            FillKidsInformation.done10 = true;
+        }
     }
 
     private void addingKidsDataToFirebase() {

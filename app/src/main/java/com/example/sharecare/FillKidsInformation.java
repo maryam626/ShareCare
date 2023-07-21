@@ -37,6 +37,19 @@ public class FillKidsInformation extends AppCompatActivity {
     private ImageView checkedKid9;
     private ImageView checkedKid10;
 
+    public static boolean done1;
+    public static boolean done2;
+    public static boolean done3;
+    public static boolean done4;
+    public static boolean done5;
+    public static boolean done6;
+    public static boolean done7;
+    public static boolean done8;
+    public static boolean done9;
+    public static boolean done10;
+
+
+
 
     private ArrayList<Button> kidsButtons;
 
@@ -112,6 +125,7 @@ public class FillKidsInformation extends AppCompatActivity {
         }
 
 
+        checkDoneVariables();
 
         kid1Btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,6 +251,50 @@ public class FillKidsInformation extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void checkDoneVariables() {
+        if(done1){
+            kid1Btn.setVisibility(View.INVISIBLE);
+            checkedKid1.setVisibility(View.VISIBLE);
+        }
+        if(done2){
+            kid2Btn.setVisibility(View.INVISIBLE);
+            checkedKid2.setVisibility(View.VISIBLE);
+        }
+        if(done3){
+            kid3Btn.setVisibility(View.INVISIBLE);
+            checkedKid3.setVisibility(View.VISIBLE);
+        }
+        if(done4){
+            kid4Btn.setVisibility(View.INVISIBLE);
+            checkedKid4.setVisibility(View.VISIBLE);
+        }
+        if(done5){
+            kid5Btn.setVisibility(View.INVISIBLE);
+            checkedKid5.setVisibility(View.VISIBLE);
+        }
+        if(done6){
+            kid6Btn.setVisibility(View.INVISIBLE);
+            checkedKid6.setVisibility(View.VISIBLE);
+        }
+        if(done7){
+            kid7Btn.setVisibility(View.INVISIBLE);
+            checkedKid7.setVisibility(View.VISIBLE);
+        }
+        if(done8){
+            kid8Btn.setVisibility(View.INVISIBLE);
+            checkedKid8.setVisibility(View.VISIBLE);
+        }
+        if(done9){
+            kid9Btn.setVisibility(View.INVISIBLE);
+            checkedKid9.setVisibility(View.VISIBLE);
+        }
+        if(done10){
+            kid10Btn.setVisibility(View.INVISIBLE);
+            checkedKid10.setVisibility(View.VISIBLE);
+        }
 
     }
 }
