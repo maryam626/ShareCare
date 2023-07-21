@@ -3,10 +3,13 @@ package com.example.sharecare;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.example.sharecare.models.Kid;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,6 +39,8 @@ public class my_children_activity extends AppCompatActivity {
     private Button kid8Btn;
     private Button kid9Btn;
     private Button kid10Btn;
+
+    private ImageButton addImageButton;
 
     private ArrayList<Button> kidsButtons;
 
@@ -76,6 +81,8 @@ public class my_children_activity extends AppCompatActivity {
         kid9Btn = (Button) findViewById(R.id.kid9Btn);
         kid10Btn = (Button) findViewById(R.id.kid10Btn);
 
+        addImageButton = (ImageButton) findViewById(R.id.addImageButton);
+
         id = getIntent().getStringExtra("id");
         userName = getIntent().getStringExtra("username");
         phoneNumber = getIntent().getStringExtra("phone_number");
@@ -110,6 +117,17 @@ public class my_children_activity extends AppCompatActivity {
         kid1Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(my_children_activity.this,KidsInfo.class);
+                Bundle extras = new Bundle();
+                Map<String,Object> kidData = kidsMap.get(kid1Btn.getText().toString());
+                extras.putString("id",kidData.get("id").toString());
+                extras.putString("age",kidData.get("age").toString());
+                extras.putString("gender",kidData.get("gender").toString());
+                extras.putString("name",kidData.get("name").toString());
+                extras.putString("parent",kidData.get("parent").toString());
+                extras.putString("schoolName",kidData.get("schoolName").toString());
+                intent.putExtras(extras);
+                startActivity(intent);
 
             }
         });
@@ -117,62 +135,161 @@ public class my_children_activity extends AppCompatActivity {
         kid2Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(my_children_activity.this,KidsInfo.class);
+                Bundle extras = new Bundle();
+                Map<String,Object> kidData = kidsMap.get(kid2Btn.getText().toString());
+                extras.putString("id",kidData.get("id").toString());
+                extras.putString("age",kidData.get("age").toString());
+                extras.putString("gender",kidData.get("gender").toString());
+                extras.putString("name",kidData.get("name").toString());
+                extras.putString("parent",kidData.get("parent").toString());
+                extras.putString("schoolName",kidData.get("schoolName").toString());
+                intent.putExtras(extras);
+                startActivity(intent);
             }
         });
 
         kid3Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(my_children_activity.this,KidsInfo.class);
+                Bundle extras = new Bundle();
+                Map<String,Object> kidData = kidsMap.get(kid3Btn.getText().toString());
+                extras.putString("id",kidData.get("id").toString());
+                extras.putString("age",kidData.get("age").toString());
+                extras.putString("gender",kidData.get("gender").toString());
+                extras.putString("name",kidData.get("name").toString());
+                extras.putString("parent",kidData.get("parent").toString());
+                extras.putString("schoolName",kidData.get("schoolName").toString());
+                intent.putExtras(extras);
+                startActivity(intent);
             }
         });
 
         kid4Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(my_children_activity.this,KidsInfo.class);
+                Bundle extras = new Bundle();
+                Map<String,Object> kidData = kidsMap.get(kid4Btn.getText().toString());
+                extras.putString("id",kidData.get("id").toString());
+                extras.putString("age",kidData.get("age").toString());
+                extras.putString("gender",kidData.get("gender").toString());
+                extras.putString("name",kidData.get("name").toString());
+                extras.putString("parent",kidData.get("parent").toString());
+                extras.putString("schoolName",kidData.get("schoolName").toString());
+                intent.putExtras(extras);
+                startActivity(intent);
             }
         });
 
         kid5Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(my_children_activity.this,KidsInfo.class);
+                Bundle extras = new Bundle();
+                Map<String,Object> kidData = kidsMap.get(kid5Btn.getText().toString());
+                extras.putString("id",kidData.get("id").toString());
+                extras.putString("age",kidData.get("age").toString());
+                extras.putString("gender",kidData.get("gender").toString());
+                extras.putString("name",kidData.get("name").toString());
+                extras.putString("parent",kidData.get("parent").toString());
+                extras.putString("schoolName",kidData.get("schoolName").toString());
+                intent.putExtras(extras);
+                startActivity(intent);
             }
         });
 
         kid6Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(my_children_activity.this,KidsInfo.class);
+                Bundle extras = new Bundle();
+                Map<String,Object> kidData = kidsMap.get(kid6Btn.getText().toString());
+                extras.putString("id",kidData.get("id").toString());
+                extras.putString("age",kidData.get("age").toString());
+                extras.putString("gender",kidData.get("gender").toString());
+                extras.putString("name",kidData.get("name").toString());
+                extras.putString("parent",kidData.get("parent").toString());
+                extras.putString("schoolName",kidData.get("schoolName").toString());
+                intent.putExtras(extras);
+                startActivity(intent);
             }
         });
 
         kid7Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(my_children_activity.this,KidsInfo.class);
+                Bundle extras = new Bundle();
+                Map<String,Object> kidData = kidsMap.get(kid7Btn.getText().toString());
+                extras.putString("id",kidData.get("id").toString());
+                extras.putString("age",kidData.get("age").toString());
+                extras.putString("gender",kidData.get("gender").toString());
+                extras.putString("name",kidData.get("name").toString());
+                extras.putString("parent",kidData.get("parent").toString());
+                extras.putString("schoolName",kidData.get("schoolName").toString());
+                intent.putExtras(extras);
+                startActivity(intent);
             }
         });
 
         kid8Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(my_children_activity.this,KidsInfo.class);
+                Bundle extras = new Bundle();
+                Map<String,Object> kidData = kidsMap.get(kid8Btn.getText().toString());
+                extras.putString("id",kidData.get("id").toString());
+                extras.putString("age",kidData.get("age").toString());
+                extras.putString("gender",kidData.get("gender").toString());
+                extras.putString("name",kidData.get("name").toString());
+                extras.putString("parent",kidData.get("parent").toString());
+                extras.putString("schoolName",kidData.get("schoolName").toString());
+                intent.putExtras(extras);
+                startActivity(intent);
             }
         });
 
         kid9Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(my_children_activity.this,KidsInfo.class);
+                Bundle extras = new Bundle();
+                Map<String,Object> kidData = kidsMap.get(kid9Btn.getText().toString());
+                extras.putString("id",kidData.get("id").toString());
+                extras.putString("age",kidData.get("age").toString());
+                extras.putString("gender",kidData.get("gender").toString());
+                extras.putString("name",kidData.get("name").toString());
+                extras.putString("parent",kidData.get("parent").toString());
+                extras.putString("schoolName",kidData.get("schoolName").toString());
+                intent.putExtras(extras);
+                startActivity(intent);
             }
         });
 
         kid10Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(my_children_activity.this,KidsInfo.class);
+                Bundle extras = new Bundle();
+                Map<String,Object> kidData = kidsMap.get(kid10Btn.getText().toString());
+                extras.putString("id",kidData.get("id").toString());
+                extras.putString("age",kidData.get("age").toString());
+                extras.putString("gender",kidData.get("gender").toString());
+                extras.putString("name",kidData.get("name").toString());
+                extras.putString("parent",kidData.get("parent").toString());
+                extras.putString("schoolName",kidData.get("schoolName").toString());
+                intent.putExtras(extras);
+                startActivity(intent);
+            }
+        });
+
+        addImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*Intent intent = new Intent(my_children_activity.this,CreateKidProfile.class);
+                startActivity(intent);*/
 
             }
         });
