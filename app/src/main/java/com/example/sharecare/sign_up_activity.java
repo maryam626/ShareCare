@@ -126,6 +126,8 @@ public class sign_up_activity extends AppCompatActivity {
                 // Store user data in SQLite database
                 long rowId = usersDatabaseHelper.insertUser(user);
 
+                id = String.valueOf(rowId);
+
                 if (rowId != -1) {
                     registerUser(emailEt.getText().toString(), passwordEt.getText().toString());
 
@@ -192,13 +194,10 @@ public class sign_up_activity extends AppCompatActivity {
         parent.put("language",language);
         parent.put("religion",religion);
 
-        Task<DocumentReference> referenceTask =  db.collection("Parents")
-                .add(parent)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        Task<Void> referenceTask =  db.collection("Parents").document(id).set(parent).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        updateIdForParent(documentReference.getId());
-                        id = documentReference.getId();
+                    public void onSuccess(Void unused) {
+                        updateIdForParent(id);
                         Map<String, Object> data = new HashMap<>();
                         data.put("name", "first kid");
                         db.collection("Parents").document(id).collection("myKids").add(data);
@@ -207,15 +206,16 @@ public class sign_up_activity extends AppCompatActivity {
                         addingUserDataToFirebase(username, phoneNumber, email, address, password, numberOfKids,
                                 maritalStatus, gender, language, religion);
 
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        Log.d(TAG, "DocumentSnapshot added with ID: " + id);
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
+                }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error adding document", e);
+
                     }
                 });
+
 
         while(!referenceTask.isComplete()){
 

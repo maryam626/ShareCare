@@ -87,11 +87,28 @@ public class home_page_parent_activity extends AppCompatActivity {
         );
 
         myChildrenButton.setOnClickListener(new View.OnClickListener() {
-                                              @Override
-                                              public void onClick(View v) {
-                                                  Toast.makeText(home_page_parent_activity.this, "Sorry ,This Feature Will Be Enabled Next Release", Toast.LENGTH_SHORT).show();
-                                              }
-                                          }
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(home_page_parent_activity.this,my_children_activity.class);
+                Bundle extras = new Bundle();
+
+                extras.putString("id",id);
+                extras.putString("userName",userName);
+                extras.putString("phone_number",phoneNumber);
+                extras.putString("email",email);
+                extras.putString("address",address);
+                extras.putString("password",password);
+                extras.putString("number_of_kids",numberOfKids);
+                extras.putString("marital_status",maritalStatus);
+                extras.putString("gender",gender);
+                extras.putString("language",language);
+                extras.putString("religion",religion);
+
+
+                intent.putExtras(extras);
+                startActivity(intent);
+            }
+        }
         );
         buttonMyGroups.setOnClickListener(new View.OnClickListener() {
             @Override

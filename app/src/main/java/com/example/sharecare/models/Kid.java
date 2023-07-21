@@ -6,11 +6,13 @@ public class Kid {
     private int age;
     private String name;
     private String gender;
-    private Parent parent;
+    private String  parent;
     private String schoolName;
 
+    public Kid(){
 
-    public Kid(int age, String name, String gender, Parent parent, String schoolName) {
+    }
+    public Kid(int age, String name, String gender, String parent, String schoolName) {
         this.age = age;
         this.name = name;
         this.gender = gender;
@@ -50,11 +52,11 @@ public class Kid {
         this.gender = gender;
     }
 
-    public Parent getParent() {
+    public String getParent() {
         return parent;
     }
 
-    public void setParent(Parent parent) {
+    public void setParent(String parent) {
         this.parent = parent;
     }
 
