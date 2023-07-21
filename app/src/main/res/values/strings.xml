@@ -122,6 +122,7 @@
     <string name="todo28">TODO</string>
     <string name="todo29">TODO</string>
     <string name="my_kids">My Kids</string>
+    <string name="kid_name">Kid Name</string>
     <string-array name="Number_Of_Kids">
         <item>1</item>
         <item>2</item>

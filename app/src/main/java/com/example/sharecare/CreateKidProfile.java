@@ -13,14 +13,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +47,7 @@ public class CreateKidProfile extends AppCompatActivity {
         ageEt1 = (EditText) findViewById(R.id.ageEt1);
         schoolNameEt = (EditText) findViewById(R.id.schoolNameEt);
         genderSpinner1 = (Spinner) findViewById(R.id.genderSpinner1);
-        kidNumberTv = (TextView) findViewById(R.id.kidNumberTv);
+        kidNumberTv = (TextView) findViewById(R.id.kidNameTv);
         finishBtn = (Button) findViewById(R.id.finishBtn);
 
         kidNumberTv.setText(String.valueOf(getIntent().getIntExtra("kid number",1)));
