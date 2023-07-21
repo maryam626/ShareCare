@@ -93,6 +93,7 @@ public class CreateKidProfile extends AppCompatActivity {
     }
 
     private void addingKidsDataToFirebase() {
+
         Map<String, Object> kid = new HashMap<>();
         kid.put("id","0");
         kid.put("age",ageEt1.getText().toString());
@@ -122,12 +123,13 @@ public class CreateKidProfile extends AppCompatActivity {
 
         while(!referenceTask.isComplete()){
 
+
         }
 
         Task<DocumentReference> referenceTask1 =  db.collection("Parents").document(sign_up_activity.id).collection("myKids").add(kid).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
-                updateId(documentReference.getId());
+                updateIdInParentCollection(documentReference.getId());
                 kidId = documentReference.getId();
                 Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
 
@@ -147,7 +149,7 @@ public class CreateKidProfile extends AppCompatActivity {
         Task<DocumentReference> referenceTask2 =  db.collection("Users").document(sign_up_activity.id).collection("myKids").add(kid).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
-                updateId(documentReference.getId());
+                updateIdInUsersCollection(documentReference.getId());
                 kidId = documentReference.getId();
                 Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
 
@@ -165,10 +167,48 @@ public class CreateKidProfile extends AppCompatActivity {
         }
 
 
+    }
+
+    private void updateIdInUsersCollection(String id) {
+        Task<Void> task = db.collection("Users").document(sign_up_activity.id).collection("myKids").document(id).update("id",id).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "document updated successfully ");
 
 
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error adding document", e);
+
+            }
+        });
+
+        while(!task.isComplete()){
+
+        }
+    }
+
+    private void updateIdInParentCollection(String id) {
+        Task<Void> task = db.collection("Parents").document(sign_up_activity.id).collection("myKids").document(id).update("id",id).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "document updated successfully ");
 
 
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error adding document", e);
+
+            }
+        });
+
+        while(!task.isComplete()){
+
+        }
     }
 
     private void updateId(String id) {
