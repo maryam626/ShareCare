@@ -144,7 +144,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
     private void loadParticipants() {
         SQLiteDatabase db = usersDatabaseHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT username FROM users where id<>? ", new String[]{String.valueOf(loggedInUserId)});
+        Cursor cursor = db.rawQuery("SELECT username FROM users where id<>? and id=100000", new String[]{String.valueOf(loggedInUserId)});
 
         List<String> participantList = new ArrayList<>();
         if (cursor.moveToFirst()) {
@@ -156,6 +156,11 @@ public class CreateGroupActivity extends AppCompatActivity {
 
         cursor.close();
         db.close();
+
+        // Add a default value when the participantList is empty
+        if (participantList.isEmpty()) {
+            participantList.add("No other participants available");
+        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, participantList);
         participantsSpinner.setAdapter(adapter);
@@ -199,13 +204,14 @@ public class CreateGroupActivity extends AppCompatActivity {
             groupId = cursor.getInt(0);
         }
         cursor.close();
+        if(!participant.equals("No other participants available")) {
+            // Insert group participant into groupParticipants table
+            String participantInsertQuery = "INSERT INTO groupParticipants (groupId, userId) " +
+                    "SELECT ?, id FROM users WHERE username = ?";
+            db.execSQL(participantInsertQuery, new String[]{String.valueOf(groupId), participant});
 
-        // Insert group participant into groupParticipants table
-        String participantInsertQuery = "INSERT INTO groupParticipants (groupId, userId) " +
-                "SELECT ?, id FROM users WHERE username = ?";
-        db.execSQL(participantInsertQuery, new String[]{String.valueOf(groupId), participant});
-
-        db.close();
+            db.close();
+        }
 
         finish();
         return true;
