@@ -18,15 +18,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.Logic.ActivityDatabaseHelper;
-import com.example.sharecare.Logic.UsersDatabaseHelper;
 import com.example.sharecare.models.Activity;
-import com.example.sharecare.models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -117,7 +114,8 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         } else if (v == btnSelectTime) {
             showTimePickerDialog();
         } else if (v == btnSave) {
-            saveActivity();
+            if(!saveActivity())
+                return;
 
             Intent intent = new Intent(ChildrenActivityCreateActivity.this, MyGroupsActivity.class);
             Bundle extras = new Bundle();
@@ -158,7 +156,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         timePickerDialog.show();
     }
 
-    private void saveActivity() {
+    private boolean saveActivity() {
         String activityName = editActivityName.getText().toString().trim();
         String selectedDate = editSelectedDate.getText().toString().trim();
         String selectedTime = editSelectedTime.getText().toString().trim();
@@ -166,20 +164,101 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         String ageFrom = editAgeFrom.getText().toString().trim();
         String ageTo = editAgeTo.getText().toString().trim();
 
-        if (TextUtils.isEmpty(activityName) || TextUtils.isEmpty(selectedDate) ||
-                TextUtils.isEmpty(selectedTime) || TextUtils.isEmpty(capacity) ||
-                TextUtils.isEmpty(ageFrom) || TextUtils.isEmpty(ageTo)) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-            return;
+        // Clear previous errors
+        editActivityName.setError(null);
+        editSelectedDate.setError(null);
+        editSelectedTime.setError(null);
+        editCapacity.setError(null);
+        editAgeFrom.setError(null);
+        editAgeTo.setError(null);
+
+        // Validate the user input and set errors if necessary
+        if (TextUtils.isEmpty(activityName)) {
+            editActivityName.setError("Activity name is required");
+            editActivityName.requestFocus();
+            return false;
         }
 
-        int capacityValue = Integer.parseInt(capacity);
-        int ageFromValue = Integer.parseInt(ageFrom);
-        int ageToValue = Integer.parseInt(ageTo);
+        if (TextUtils.isEmpty(selectedDate)) {
+            editSelectedDate.setError("Date is required");
+            editSelectedDate.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(selectedTime)) {
+            editSelectedTime.setError("Time is required");
+            editSelectedTime.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(capacity)) {
+            editCapacity.setError("Capacity is required");
+            editCapacity.requestFocus();
+            return false;
+        }
+
+        int capacityValue, ageFromValue, ageToValue;
+
+        try {
+            capacityValue = Integer.parseInt(capacity);
+            ageFromValue = Integer.parseInt(ageFrom);
+            ageToValue = Integer.parseInt(ageTo);
+        } catch (NumberFormatException e) {
+            editCapacity.setError("Invalid input for capacity or age");
+            editCapacity.requestFocus();
+            return false;
+        }
+
+        if (capacityValue < 1 || capacityValue > 100) {
+            editCapacity.setError("Capacity must be between 1 and 100");
+            editCapacity.requestFocus();
+            return false;
+        }
+
+        if (ageFromValue < 1 || ageFromValue > 99 || ageToValue < 1 || ageToValue > 99) {
+            editAgeFrom.setError("Age of child must be between 1 and 99");
+            editAgeFrom.requestFocus();
+            return false;
+        }
 
         if (ageFromValue >= ageToValue) {
-            Toast.makeText(this, "Invalid age range", Toast.LENGTH_SHORT).show();
-            return;
+            editAgeTo.setError("Invalid age range");
+            editAgeTo.requestFocus();
+            return false;
+        }
+        if (TextUtils.isEmpty(activityName)) {
+            editActivityName.setError("Activity name is required");
+            editActivityName.requestFocus();
+            return false;
+        } else if (activityName.length() < 2 || activityName.length() > 20) {
+            editActivityName.setError("Activity name must be between 2 and 20 characters");
+            editActivityName.requestFocus();
+            return false;
+        }
+
+        // Validate selected date
+        if (TextUtils.isEmpty(selectedDate)) {
+            editSelectedDate.setError("Please select a date");
+            editSelectedDate.requestFocus();
+            return false;
+        }
+
+        // Get the current date
+        Calendar currentDate = Calendar.getInstance();
+
+        // Parse the selected date to compare
+        Calendar selectedDateCalendar = Calendar.getInstance();
+        try {
+            selectedDateCalendar.setTime(dateFormatter.parse(selectedDate));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Compare the selected date with the current date
+        if (selectedDateCalendar.compareTo(currentDate) <= 0) {
+            editSelectedDate.setError("Please select a date in the future");
+            editSelectedDate.requestFocus();
+            return false;
         }
 
         // Create Activity object
@@ -207,6 +286,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         editCapacity.setText("");
         editAgeFrom.setText("");
         editAgeTo.setText("");
+        return true;
     }
 
     private void addingActivityDataToFirebase() {
