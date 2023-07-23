@@ -73,7 +73,8 @@ public class CreateGroupActivity extends AppCompatActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createGroup();
+                if(!createGroup())
+                    return;
                 addingGroupToFirebase();
                 Intent intent = new Intent(CreateGroupActivity.this, MyGroupsActivity.class);
                 Bundle extras = new Bundle();
@@ -160,13 +161,30 @@ public class CreateGroupActivity extends AppCompatActivity {
         participantsSpinner.setAdapter(adapter);
     }
 
-    private void createGroup() {
+    private boolean createGroup() {
         String groupName = groupNameEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
         String participant = participantsSpinner.getSelectedItem().toString();
 
         String city = CitySpinner.getSelectedItem().toString();
         String street = streetEditText.getText().toString();
+
+
+        // Validate the user input
+        if (!isGroupNameValid(groupName)) {
+            groupNameEditText.setError("Group name must be 2 to 20 characters");
+            return false;
+        }
+
+        if (!isDescriptionValid(description)) {
+            descriptionEditText.setError("Description must be 10 to 30 characters");
+            return false;
+        }
+
+        if (!isStreetValid(street)) {
+            streetEditText.setError("Street must be 5 to 20 characters");
+            return false;
+        }
 
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
@@ -190,7 +208,20 @@ public class CreateGroupActivity extends AppCompatActivity {
         db.close();
 
         finish();
+        return true;
+    }
+    // Helper methods to validate input
+
+    private boolean isGroupNameValid(String groupName) {
+        return groupName.length() >= 2 && groupName.length() <= 20;
     }
 
+    private boolean isDescriptionValid(String description) {
+        return description.length() >= 10 && description.length() <= 30;
+    }
+
+    private boolean isStreetValid(String street) {
+        return street.length() >= 5 && street.length() <= 20;
+    }
 
 }
