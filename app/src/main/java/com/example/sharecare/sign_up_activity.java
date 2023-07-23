@@ -33,7 +33,6 @@ import java.util.Map;
 public class sign_up_activity extends AppCompatActivity {
     private static final String TAG = "sign up activity";
 
-
     private EditText userNameEt;
     private EditText phoneEt;
     private EditText emailEt;
@@ -67,7 +66,7 @@ public class sign_up_activity extends AppCompatActivity {
         kidsSpinner = findViewById(R.id.kidsSpinner);
         maritalSpinner = findViewById(R.id.maritalSpinner);
         genderSpinner = findViewById(R.id.genderSpinner);
-        signUpBtn1 = findViewById(R.id.signUpBtn1);
+        signUpBtn1 = findViewById(R.id.signUpBtn);
         languagesSpinner = findViewById(R.id.languageSpinner);
         religionSpinner = findViewById(R.id.religionSpinner);
         passwordEt = findViewById(R.id.passwordEt);
@@ -104,76 +103,88 @@ public class sign_up_activity extends AppCompatActivity {
         signUpBtn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Retrieve user input
-                String username = userNameEt.getText().toString().trim();
-                String phoneNumber = phoneEt.getText().toString().trim();
-                String email = emailEt.getText().toString().trim();
-                String address = addressEt.getText().toString().trim();
-                String password = passwordEt.getText().toString().trim();
-                int numberOfKids = Integer.parseInt(kidsSpinner.getSelectedItem().toString());
-                String maritalStatus = maritalSpinner.getSelectedItem().toString();
-                String gender = genderSpinner.getSelectedItem().toString();
-                String language = languagesSpinner.getSelectedItem().toString();
-                String religion = religionSpinner.getSelectedItem().toString();
+
+                if (SignUpValidation.isUserNameValid(userNameEt) &&
+                        SignUpValidation.isPhoneNumberValid(phoneEt) &&
+                        SignUpValidation.isAddressValid(addressEt) &&
+                        SignUpValidation.isPasswordValid(passwordEt) &&
+                        SignUpValidation.isEmailValid(emailEt) &&
+                        SignUpValidation.isSpinnerSelectionValid(kidsSpinner, "Number of Kids") &&
+                        SignUpValidation.isSpinnerSelectionValid(maritalSpinner, "Marital Status") &&
+                        SignUpValidation.isSpinnerSelectionValid(genderSpinner, "Gender") &&
+                        SignUpValidation.isSpinnerSelectionValid(languagesSpinner, "Language") &&
+                        SignUpValidation.isSpinnerSelectionValid(religionSpinner, "Religion")) {
+                    // All fields are valid, proceed with sign-up process
+
+                    // Retrieve user input
+                    String username = userNameEt.getText().toString().trim();
+                    String phoneNumber = phoneEt.getText().toString().trim();
+                    String email = emailEt.getText().toString().trim();
+                    String address = addressEt.getText().toString().trim();
+                    String password = passwordEt.getText().toString().trim();
+                    int numberOfKids = Integer.parseInt(kidsSpinner.getSelectedItem().toString());
+                    String maritalStatus = maritalSpinner.getSelectedItem().toString();
+                    String gender = genderSpinner.getSelectedItem().toString();
+                    String language = languagesSpinner.getSelectedItem().toString();
+                    String religion = religionSpinner.getSelectedItem().toString();
 
 
-                // Create a new User object
-                User user = new User(username, phoneNumber, email, address, password, numberOfKids,
-                        maritalStatus, gender, language, religion);
+                    // Create a new User object
+                    User user = new User(username, phoneNumber, email, address, password, numberOfKids,
+                            maritalStatus, gender, language, religion);
 
 
+                    // Store user data in SQLite database
+                    long rowId = usersDatabaseHelper.insertUser(user);
 
-                // Store user data in SQLite database
-                long rowId = usersDatabaseHelper.insertUser(user);
+                    id = String.valueOf(rowId);
 
-                id = String.valueOf(rowId);
+                    if (rowId != -1) {
+                        registerUser(emailEt.getText().toString(), passwordEt.getText().toString());
 
-                if (rowId != -1) {
-                    registerUser(emailEt.getText().toString(), passwordEt.getText().toString());
+                        if (userNameEt.getText().toString().equals("")) {
+                            userNameEt.setError("Enter your User Name");
+                        }
+                        if (phoneEt.getText().toString().equals("")) {
+                            phoneEt.setError("Enter your phone number");
+                        }
+                        if (emailEt.getText().toString().equals("")) {
+                            emailEt.setError("Enter your Email");
+                        }
+                        if (addressEt.getText().toString().equals("")) {
+                            addressEt.setError("Enter your Address");
+                        } else {
 
-                    if (userNameEt.getText().toString().equals("")) {
-                        userNameEt.setError("Enter your User Name");
-                    }
-                    if (phoneEt.getText().toString().equals("")) {
-                        phoneEt.setError("Enter your phone number");
-                    }
-                    if (emailEt.getText().toString().equals("")) {
-                        emailEt.setError("Enter your Email");
-                    }
-                    if (addressEt.getText().toString().equals("")) {
-                        addressEt.setError("Enter your Address");
+                            // Successful message
+                            Toast.makeText(sign_up_activity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+
+                            addingParentDataToFirebase(username, phoneNumber, email, address, password, numberOfKids,
+                                    maritalStatus, gender, language, religion);
+
+
+                            Intent intent = new Intent(sign_up_activity.this, FillKidsInformation.class);
+                            //Sending Data To Home Page Using Bundle
+                            Bundle extras = new Bundle();
+                            extras.putString("username", username);
+                            extras.putString("phone_number", phoneNumber);
+                            extras.putString("email", email);
+                            extras.putString("address", address);
+                            extras.putString("password", password);
+                            extras.putString("number_of_kids", String.valueOf(numberOfKids));
+                            extras.putString("marital_status", maritalStatus);
+                            extras.putString("gender", gender);
+                            extras.putString("language", language);
+                            extras.putString("religion", religion);
+
+                            intent.putExtras(extras);
+                            startActivity(intent);
+                        }
                     } else {
-
-                        // Successful message
-                        Toast.makeText(sign_up_activity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-
-                        addingParentDataToFirebase(username, phoneNumber, email, address, password, numberOfKids,
-                                maritalStatus, gender, language, religion);
-
-
-
-                        Intent intent = new Intent(sign_up_activity.this, FillKidsInformation.class);
-                        //Sending Data To Home Page Using Bundle
-                        Bundle extras = new Bundle();
-                        extras.putString("username", username);
-                        extras.putString("phone_number", phoneNumber);
-                        extras.putString("email", email);
-                        extras.putString("address", address);
-                        extras.putString("password", password);
-                        extras.putString("number_of_kids", String.valueOf(numberOfKids));
-                        extras.putString("marital_status", maritalStatus);
-                        extras.putString("gender", gender);
-                        extras.putString("language", language);
-                        extras.putString("religion", religion);
-
-                        intent.putExtras(extras);
-                        startActivity(intent);
+                        // Error message
+                        Toast.makeText(sign_up_activity.this, "Registration failed. Please try again.", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    // Error message
-                    Toast.makeText(sign_up_activity.this, "Registration failed. Please try again.", Toast.LENGTH_SHORT).show();
-                }
 
+                }
             }
         });
 

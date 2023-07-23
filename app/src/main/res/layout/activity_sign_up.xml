@@ -1,300 +1,157 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
+
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-        <RelativeLayout
-            android:id="@+id/page_welcome_ek1"
-            android:layout_width="411dp"
-            android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-            <Button
-                android:id="@+id/signUpBtn1"
-                android:layout_width="95dp"
-                android:layout_height="60dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="157dp"
-                android:layout_marginTop="764dp"
-                android:layout_marginEnd="159dp"
-                android:backgroundTint="#24978C"
-                android:text="@string/sign_up"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="TextContrastCheck" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/username_label"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView7"
-                android:layout_width="225dp"
-                android:layout_height="97dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="120dp"
-                android:layout_marginTop="33dp"
-                android:layout_marginEnd="66dp"
-                android:text="@string/sign_up1"
-                android:textSize="48sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+            android:id="@+id/userNameEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="@string/user_name_hint" />
 
-            <EditText
-                android:id="@+id/userNameEt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="101dp"
-                android:layout_marginTop="136dp"
-                android:layout_marginEnd="101dp"
-                android:autofillHints=""
-                android:ems="10"
-                android:hint="@string/user_name"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                android:textColorHint="#757575"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.529"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_label"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/phoneEt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="101dp"
-                android:layout_marginTop="202dp"
-                android:layout_marginEnd="100dp"
-                android:autofillHints=""
-                android:ems="10"
-                android:hint="@string/phone_number"
-                android:minHeight="48dp"
-                android:textColorHint="#757575"
-                android:inputType="phone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+            android:id="@+id/phoneEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:hint="@string/phone_number_hint" />
 
-            <EditText
-                android:id="@+id/addressEt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="101dp"
-                android:layout_marginTop="326dp"
-                android:layout_marginEnd="95dp"
-                android:autofillHints=""
-                android:ems="10"
-                android:hint="@string/address"
-                android:inputType="textPostalAddress"
-                android:minHeight="48dp"
-                android:textColorHint="#757575"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/address_label"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/passwordEt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="101dp"
-                android:layout_marginTop="392dp"
-                android:layout_marginEnd="94dp"
-                android:autofillHints=""
-                android:ems="10"
-                android:hint="@string/password"
-                android:minHeight="48dp"
-                android:textColorHint="#757575"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/addressEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPostalAddress"
+            android:hint="@string/address_hint" />
 
-            <EditText
-                android:id="@+id/emailEt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="101dp"
-                android:layout_marginTop="262dp"
-                android:layout_marginEnd="98dp"
-                android:autofillHints=""
-                android:ems="10"
-                android:hint="@string/email"
-                android:minHeight="48dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:inputType="textEmailAddress"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/password_label"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/kidsSpinner"
-                android:layout_width="116dp"
-                android:layout_height="50dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="227dp"
-                android:layout_marginTop="446dp"
-                android:layout_marginEnd="68dp"
-                android:entries="@array/Number_Of_Kids"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SpeakableTextPresentCheck" />
+        <EditText
+            android:id="@+id/passwordEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="@string/password_hint" />
 
-            <Spinner
-                android:id="@+id/maritalSpinner"
-                android:layout_width="122dp"
-                android:layout_height="48dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="227dp"
-                android:layout_marginTop="501dp"
-                android:layout_marginEnd="62dp"
-                android:entries="@array/Marital_Status"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SpeakableTextPresentCheck" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email_label"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/languageSpinner"
-                android:layout_width="121dp"
-                android:layout_height="52dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="228dp"
-                android:layout_marginTop="619dp"
-                android:layout_marginEnd="62dp"
-                android:entries="@array/Languages"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SpeakableTextPresentCheck" />
+        <EditText
+            android:id="@+id/emailEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:hint="@string/email_hint" />
 
-            <Spinner
-                android:id="@+id/religionSpinner"
-                android:layout_width="121dp"
-                android:layout_height="52dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="229dp"
-                android:layout_marginTop="682dp"
-                android:layout_marginEnd="61dp"
-                android:entries="@array/Religions"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SpeakableTextPresentCheck" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/kids_label"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/genderSpinner"
-                android:layout_width="121dp"
-                android:layout_height="52dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="225dp"
-                android:layout_marginTop="557dp"
-                android:layout_marginEnd="65dp"
-                android:entries="@array/Gender"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SpeakableTextPresentCheck" />
+        <Spinner
+            android:id="@+id/kidsSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/Number_Of_Kids" />
 
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="452dp"
-                android:layout_marginEnd="198dp"
-                android:text="@string/number_of_kids1"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/marital_label"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="512dp"
-                android:layout_marginEnd="214dp"
-                android:text="@string/marital_status"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <Spinner
+            android:id="@+id/maritalSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/Marital_Status" />
 
-            <TextView
-                android:id="@+id/textView9"
-                android:layout_width="88dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="572dp"
-                android:layout_marginEnd="259dp"
-                android:text="@string/gender"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gender_label"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView13"
-                android:layout_width="101dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="700dp"
-                android:layout_marginEnd="245dp"
-                android:text="@string/religion"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <Spinner
+            android:id="@+id/genderSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/Gender" />
 
-            <TextView
-                android:id="@+id/textView21"
-                android:layout_width="112dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="640dp"
-                android:layout_marginEnd="234dp"
-                android:text="@string/language"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/language_label"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/languageSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/Languages" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/religion_label"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/religionSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/Religions" />
+
+        <Button
+            android:id="@+id/signUpBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="Sign Up" />
+
     </LinearLayout>
-
 </ScrollView>
