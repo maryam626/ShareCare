@@ -124,6 +124,25 @@
     <string name="my_kids">My Kids</string>
     <string name="kid_name">Kid Name</string>
     <string name="todo7">TODO</string>
+    <!-- Labels -->
+    <string name="username_label">User Name</string>
+    <string name="phone_label">Phone Number</string>
+    <string name="address_label">Address</string>
+    <string name="password_label">Password</string>
+    <string name="email_label">Email Address</string>
+    <string name="kids_label">Number of Kids</string>
+    <string name="marital_label">Marital Status</string>
+    <string name="gender_label">Gender</string>
+    <string name="language_label">Language</string>
+    <string name="religion_label">Religion</string>
+
+    <!-- Hints -->
+    <string name="user_name_hint">(4-20 chars, alphanumeric, _, -)</string>
+    <string name="phone_number_hint">Phone (10 digits)</string>
+    <string name="address_hint">Address (max 100 chars)</string>
+    <string name="password_hint">Password (min 6 chars, letters, numbers, special chars)</string>
+    <string name="email_hint">Email (e.g., abc@example.com)</string>
+
     <string-array name="Number_Of_Kids">
         <item>1</item>
         <item>2</item>
@@ -149,4 +168,6 @@
         <item>Learning</item>
         <item>Playing</item>
     </string-array>
+
+
 </resources>
