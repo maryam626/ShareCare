@@ -11,16 +11,16 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.sharecare.Logic.ActivityDatabaseHelper;
-import com.example.sharecare.Logic.GroupsDatabaseHelper;
+import com.example.sharecare.Logic.ActivitySQLLiteDatabaseHelper;
+import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class GroupInfoActivity extends AppCompatActivity {
-    private ActivityDatabaseHelper activityDatabaseHelper;
+    private ActivitySQLLiteDatabaseHelper activityDatabaseHelper;
 
-    private GroupsDatabaseHelper groupsDatabaseHelper;
+    private GroupsSQLLiteDatabaseHelper groupsDatabaseHelper;
 
     private int ishost;
     private TableLayout tableLayout;
@@ -34,12 +34,12 @@ public class GroupInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_info);
-        activityDatabaseHelper= new ActivityDatabaseHelper(this);
+        activityDatabaseHelper= new ActivitySQLLiteDatabaseHelper(this);
         SQLiteDatabase activityDatabase = activityDatabaseHelper.getReadableDatabase();
         //create table if not exist
         activityDatabaseHelper.onCreate(activityDatabase);
         createActivityButton = findViewById(R.id.createActivityButton);
-        groupsDatabaseHelper = new GroupsDatabaseHelper(this);
+        groupsDatabaseHelper = new GroupsSQLLiteDatabaseHelper(this);
         SQLiteDatabase groupsDatabase = groupsDatabaseHelper.getReadableDatabase();
         //create table if not exist
         groupsDatabaseHelper.onCreate(groupsDatabase);

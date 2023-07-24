@@ -4,9 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import com.example.sharecare.Logic.GroupsDatabaseHelper;
+import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +13,11 @@ import java.util.List;
 public class GroupHandler {
 
     private static final String TAG = "GroupHandler";
-    private GroupsDatabaseHelper databaseHelper;
+    private GroupsSQLLiteDatabaseHelper databaseHelper;
     private SQLiteDatabase db;
 
     public GroupHandler(Context context) {
-        databaseHelper = new GroupsDatabaseHelper(context);
+        databaseHelper = new GroupsSQLLiteDatabaseHelper(context);
     }
 
     public void open() {

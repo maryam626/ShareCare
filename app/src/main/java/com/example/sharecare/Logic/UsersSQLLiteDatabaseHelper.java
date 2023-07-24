@@ -3,12 +3,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.example.sharecare.models.User;
 
-public class UsersDatabaseHelper extends SQLiteOpenHelper {
+public class UsersSQLLiteDatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "database";
 
     private static final String DATABASE_NAME = "ShareCare.db";
@@ -41,7 +39,7 @@ public class UsersDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_LANGUAGE + " TEXT, " +
                     COLUMN_RELIGION + " TEXT)";
 
-    public UsersDatabaseHelper(Context context) {
+    public UsersSQLLiteDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

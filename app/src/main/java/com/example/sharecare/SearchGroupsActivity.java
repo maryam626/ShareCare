@@ -7,12 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.sharecare.Logic.GroupsDatabaseHelper;
+import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +22,7 @@ public class SearchGroupsActivity extends AppCompatActivity {
 
     private List<String> selectedCities = new ArrayList<>();
 
-    private GroupsDatabaseHelper groupsDatabaseHelper;
+    private GroupsSQLLiteDatabaseHelper groupsDatabaseHelper;
     private SQLiteDatabase groupsDatabase;
     private int loggedInUserId;
     private String loggedInUsername;
@@ -35,7 +33,7 @@ public class SearchGroupsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_groups);
 
-        groupsDatabaseHelper = new GroupsDatabaseHelper(this);
+        groupsDatabaseHelper = new GroupsSQLLiteDatabaseHelper(this);
         groupsDatabase = groupsDatabaseHelper.getReadableDatabase();
         loggedInUserId = getIntent().getIntExtra("userid",-1);
         loggedInUsername = getIntent().getStringExtra("username");

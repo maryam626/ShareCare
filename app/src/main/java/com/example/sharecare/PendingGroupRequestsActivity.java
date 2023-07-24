@@ -14,12 +14,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.sharecare.Logic.ActivityDatabaseHelper;
-import com.example.sharecare.Logic.GroupsDatabaseHelper;
+import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
 
 public class PendingGroupRequestsActivity extends AppCompatActivity {
 
-    private GroupsDatabaseHelper groupsDatabaseHelper;
+    private GroupsSQLLiteDatabaseHelper groupsDatabaseHelper;
 
     private TableLayout tableLayout;
     private int loggedInUserId;
@@ -31,7 +30,7 @@ public class PendingGroupRequestsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_pending_requests);
 
-        groupsDatabaseHelper= new GroupsDatabaseHelper(this);
+        groupsDatabaseHelper= new GroupsSQLLiteDatabaseHelper(this);
 
         Intent intent = getIntent();
         groupId = intent.getIntExtra("groupid", -1);

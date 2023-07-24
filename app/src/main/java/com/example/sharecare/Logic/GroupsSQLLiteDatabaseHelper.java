@@ -3,18 +3,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GroupsDatabaseHelper extends SQLiteOpenHelper {
+public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "ShareCare.db";
     private static final int DATABASE_VERSION = 1;
 
-    public GroupsDatabaseHelper(Context context) {
+    public GroupsSQLLiteDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

@@ -8,11 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sharecare.Logic.UsersDatabaseHelper;
+import com.example.sharecare.Logic.UsersSQLLiteDatabaseHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,7 +21,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class parent_profile_activity extends AppCompatActivity {
@@ -53,7 +51,7 @@ public class parent_profile_activity extends AppCompatActivity {
     private String language;
     private String religion;
 
-    private UsersDatabaseHelper usersDatabaseHelper;
+    private UsersSQLLiteDatabaseHelper usersDatabaseHelper;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
@@ -139,7 +137,7 @@ public class parent_profile_activity extends AppCompatActivity {
                 languageEt.setEnabled(false);
                 religionEt.setEnabled(false);
 
-                usersDatabaseHelper = new UsersDatabaseHelper(parent_profile_activity.this);
+                usersDatabaseHelper = new UsersSQLLiteDatabaseHelper(parent_profile_activity.this);
                 usersDatabaseHelper.updateUser(id, userNameTv.getText().toString(), phoneEt1.getText().toString(),emailEt1.getText().toString(), addressEt3.getText().toString(), passwordEt1.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
                 updateUserInFirebase(userNameTv.getText().toString(), phoneEt1.getText().toString(), addressEt3.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
                 updateParentInFirebase(userNameTv.getText().toString(), phoneEt1.getText().toString(), addressEt3.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());

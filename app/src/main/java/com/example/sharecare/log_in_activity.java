@@ -2,7 +2,6 @@ package com.example.sharecare;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,7 +14,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.sharecare.Logic.UsersDatabaseHelper;
+import com.example.sharecare.Logic.UsersSQLLiteDatabaseHelper;
 
 public class log_in_activity extends AppCompatActivity {
 
@@ -40,14 +39,14 @@ public class log_in_activity extends AppCompatActivity {
     private String language;
     private String religion;
 
-    private UsersDatabaseHelper databaseHelper;
+    private UsersSQLLiteDatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        databaseHelper = new UsersDatabaseHelper(this);
+        databaseHelper = new UsersSQLLiteDatabaseHelper(this);
         forgetTv = (TextView) findViewById(R.id.forgetTv);
         EtPassword = (EditText) findViewById(R.id.EtPassword);
         EtUserName = (EditText) findViewById(R.id.EtUserName);

@@ -13,10 +13,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.sharecare.Logic.GroupsDatabaseHelper;
+import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -26,7 +25,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     private TableLayout resultTable;
     private int loggedInUserId;
     private String loggedInUsername;
-    private GroupsDatabaseHelper databaseHelper;
+    private GroupsSQLLiteDatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +34,7 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         resultTable = findViewById(R.id.resultTable);
 
-        databaseHelper = new GroupsDatabaseHelper(this);
+        databaseHelper = new GroupsSQLLiteDatabaseHelper(this);
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         databaseHelper.onCreate(db);
         db.close();
