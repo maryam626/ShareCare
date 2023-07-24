@@ -2,7 +2,6 @@ package com.example.sharecare;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -10,33 +9,22 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.handlers.GroupHandler;
 import com.example.sharecare.handlers.UserHandler;
-import com.example.sharecare.models.Group;
 import com.example.sharecare.valdiators.CreateGroupValidator;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CreateGroupActivity extends AppCompatActivity {
-
-    private static final String TAG = "create group activity";
-
     private EditText groupNameEditText, descriptionEditText, streetEditText;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     private Spinner participantsSpinner, CitySpinner;
     private Button createButton;
     private GroupHandler groupHandler;
     private UserHandler userHandler;
-
     private int loggedInUserId;
     private String loggedInUsername;
     private boolean isGroupInserted = false;
@@ -47,7 +35,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
 
-        groupHandler = new GroupHandler(this);
+        groupHandler = new GroupHandler(this, db);
         userHandler = new UserHandler(this);
 
         groupNameEditText = findViewById(R.id.groupNameEditText);
@@ -62,28 +50,25 @@ public class CreateGroupActivity extends AppCompatActivity {
 
         loadParticipants();
         loadCities();
-
-
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!createGroup())
                     return;
 
-                // Store the group to the Firebase and SQLite databases
                 if (isGroupInserted) {
                     groupHandler.open();
                     boolean isParticipantInserted = groupHandler.insertGroupParticipant(groupId, participantsSpinner.getSelectedItem().toString());
                     groupHandler.close();
 
-                    if (!isParticipantInserted) {
-                        Toast.makeText(CreateGroupActivity.this, "Failed to add participant. Please try again.", Toast.LENGTH_SHORT).show();
-                        return;
+                    if (isParticipantInserted) {
+                        // Successful message
+                        Toast.makeText(CreateGroupActivity.this, "successfully created group", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Error message
+                        Toast.makeText(CreateGroupActivity.this, "something went wrong , failed to store group", Toast.LENGTH_SHORT).show();
                     }
                 }
-
-                // Store the group to the Firebase and SQLite databases
-                addingGroupToFirebase();
 
                 Intent intent = new Intent(CreateGroupActivity.this, MyGroupsActivity.class);
                 Bundle extras = new Bundle();
@@ -93,34 +78,6 @@ public class CreateGroupActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-
-    private void addingGroupToFirebase() {
-        Map<String, Object> group = new HashMap<>();
-        group.put("id", String.valueOf(groupId));
-        group.put("groupName", groupNameEditText.getText().toString());
-        group.put("briefInformation", descriptionEditText.getText().toString());
-        group.put("host", loggedInUsername);
-        group.put("participants", participantsSpinner.getSelectedItem().toString());
-        group.put("city", CitySpinner.getSelectedItem().toString());
-        group.put("street", streetEditText.getText().toString());
-
-        db.collection("Groups")
-                .document(String.valueOf(groupId))
-                .set(group)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(CreateGroupActivity.this, "Group added to Firebase", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(CreateGroupActivity.this, "Failed to add group to Firebase", Toast.LENGTH_SHORT).show();
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
     }
 
     private void loadCities() {
@@ -178,7 +135,6 @@ public class CreateGroupActivity extends AppCompatActivity {
         }
 
         return true;
-
     }
     @Override
     protected void onDestroy() {
@@ -190,5 +146,4 @@ public class CreateGroupActivity extends AppCompatActivity {
            // userHandler.close();
         }
     }
-
 }

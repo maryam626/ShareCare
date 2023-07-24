@@ -4,8 +4,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +22,11 @@ public class GroupHandler {
     private GroupsSQLLiteDatabaseHelper databaseHelper;
     private SQLiteDatabase db;
 
-    public GroupHandler(Context context) {
+    private FirebaseFirestore firebaseDb;
+
+    public GroupHandler(Context context, FirebaseFirestore firebaseDb) {
         databaseHelper = new GroupsSQLLiteDatabaseHelper(context);
+        this.firebaseDb = firebaseDb;
     }
 
     public void open() {
@@ -42,7 +51,23 @@ public class GroupHandler {
         values.put("street", street);
         values.put("hostUserId", hostUserId);
 
-        return db.insert("groups", null, values);
+        long groupId = db.insert("groups", null, values);
+
+        firebaseDb.collection("Groups")
+                .document(String.valueOf(groupId))
+                .set(values)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                     }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                         Log.w(TAG, "Error adding document", e);
+                    }
+                });
+        return groupId;
     }
 
     public boolean insertGroupParticipant(int groupId, String participant) {
@@ -50,8 +75,24 @@ public class GroupHandler {
         values.put("groupId", groupId);
         values.put("userId", getUserIdByUsername(participant));
 
-        long result = db.insert("groupParticipants", null, values);
-        return result != -1;
+        long groupParticipantId = db.insert("groupParticipants", null, values);
+        firebaseDb.collection("groupParticipants")
+                .document(String.valueOf(groupParticipantId))
+                .set(values)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                       // Toast.makeText(CreateGroupActivity.this, "groupParticipants added to Firebase", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                       // Toast.makeText(CreateGroupActivity.this, "Failed to add group to Firebase", Toast.LENGTH_SHORT).show();
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
+        return groupParticipantId != -1;
     }
 
     public List<String> getParticipantsExceptCurrent(int loggedInUserId) {
