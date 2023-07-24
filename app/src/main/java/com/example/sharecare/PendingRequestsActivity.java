@@ -14,11 +14,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.sharecare.Logic.ActivityDatabaseHelper;
+import com.example.sharecare.Logic.ActivitySQLLiteDatabaseHelper;
 
 public class PendingRequestsActivity extends AppCompatActivity {
 
-    private ActivityDatabaseHelper activityDatabaseHelper;
+    private ActivitySQLLiteDatabaseHelper activityDatabaseHelper;
     private SQLiteDatabase activityDatabase;
     private TableLayout tableLayout;
     private int loggedInUserId;
@@ -30,7 +30,7 @@ public class PendingRequestsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pending_requests);
 
-        activityDatabaseHelper= new ActivityDatabaseHelper(this);
+        activityDatabaseHelper= new ActivitySQLLiteDatabaseHelper(this);
         activityDatabase = activityDatabaseHelper.getReadableDatabase();
         Intent intent = getIntent();
         groupId = intent.getIntExtra("groupid", -1);

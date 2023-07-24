@@ -17,11 +17,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.sharecare.Logic.GroupsDatabaseHelper;
+import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MyGroupsActivity extends AppCompatActivity {
@@ -30,7 +29,7 @@ public class MyGroupsActivity extends AppCompatActivity {
 
     private Button createGroupButton;
     private TableLayout groupsTableLayout;
-    private GroupsDatabaseHelper databaseHelper;
+    private GroupsSQLLiteDatabaseHelper databaseHelper;
     private int loggedInUserId;
     private String loggedInUsername;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -43,7 +42,7 @@ public class MyGroupsActivity extends AppCompatActivity {
         loggedInUserId = getIntent().getIntExtra("userid",-1);
         loggedInUsername = getIntent().getStringExtra("username");
 
-        databaseHelper = new GroupsDatabaseHelper(this);
+        databaseHelper = new GroupsSQLLiteDatabaseHelper(this);
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         databaseHelper.onCreate(db);
 

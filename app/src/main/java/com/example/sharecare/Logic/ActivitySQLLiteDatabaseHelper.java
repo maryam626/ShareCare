@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.example.sharecare.models.Activity;
 
-public class ActivityDatabaseHelper extends SQLiteOpenHelper {
+public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "ShareCare.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_NAME = "activities";
@@ -40,7 +40,7 @@ public class ActivityDatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE IF NOT EXISTS   activitiesRequest (userid INTEGER, activityid INTEGER, requestDate TEXT, isaccept INTEGER)";
 
 
-    public ActivityDatabaseHelper(Context context) {
+    public ActivitySQLLiteDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

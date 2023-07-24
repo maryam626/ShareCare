@@ -7,7 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.sharecare.Logic.ActivityDatabaseHelper;
+import com.example.sharecare.Logic.ActivitySQLLiteDatabaseHelper;
 import com.example.sharecare.models.Activity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,12 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ActivityHandler {
-    private ActivityDatabaseHelper databaseHelper;
+    private ActivitySQLLiteDatabaseHelper databaseHelper;
     private FirebaseFirestore firebaseDb;
 
 
     public ActivityHandler(Context context, FirebaseFirestore db) {
-        databaseHelper = new ActivityDatabaseHelper(context);
+        databaseHelper = new ActivitySQLLiteDatabaseHelper(context);
         firebaseDb = db;
     }
 
