@@ -2,7 +2,7 @@ package com.example.sharecare.valdiators;
 
 import java.util.Calendar;
 
-public class Validator {
+public class CreateGroupValidator {
 
     public static boolean isGroupNameValid(String groupName) {
         return groupName.length() >= 2 && groupName.length() <= 20;

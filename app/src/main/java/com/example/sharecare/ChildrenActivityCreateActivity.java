@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,7 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.sharecare.Logic.ActivityDatabaseHelper;
+import com.example.sharecare.handlers.ActivityHandler;
+import com.example.sharecare.valdiators.CreateActivityValidator;
 import com.example.sharecare.models.Activity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,7 +43,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
 
     private String selectedActivity;
     private String[] activityOptions;
-    private ActivityDatabaseHelper databaseHelper;
+    private ActivityHandler activityHandler;
 
     private int loggedInUserId;
     private String loggedInUsername;
@@ -51,7 +51,6 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
     private int groupId;
     private int ishost;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +72,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         Intent intent = getIntent();
         groupId = intent.getIntExtra("groupid", -1);
         ishost = intent.getIntExtra("ishost", -1);
-        loggedInUserId =  getIntent().getIntExtra("userid",-1);
+        loggedInUserId =  getIntent().getIntExtra("userid", -1);
         loggedInUsername = getIntent().getStringExtra("username");
 
         // Set click listeners
@@ -87,7 +86,8 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
 
         // Initialize activity options
         activityOptions = getResources().getStringArray(R.array.activity_options);
-        databaseHelper = new ActivityDatabaseHelper(this);
+        activityHandler = new ActivityHandler(this,db);
+
         // Set up spinner with activity options
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, activityOptions);
@@ -104,7 +104,6 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
                 selectedActivity = null;
             }
         });
-
     }
 
     @Override
@@ -114,7 +113,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         } else if (v == btnSelectTime) {
             showTimePickerDialog();
         } else if (v == btnSave) {
-            if(!saveActivity())
+            if (!saveActivity())
                 return;
 
             Intent intent = new Intent(ChildrenActivityCreateActivity.this, MyGroupsActivity.class);
@@ -164,111 +163,45 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         String ageFrom = editAgeFrom.getText().toString().trim();
         String ageTo = editAgeTo.getText().toString().trim();
 
-        // Clear previous errors
-        editActivityName.setError(null);
-        editSelectedDate.setError(null);
-        editSelectedTime.setError(null);
-        editCapacity.setError(null);
-        editAgeFrom.setError(null);
-        editAgeTo.setError(null);
-
         // Validate the user input and set errors if necessary
-        if (TextUtils.isEmpty(activityName)) {
-            editActivityName.setError("Activity name is required");
-            editActivityName.requestFocus();
-            return false;
-        }
-
-        if (TextUtils.isEmpty(selectedDate)) {
-            editSelectedDate.setError("Date is required");
-            editSelectedDate.requestFocus();
-            return false;
-        }
-
-        if (TextUtils.isEmpty(selectedTime)) {
-            editSelectedTime.setError("Time is required");
-            editSelectedTime.requestFocus();
-            return false;
-        }
-
-        if (TextUtils.isEmpty(capacity)) {
-            editCapacity.setError("Capacity is required");
-            editCapacity.requestFocus();
-            return false;
-        }
-
-        int capacityValue, ageFromValue, ageToValue;
-
-        try {
-            capacityValue = Integer.parseInt(capacity);
-            ageFromValue = Integer.parseInt(ageFrom);
-            ageToValue = Integer.parseInt(ageTo);
-        } catch (NumberFormatException e) {
-            editCapacity.setError("Invalid input for capacity or age");
-            editCapacity.requestFocus();
-            return false;
-        }
-
-        if (capacityValue < 1 || capacityValue > 100) {
-            editCapacity.setError("Capacity must be between 1 and 100");
-            editCapacity.requestFocus();
-            return false;
-        }
-
-        if (ageFromValue < 1 || ageFromValue > 99 || ageToValue < 1 || ageToValue > 99) {
-            editAgeFrom.setError("Age of child must be between 1 and 99");
-            editAgeFrom.requestFocus();
-            return false;
-        }
-
-        if (ageFromValue >= ageToValue) {
-            editAgeTo.setError("Invalid age range");
-            editAgeTo.requestFocus();
-            return false;
-        }
-        if (TextUtils.isEmpty(activityName)) {
-            editActivityName.setError("Activity name is required");
-            editActivityName.requestFocus();
-            return false;
-        } else if (activityName.length() < 2 || activityName.length() > 20) {
+        if (!CreateActivityValidator.isActivityNameValid(activityName)) {
             editActivityName.setError("Activity name must be between 2 and 20 characters");
             editActivityName.requestFocus();
             return false;
         }
 
-        // Validate selected date
-        if (TextUtils.isEmpty(selectedDate)) {
+        if (!CreateActivityValidator.isDateValid(selectedDate)) {
             editSelectedDate.setError("Please select a date");
             editSelectedDate.requestFocus();
             return false;
         }
 
-        // Get the current date
-        Calendar currentDate = Calendar.getInstance();
-
-        // Parse the selected date to compare
-        Calendar selectedDateCalendar = Calendar.getInstance();
-        try {
-            selectedDateCalendar.setTime(dateFormatter.parse(selectedDate));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!CreateActivityValidator.isTimeValid(selectedTime)) {
+            editSelectedTime.setError("Please select a time");
+            editSelectedTime.requestFocus();
+            return false;
         }
 
-        // Compare the selected date with the current date
-        if (selectedDateCalendar.compareTo(currentDate) <= 0) {
-            editSelectedDate.setError("Please select a date in the future");
-            editSelectedDate.requestFocus();
+        if (!CreateActivityValidator.isCapacityValid(capacity)) {
+            editCapacity.setError("Capacity must be between 1 and 100");
+            editCapacity.requestFocus();
+            return false;
+        }
+
+        if (!CreateActivityValidator.isAgeRangeValid(ageFrom, ageTo)) {
+            editAgeFrom.setError("Invalid age range");
+            editAgeFrom.requestFocus();
             return false;
         }
 
         // Create Activity object
         Activity activity = new Activity(activityName, selectedActivity, selectedDate, selectedTime,
-                capacityValue, ageFromValue, ageToValue,groupId,loggedInUserId);
+                Integer.parseInt(capacity), Integer.parseInt(ageFrom), Integer.parseInt(ageTo), groupId, loggedInUserId);
 
         // Store user data in SQLite database
-        long rowId = databaseHelper.insertActivity(activity);
+        long rowId = activityHandler.insertActivity(activity);
+        activityHandler.addingActivityDataToFirebase(activity);
 
-        addingActivityDataToFirebase();
 
         if (rowId != -1) {
             // Successful message

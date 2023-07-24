@@ -1,8 +1,6 @@
 package com.example.sharecare;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,18 +15,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.handlers.GroupHandler;
 import com.example.sharecare.handlers.UserHandler;
-import com.example.sharecare.valdiators.Validator;
-import com.example.sharecare.models.User;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.sharecare.models.Group;
+import com.example.sharecare.valdiators.CreateGroupValidator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -158,17 +150,17 @@ public class CreateGroupActivity extends AppCompatActivity {
         String street = streetEditText.getText().toString();
 
         // Validate the user input
-        if (!Validator.isGroupNameValid(groupName)) {
+        if (!CreateGroupValidator.isGroupNameValid(groupName)) {
             groupNameEditText.setError("Group name must be 2 to 20 characters");
             return false;
         }
 
-        if (!Validator.isDescriptionValid(description)) {
+        if (!CreateGroupValidator.isDescriptionValid(description)) {
             descriptionEditText.setError("Description must be 10 to 30 characters");
             return false;
         }
 
-        if (!Validator.isStreetValid(street)) {
+        if (!CreateGroupValidator.isStreetValid(street)) {
             streetEditText.setError("Street must be 5 to 20 characters");
             return false;
         }
