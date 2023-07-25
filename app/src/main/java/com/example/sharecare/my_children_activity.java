@@ -2,7 +2,9 @@ package com.example.sharecare;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -69,6 +71,39 @@ public class my_children_activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_children);
+
+        //here is the add child fragment code//
+        Button btnaddchild = findViewById(R.id.addChildbtn);
+        btnaddchild.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ///here is the transaction from one fragment to other when the button is clicked//
+                FragmentManager fragmentManager = getSupportFragmentManager();  //here we created java class for fragment manger and get a supported fragment manger//
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, addChildFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("name") // Name can be null
+                        .commit();
+
+            }
+        });
+
+
+        //here is the my children fragment code//
+         Button btnmychildren = findViewById(R.id.mychildrenbtn);
+        btnmychildren.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ///here is the transaction from one fragment to other when the button is clicked//
+                FragmentManager fragmentManager = getSupportFragmentManager();  //here we created java class for fragment manger and get a supported fragment manger//
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, myChildrenFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("name") // Name can be null
+                        .commit();
+
+            }
+        });
 
         kid1Btn = (Button) findViewById(R.id.kid1Btn);
         kid2Btn = (Button) findViewById(R.id.kid2Btn);
