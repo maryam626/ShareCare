@@ -8,6 +8,9 @@
         <item>Judaism</item>
     </string-array>
     <string-array name="Languages">
+        <item>Arabic</item>
+        <item>English</item>
+        <item>Hebrew</item>
     </string-array>
     <string name="user_name">User Name</string>
     <string name="password">Password</string>
