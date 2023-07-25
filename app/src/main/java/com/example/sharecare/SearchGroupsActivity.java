@@ -1,4 +1,5 @@
 package com.example.sharecare;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -64,7 +65,7 @@ public class SearchGroupsActivity extends AppCompatActivity {
     private void addCitiesToTable(Cursor cursor) {
         if (cursor.moveToFirst()) {
             do {
-                String city = cursor.getString(cursor.getColumnIndex("city"));
+                @SuppressLint("Range") String city = cursor.getString(cursor.getColumnIndex("city"));
                 addCityElement(city);
             } while (cursor.moveToNext());
         }
