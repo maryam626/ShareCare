@@ -1,4 +1,5 @@
 package com.example.sharecare.Logic;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,7 +9,6 @@ import com.example.sharecare.models.User;
 
 public class UsersSQLLiteDatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "database";
-
     private static final String DATABASE_NAME = "ShareCare.db";
     private static final int DATABASE_VERSION = 1;
 
@@ -68,19 +68,12 @@ public class UsersSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_LANGUAGE, user.getLanguage());
         values.put(COLUMN_RELIGION, user.getReligion());
 
-        long rowId=-1;
-        try{
-              rowId= db.insertOrThrow(TABLE_NAME, null, values);
-        }catch(Exception ex)
-        {
-            long d=2;
-        }
-
+        long rowId = db.insertOrThrow(TABLE_NAME, null, values);
         db.close();
         return rowId;
     }
 
-    public void updateUser(String rowId,String username, String phone, String email, String address, String password, int numKids, String marital, String gender, String language, String religion ){
+    public void updateUser(String rowId, String username, String phone, String email, String address, String password, int numKids, String marital, String gender, String language, String religion) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -95,8 +88,7 @@ public class UsersSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_LANGUAGE, language);
         values.put(COLUMN_RELIGION, religion);
 
-        long result = db.update(TABLE_NAME,values,"id=?", new String[]{rowId});
-
-
+        long result = db.update(TABLE_NAME, values, "id=?", new String[]{rowId});
+        db.close();
     }
 }
