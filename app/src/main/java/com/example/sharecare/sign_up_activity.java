@@ -2,7 +2,6 @@ package com.example.sharecare;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -10,27 +9,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.sharecare.Logic.UsersSQLLiteDatabaseHelper;
+import com.example.sharecare.handlers.SignUpFirebaseHandler;
+import com.example.sharecare.handlers.UserHandler;
 import com.example.sharecare.models.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.example.sharecare.valdiators.SignUpValidator;
 
 public class sign_up_activity extends AppCompatActivity {
-    private static final String TAG = "sign up activity";
+    private static final String TAG = "sign_up_activity";
 
     private EditText userNameEt;
     private EditText phoneEt;
@@ -44,15 +31,9 @@ public class sign_up_activity extends AppCompatActivity {
     private Button signUpBtn1;
     private EditText passwordEt;
 
-    private FirebaseAuth mAuth;
-
-    private UsersSQLLiteDatabaseHelper usersDatabaseHelper;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private UserHandler userHandler;
+    private SignUpFirebaseHandler firebaseHandler;
     public static String id;
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,11 +51,8 @@ public class sign_up_activity extends AppCompatActivity {
         religionSpinner = findViewById(R.id.religionSpinner);
         passwordEt = findViewById(R.id.passwordEt);
 
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
-
-        usersDatabaseHelper = new UsersSQLLiteDatabaseHelper(this);
-
+        userHandler = new UserHandler(this);
+        firebaseHandler = new SignUpFirebaseHandler();
 
         // Set up spinner adapters
         ArrayAdapter<CharSequence> numberOfKidsAdapter = ArrayAdapter.createFromResource(
@@ -97,22 +75,20 @@ public class sign_up_activity extends AppCompatActivity {
                 this, R.array.Religions, android.R.layout.simple_spinner_item);
         religionSpinner.setAdapter(religionAdapter);
 
-
         // Register button click listener
         signUpBtn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (SignUpValidation.isUserNameValid(userNameEt) &&
-                        SignUpValidation.isPhoneNumberValid(phoneEt) &&
-                        SignUpValidation.isAddressValid(addressEt) &&
-                        SignUpValidation.isPasswordValid(passwordEt) &&
-                        SignUpValidation.isEmailValid(emailEt) &&
-                        SignUpValidation.isSpinnerSelectionValid(kidsSpinner, "Number of Kids") &&
-                        SignUpValidation.isSpinnerSelectionValid(maritalSpinner, "Marital Status") &&
-                        SignUpValidation.isSpinnerSelectionValid(genderSpinner, "Gender") &&
-                        SignUpValidation.isSpinnerSelectionValid(languagesSpinner, "Language") &&
-                        SignUpValidation.isSpinnerSelectionValid(religionSpinner, "Religion")) {
+                if (SignUpValidator.isUserNameValid(userNameEt) &&
+                        SignUpValidator.isPhoneNumberValid(phoneEt) &&
+                        SignUpValidator.isAddressValid(addressEt) &&
+                        SignUpValidator.isPasswordValid(passwordEt) &&
+                        SignUpValidator.isEmailValid(emailEt) &&
+                        SignUpValidator.isSpinnerSelectionValid(kidsSpinner, "Number of Kids") &&
+                        SignUpValidator.isSpinnerSelectionValid(maritalSpinner, "Marital Status") &&
+                        SignUpValidator.isSpinnerSelectionValid(genderSpinner, "Gender") &&
+                        SignUpValidator.isSpinnerSelectionValid(languagesSpinner, "Language") &&
+                        SignUpValidator.isSpinnerSelectionValid(religionSpinner, "Religion")) {
                     // All fields are valid, proceed with sign-up process
 
                     // Retrieve user input
@@ -127,258 +103,47 @@ public class sign_up_activity extends AppCompatActivity {
                     String language = languagesSpinner.getSelectedItem().toString();
                     String religion = religionSpinner.getSelectedItem().toString();
 
-
                     // Create a new User object
                     User user = new User(username, phoneNumber, email, address, password, numberOfKids,
                             maritalStatus, gender, language, religion);
 
-
                     // Store user data in SQLite database
-                    long rowId = usersDatabaseHelper.insertUser(user);
-
-                    id = String.valueOf(rowId);
+                    long rowId = userHandler.insertUser(user);
 
                     if (rowId != -1) {
-                        registerUser(emailEt.getText().toString(), passwordEt.getText().toString());
+                        // Successful message
+                        Toast.makeText(sign_up_activity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
 
-                        if (userNameEt.getText().toString().equals("")) {
-                            userNameEt.setError("Enter your User Name");
-                        }
-                        if (phoneEt.getText().toString().equals("")) {
-                            phoneEt.setError("Enter your phone number");
-                        }
-                        if (emailEt.getText().toString().equals("")) {
-                            emailEt.setError("Enter your Email");
-                        }
-                        if (addressEt.getText().toString().equals("")) {
-                            addressEt.setError("Enter your Address");
-                        } else {
+                        // Register the user in Firebase
+                        firebaseHandler.registerUser(email, password, sign_up_activity.this);
 
-                            // Successful message
-                            Toast.makeText(sign_up_activity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                        // Add user data to Firebase
+                        firebaseHandler.addParentDataToFirebase(String.valueOf(rowId), username, phoneNumber, email, address,
+                                password, numberOfKids, maritalStatus, gender, language, religion, sign_up_activity.this);
 
-                            addingParentDataToFirebase(username, phoneNumber, email, address, password, numberOfKids,
-                                    maritalStatus, gender, language, religion);
+                        // Start the next activity
+                        Intent intent = new Intent(sign_up_activity.this, FillKidsInformation.class);
+                        // Sending Data To Home Page Using Bundle
+                        Bundle extras = new Bundle();
+                        extras.putString("username", username);
+                        extras.putString("phone_number", phoneNumber);
+                        extras.putString("email", email);
+                        extras.putString("address", address);
+                        extras.putString("password", password);
+                        extras.putString("number_of_kids", String.valueOf(numberOfKids));
+                        extras.putString("marital_status", maritalStatus);
+                        extras.putString("gender", gender);
+                        extras.putString("language", language);
+                        extras.putString("religion", religion);
 
-
-                            Intent intent = new Intent(sign_up_activity.this, FillKidsInformation.class);
-                            //Sending Data To Home Page Using Bundle
-                            Bundle extras = new Bundle();
-                            extras.putString("username", username);
-                            extras.putString("phone_number", phoneNumber);
-                            extras.putString("email", email);
-                            extras.putString("address", address);
-                            extras.putString("password", password);
-                            extras.putString("number_of_kids", String.valueOf(numberOfKids));
-                            extras.putString("marital_status", maritalStatus);
-                            extras.putString("gender", gender);
-                            extras.putString("language", language);
-                            extras.putString("religion", religion);
-
-                            intent.putExtras(extras);
-                            startActivity(intent);
-                        }
+                        intent.putExtras(extras);
+                        startActivity(intent);
                     } else {
                         // Error message
                         Toast.makeText(sign_up_activity.this, "Registration failed. Please try again.", Toast.LENGTH_SHORT).show();
                     }
-
                 }
             }
         });
-
-
-    }
-
-    private void addingParentDataToFirebase(String username, String phoneNumber, String email, String address, String password, int numberOfKids, String maritalStatus, String gender, String language, String religion) {
-        Map<String, Object> parent = new HashMap<>();
-        parent.put("id","0");
-        parent.put("username",username);
-        parent.put("phoneNumber",phoneNumber);
-        parent.put("email",email);
-        parent.put("address",address);
-        parent.put("password",password);
-        parent.put("numberOfKids",String.valueOf(numberOfKids));
-        parent.put("maritalStatus",maritalStatus);
-        parent.put("gender",gender);
-        parent.put("language",language);
-        parent.put("religion",religion);
-
-        Task<Void> referenceTask =  db.collection("Parents").document(id).set(parent).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        updateIdForParent(id);
-                        Map<String, Object> data = new HashMap<>();
-                        data.put("name", "first kid");
-                        db.collection("Parents").document(id).collection("myKids").add(data);
-
-
-                        addingUserDataToFirebase(username, phoneNumber, email, address, password, numberOfKids,
-                                maritalStatus, gender, language, religion);
-
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + id);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-
-                    }
-                });
-
-
-        while(!referenceTask.isComplete()){
-
-        }
-
-    }
-
-    private void updateIdForParent(String id) {
-        Map<String,Object> parentDetail = new HashMap<String, Object>();
-        parentDetail.put("id", id);
-
-
-        db.collection("Parents")
-                .whereEqualTo("email", emailEt.getText().toString())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful() && !task.getResult().isEmpty()) {
-
-                            DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
-                            String documentId = documentSnapshot.getId();
-                            db.collection("Parents").document(documentId).update(parentDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-
-                                    Toast.makeText(sign_up_activity.this, "id updated Successfully", Toast.LENGTH_SHORT).show();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(sign_up_activity.this, "Some error happened", Toast.LENGTH_SHORT).show();
-
-                                }
-                            });
-
-                        }
-                        else {
-                            Log.d(TAG, "Error changing data", task.getException());
-
-                        }
-                    }
-                });
-    }
-
-    private void addingUserDataToFirebase(String username, String phoneNumber, String email, String address, String password, int numberOfKids, String maritalStatus, String gender, String language, String religion) {
-
-        Map<String, Object> user = new HashMap<>();
-        user.put("id","0");
-        user.put("username",username);
-        user.put("phoneNumber",phoneNumber);
-        user.put("email",email);
-        user.put("address",address);
-        user.put("password",password);
-        user.put("numberOfKids",String.valueOf(numberOfKids));
-        user.put("maritalStatus",maritalStatus);
-        user.put("gender",gender);
-        user.put("language",language);
-        user.put("religion",religion);
-
-        Task<Void> referenceTask =  db.collection("Users").document(id)
-                .set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        updateId(id);
-                        Map<String, Object> data = new HashMap<>();
-                        data.put("name", "first kid");
-                        db.collection("Users").document(id).collection("myKids").add(data);
-
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + id);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-
-        while(!referenceTask.isComplete()){
-
-        }
-
-
-
-    }
-
-    private void updateId(String id) {
-        Map<String,Object> userDetail = new HashMap<String, Object>();
-        userDetail.put("id", id);
-
-
-        db.collection("Users")
-                .whereEqualTo("email", emailEt.getText().toString())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful() && !task.getResult().isEmpty()) {
-
-                            DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
-                            String documentId = documentSnapshot.getId();
-                            db.collection("Users").document(documentId).update(userDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-
-                                    Toast.makeText(sign_up_activity.this, "id updated Successfully", Toast.LENGTH_SHORT).show();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(sign_up_activity.this, "Some error happened", Toast.LENGTH_SHORT).show();
-
-                                }
-                            });
-
-                        }
-                        else {
-                            Log.d(TAG, "Error changing data", task.getException());
-
-                        }
-                    }
-                });
-
-    }
-
-    private void registerUser (String email, String password){
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(sign_up_activity.this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(sign_up_activity.this, "successfull!!!!!", Toast.LENGTH_SHORT).show();
-                } else {
-                    try {
-                        throw task.getException();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    Toast.makeText(sign_up_activity.this, "Faild------", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        });
-
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            currentUser.reload();
-        }
-
     }
 }

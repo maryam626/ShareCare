@@ -1,4 +1,5 @@
 package com.example.sharecare.handlers;
+
 import android.content.Context;
 
 import com.example.sharecare.Logic.UsersSQLLiteDatabaseHelper;
