@@ -22,8 +22,12 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String createGroupsTableQuery = "CREATE TABLE IF NOT EXISTS  groups (id INTEGER PRIMARY KEY AUTOINCREMENT, groupName TEXT,description TEXT,city TEXT,street TEXT, hostUserId INTEGER)";
+        String createGroupsTableQuery = "CREATE TABLE IF NOT EXISTS  groups (id INTEGER PRIMARY KEY AUTOINCREMENT, groupName TEXT,description TEXT,city TEXT,street TEXT,language Text, religion TEXT, hostUserId INTEGER)";
         db.execSQL(createGroupsTableQuery);
+
+        // drop grougs table activate once whenever is needed
+//        String createGroupsTableQuery = "DROP TABLE groups ";
+//        db.execSQL(createGroupsTableQuery);
 
         String createGroupParticipantsTableQuery = "CREATE TABLE IF NOT EXISTS  groupParticipants (groupId INTEGER, userId INTEGER)";
         db.execSQL(createGroupParticipantsTableQuery);
@@ -31,9 +35,17 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         String createCitiesTableQuery = "CREATE TABLE IF NOT EXISTS  cities (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)";
         db.execSQL(createCitiesTableQuery);
 
+        String createLanguagesTableQuery = "CREATE TABLE IF NOT EXISTS  languages (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)";
+        db.execSQL(createLanguagesTableQuery);
+
+        String createReligionTableQuery = "CREATE TABLE IF NOT EXISTS  religions (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)";
+        db.execSQL(createReligionTableQuery);
+
         db.execSQL(CREATE_TABLE_GROUP_PENDING_REQUESTS);
 
         addCities(db);
+        addLanguages(db);
+        addReligions(db);
     }
 
     private void addCities(SQLiteDatabase db) {
@@ -43,6 +55,30 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         for (String city : cities) {
             // Create an array of values to be inserted
             String[] values = {city};
+
+            // Execute the insert query
+            db.execSQL(insertQuery, values);
+        }
+    }
+    private void addLanguages(SQLiteDatabase db) {
+        List<String> languages = Arrays.asList("Arabic", "English", "Hebrew", "Russian", "Spanish");
+        String insertQuery = "INSERT OR IGNORE INTO languages (name) VALUES (?)";
+
+        for (String language : languages) {
+            // Create an array of values to be inserted
+            String[] values = {language};
+
+            // Execute the insert query
+            db.execSQL(insertQuery, values);
+        }
+    }
+    private void addReligions(SQLiteDatabase db) {
+        List<String> religions = Arrays.asList("Muslim", "Christian", "Jewish", "Druz");
+        String insertQuery = "INSERT OR IGNORE INTO religions (name) VALUES (?)";
+
+        for (String religion : religions) {
+            // Create an array of values to be inserted
+            String[] values = {religion};
 
             // Execute the insert query
             db.execSQL(insertQuery, values);
@@ -87,6 +123,41 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         return cityList;
     }
 
+    public List<String> loadLanguages() {
+        List<String> cityList = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT DISTINCT name FROM languages ORDER BY name ASC", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String city = cursor.getString(cursor.getColumnIndex("name"));
+                cityList.add(city);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return cityList;
+    }
+
+    public List<String> loadReligions() {
+        List<String> cityList = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT DISTINCT name FROM religions ORDER BY name ASC", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String city = cursor.getString(cursor.getColumnIndex("name"));
+                cityList.add(city);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return cityList;
+    }
     public int getUserIdByUsername(String username) {
         int userId = -1;
         SQLiteDatabase db = getReadableDatabase();
