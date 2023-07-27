@@ -1,11 +1,12 @@
 package com.example.sharecare;
-import android.content.ContentValues;
+
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -14,11 +15,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
+import com.example.sharecare.handlers.GroupHandler;
+import com.example.sharecare.models.Group;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class SearchResultsActivity extends AppCompatActivity {
 
@@ -26,6 +27,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     private int loggedInUserId;
     private String loggedInUsername;
     private GroupsSQLLiteDatabaseHelper databaseHelper;
+    private GroupHandler groupHandler; // New instance of GroupHandler class
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,147 +37,122 @@ public class SearchResultsActivity extends AppCompatActivity {
         resultTable = findViewById(R.id.resultTable);
 
         databaseHelper = new GroupsSQLLiteDatabaseHelper(this);
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
-        databaseHelper.onCreate(db);
-        db.close();
+        groupHandler = new GroupHandler(this, FirebaseFirestore.getInstance()); // Initialize GroupHandler
 
         Intent intent = getIntent();
-        loggedInUserId = intent.getIntExtra("userid",-1);
+        loggedInUserId = intent.getIntExtra("userid", -1);
         loggedInUsername = intent.getStringExtra("username");
         List<String> selectedCities = intent.getStringArrayListExtra("selectedCities");
 
+        // Scroll view reference
+        HorizontalScrollView horizontalScrollView = findViewById(R.id.horizontalScrollView);
+
+        // Scroll the view to the leftmost position (start) to show the beginning of the table
+        horizontalScrollView.post(() -> horizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT));
         loadGroups(selectedCities);
     }
 
     private void loadGroups(List<String> selectedCities) {
+        groupHandler.open(); // Open the database connection
 
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
-        // Retrieve groups where user is not part of or didnt do a requst to join to yet
-        String selectQuery= "select distinct groupid,groupName,description,city,street from (SELECT  id as groupid,groupName,description,city,street  FROM groups" +
-                "  WHERE hostUserId <> ? union all SELECT groups.id as groupid,groups.groupName,groups.description,groups.city,groups.street " +
-                " FROM groups INNER JOIN groupParticipants ON groups.id = groupParticipants.groupId " +
-                " WHERE groupParticipants.userId <> ?" +
-                " union all SELECT groups.id as groupid,groups.groupName,groups.description,groups.city,groups.street " +
-                " FROM groups INNER JOIN groupsRequest ON groups.id = groupsRequest.groupId " +
-                "  WHERE groupsRequest.userId = ? and isaccept=0) where city in ( ";
+        List<Group> groups = groupHandler.getGroups(selectedCities, loggedInUserId);
 
-         // Append each city name to the query
-        for (int i = 0; i < selectedCities.size(); i++) {
-            selectQuery += "'" + selectedCities.get(i) + "'";
-            if (i < selectedCities.size() - 1) {
-                selectQuery += ",";
-            }
+        groupHandler.close(); // Close the database connection
+
+        if (groups.isEmpty()) {
+            Toast.makeText(this, "There are no groups that you are not part of! View groups in My Groups section.", Toast.LENGTH_SHORT).show();
+        } else {
+            addGroupsToTable(groups);
         }
-        selectQuery += ")";
-        Cursor hostCursor = db.rawQuery(selectQuery,new String[]{String.valueOf(loggedInUserId),String.valueOf(loggedInUserId),String.valueOf(loggedInUserId)});
-
-        addGroupsToTable(hostCursor);
-
-        hostCursor.close();
-        db.close();
     }
 
+    private void addGroupsToTable(List<Group> groups) {
+        resultTable.removeAllViews(); // Clear the table before adding new data
 
-    private void addGroupsToTable(Cursor cursor) {
-boolean first=true;
-        if (cursor.moveToFirst()) {
-            do {
+        TableRow headerRow = new TableRow(this);
 
-                int groupId = cursor.getInt(cursor.getColumnIndex("groupid"));
-                String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
-                String description = cursor.getString(cursor.getColumnIndex("description"));
-                String city = cursor.getString(cursor.getColumnIndex("city"));
-                String street = cursor.getString(cursor.getColumnIndex("street"));
+        // Create TextViews for column headers
+        TextView groupNameLabelTextView = new TextView(this);
+        groupNameLabelTextView.setText("Group Name");
+        groupNameLabelTextView.setPadding(8, 8, 8, 8);
+        groupNameLabelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        groupNameLabelTextView.setTypeface(null, Typeface.BOLD);
+        groupNameLabelTextView.setTextColor(getResources().getColor(android.R.color.black));
 
-                // Create a new row in the table
-                TableRow row = new TableRow(this);
+        headerRow.addView(groupNameLabelTextView);
 
+        TextView descriptionLabelTextView = new TextView(this);
+        descriptionLabelTextView.setText("Description");
+        descriptionLabelTextView.setPadding(8, 8, 8, 8);
+        descriptionLabelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        descriptionLabelTextView.setTypeface(null, Typeface.BOLD);
+        descriptionLabelTextView.setTextColor(getResources().getColor(android.R.color.black));
+        headerRow.addView(descriptionLabelTextView);
 
-                if(first)
-                {
-                    // Create TextViews for group name and group ID
-                    TextView groupNameLabelTextView = new TextView(this);
-                    groupNameLabelTextView.setText("Group Name");
-                    groupNameLabelTextView.setPadding(8, 8, 8, 8);
-                    row.addView(groupNameLabelTextView);
+        TextView cityLabelTextView = new TextView(this);
+        cityLabelTextView.setText("City");
+        cityLabelTextView.setPadding(8, 8, 8, 8);
+        cityLabelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        cityLabelTextView.setTypeface(null, Typeface.BOLD);
+        cityLabelTextView.setTextColor(getResources().getColor(android.R.color.black));
+        headerRow.addView(cityLabelTextView);
 
-                    TextView  descriptionLabelTextView = new TextView(this);
-                    descriptionLabelTextView.setText(String.valueOf("Description"));
-                    descriptionLabelTextView.setPadding(8, 8, 8, 8);
-                    row.addView(descriptionLabelTextView);
+        TextView streetLabelTextView = new TextView(this);
+        streetLabelTextView.setText("Street");
+        streetLabelTextView.setPadding(8, 8, 8, 8);
+        streetLabelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        streetLabelTextView.setTypeface(null, Typeface.BOLD);
+        streetLabelTextView.setTextColor(getResources().getColor(android.R.color.black));
+        headerRow.addView(streetLabelTextView);
 
-                    TextView  cityLabelTextView = new TextView(this);
-                    cityLabelTextView.setText(String.valueOf("City"));
-                    cityLabelTextView.setPadding(8, 8, 8, 8);
-                    row.addView(cityLabelTextView);
+        resultTable.addView(headerRow);
 
-                    TextView  streetLabelTextView = new TextView(this);
-                    streetLabelTextView.setText(String.valueOf("Street"));
-                    streetLabelTextView.setPadding(8, 8, 8, 8);
-                    row.addView(streetLabelTextView);
-                    resultTable.addView(row);
-                    row = new TableRow(this);
-                    first=false;
+        for (Group group : groups) {
+            TableRow row = new TableRow(this);
+
+            // Create TextViews for group information
+            TextView groupNameTextView = new TextView(this);
+            groupNameTextView.setText(group.getGroupName());
+            groupNameTextView.setPadding(8, 8, 8, 8);
+            row.addView(groupNameTextView);
+
+            TextView descriptionTextView = new TextView(this);
+            descriptionTextView.setText(group.getBriefInformation());
+            descriptionTextView.setPadding(8, 8, 8, 8);
+            row.addView(descriptionTextView);
+
+            TextView cityTextView = new TextView(this);
+            cityTextView.setText(group.getCity());
+            cityTextView.setPadding(8, 8, 8, 8);
+            row.addView(cityTextView);
+
+            TextView streetTextView = new TextView(this);
+            streetTextView.setText(group.getStreet());
+            streetTextView.setPadding(8, 8, 8, 8);
+            row.addView(streetTextView);
+
+            // Create a Button for "Join Group"
+            Button openGroupButton = new Button(this);
+            openGroupButton.setText("Join Group");
+            openGroupButton.setPadding(8, 8, 8, 8);
+            openGroupButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    joinGroup(group.getId());
                 }
-                // Create TextViews for group name and group ID
-                TextView groupNameTextView = new TextView(this);
-                groupNameTextView.setText(groupName);
-                groupNameTextView.setPadding(8, 8, 8, 8);
-                row.addView(groupNameTextView);
+            });
+            row.addView(openGroupButton);
 
-                TextView  descriptionTextView = new TextView(this);
-                descriptionTextView.setText(String.valueOf(description));
-                descriptionTextView.setPadding(8, 8, 8, 8);
-                row.addView(descriptionTextView);
+            resultTable.addView(row);
+        }
+    }
 
-                TextView  cityTextView = new TextView(this);
-                cityTextView.setText(String.valueOf(city));
-                cityTextView.setPadding(8, 8, 8, 8);
-                row.addView(cityTextView);
-
-                TextView  streetTextView = new TextView(this);
-                streetTextView.setText(String.valueOf(street));
-                streetTextView.setPadding(8, 8, 8, 8);
-                row.addView(streetTextView);
-
-                // Create a Button for "Open Group"
-                Button openGroupButton = new Button(this);
-                openGroupButton.setText("Join Group");
-                openGroupButton.setPadding(8, 8, 8, 8);
-                openGroupButton.setOnClickListener(new View.OnClickListener() {
-
-                    public void insertActivityRequest(int userId, int activityId) {
-
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                        String date = dateFormat.format(new Date());
-
-                        ContentValues values = new ContentValues();
-                        values.put("userid", userId);
-                        values.put("groupid", activityId);
-                        values.put("requestDate", date);
-                        values.put("isaccept", false);
-
-                        SQLiteDatabase db = databaseHelper.getReadableDatabase();
-
-                        db.insert("groupsRequest", null, values);
-                        db.close();
-                    }
-
-                    @Override
-                    public void onClick(View v) {
-                        insertActivityRequest(loggedInUserId,groupId);
-                        Toast.makeText(SearchResultsActivity.this, "Your request submitted to group owner ", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                row.addView(openGroupButton);
-
-                // Add the row to the table
-                resultTable.addView(row);
-            } while (cursor.moveToNext());
-        }else
-        {
-            Toast.makeText(SearchResultsActivity.this, "There is no groups that you are not part of ! , view groups in My Groups section", Toast.LENGTH_SHORT).show();
-
+    private void joinGroup(int groupId) {
+        boolean success = groupHandler.insertGroupParticipant(groupId, loggedInUsername);
+        if (success) {
+            Toast.makeText(this, "Your request has been submitted to the group owner.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Failed to join the group. Please try again.", Toast.LENGTH_SHORT).show();
         }
     }
 }
