@@ -22,22 +22,20 @@ import java.util.List;
 public class CreateGroupActivity extends AppCompatActivity {
     private EditText groupNameEditText, descriptionEditText, streetEditText;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private Spinner participantsSpinner, CitySpinner;
+    private Spinner participantsSpinner, CitySpinner, languageSpinner, religionSpinner;
     private Button createButton;
     private GroupHandler groupHandler;
     private UserHandler userHandler;
     private int loggedInUserId;
     private String loggedInUsername;
     private boolean isGroupInserted = false;
+
     int groupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
-
-        // Toolbar toolbar = findViewById(R.id.toolbar);
-    //    setSupportActionBar(toolbar);
 
         groupHandler = new GroupHandler(this, db);
         userHandler = new UserHandler(this);
@@ -48,12 +46,16 @@ public class CreateGroupActivity extends AppCompatActivity {
 
         participantsSpinner = findViewById(R.id.participantsSpinner);
         CitySpinner = findViewById(R.id.CitySpinner);
+        languageSpinner = findViewById(R.id.LanguagesSpinner);
+        religionSpinner = findViewById(R.id.ReligionsSpinner);
         createButton = findViewById(R.id.createButton);
         loggedInUserId = getIntent().getIntExtra("userid", -1);
         loggedInUsername = getIntent().getStringExtra("username");
 
         loadParticipants();
         loadCities();
+        loadLanguages();
+        loadReligions();
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,9 +86,6 @@ public class CreateGroupActivity extends AppCompatActivity {
         });
     }
 
-    private void setSupportActionBar(Toolbar toolbar) {
-    }
-
     private void loadCities() {
         groupHandler.open();
         List<String>  cityList = groupHandler.getAllCities();
@@ -94,7 +93,6 @@ public class CreateGroupActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, cityList);
         CitySpinner.setAdapter(adapter);
     }
-
     private void loadParticipants() {
         groupHandler.open();
         List<String> participantList = groupHandler.getParticipantsExceptCurrent(loggedInUserId);
@@ -106,12 +104,29 @@ public class CreateGroupActivity extends AppCompatActivity {
         participantsSpinner.setAdapter(adapter);
     }
 
+    private void loadLanguages() {
+        groupHandler.open();
+        List<String>  languagesList = groupHandler.getAllLanguages();
+        groupHandler.close();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, languagesList);
+        languageSpinner.setAdapter(adapter);
+    }
+
+    private void loadReligions() {
+        groupHandler.open();
+        List<String>  religionsList = groupHandler.getAllReligions();
+        groupHandler.close();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, religionsList);
+        religionSpinner.setAdapter(adapter);
+    }
     private boolean createGroup() {
         String groupName = groupNameEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
         String participant = participantsSpinner.getSelectedItem().toString();
         String city = CitySpinner.getSelectedItem().toString();
         String street = streetEditText.getText().toString();
+        String language = languageSpinner.getSelectedItem().toString();
+        String religion = religionSpinner.getSelectedItem().toString();
 
         // Validate the user input
         if (!CreateGroupValidator.isGroupNameValid(groupName)) {
@@ -131,7 +146,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
         // Insert group into the local database
         groupHandler.open();
-        groupId = (int) groupHandler.insertGroup(groupName, description, city, street, loggedInUserId);
+        groupId = (int) groupHandler.insertGroup(groupName, description, city, street, language, religion, loggedInUserId);
         groupHandler.close();
 
         if (groupId == -1) {

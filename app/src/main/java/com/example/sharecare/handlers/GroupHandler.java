@@ -42,11 +42,15 @@ public class GroupHandler {
     public List<String> getGroupsDistinctCities() {
         return databaseHelper.getGroupsDistinctCities();
     }
+    public List<String> getAllLanguages() {
+        return databaseHelper.loadLanguages();
+    }
 
+    public List<String> getAllReligions() {
+        return databaseHelper.loadReligions();
+    }
 
-
-
-    public long insertGroup(String groupName, String description, String city, String street, int hostUserId) {
+    public long insertGroup(String groupName, String description, String city, String street, String language, String religion, int hostUserId) {
         if (!Validator.isValidGroupName(groupName)) {
             return -1; // Invalid group name
         }
@@ -70,6 +74,8 @@ public class GroupHandler {
         values.put("description", description);
         values.put("city", city);
         values.put("street", street);
+        values.put("language", language);
+        values.put("religion", religion);
         values.put("hostUserId", hostUserId);
 
         long groupId = db.insert("groups", null, values);

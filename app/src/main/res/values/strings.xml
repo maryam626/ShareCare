@@ -136,6 +136,8 @@
     <string name="gender_label">Gender</string>
     <string name="language_label">Language</string>
     <string name="religion_label">Religion</string>
+    <string name="Select_Language">Select Language</string>
+    <string name="Select_Religion">Select Religion</string>
 
     <!-- Hints -->
     <string name="user_name_hint">(4-20 chars, alphanumeric, _, -)</string>
