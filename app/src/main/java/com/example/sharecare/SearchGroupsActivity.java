@@ -1,17 +1,17 @@
 package com.example.sharecare;
-import android.annotation.SuppressLint;
+
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
+import com.example.sharecare.handlers.GroupHandler;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,36 +23,23 @@ public class SearchGroupsActivity extends AppCompatActivity {
 
     private List<String> selectedCities = new ArrayList<>();
 
-    private GroupsSQLLiteDatabaseHelper groupsDatabaseHelper;
-    private SQLiteDatabase groupsDatabase;
+    private GroupHandler groupHandler; // New instance of GroupHandler class
     private int loggedInUserId;
     private String loggedInUsername;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_groups);
 
-        groupsDatabaseHelper = new GroupsSQLLiteDatabaseHelper(this);
-        groupsDatabase = groupsDatabaseHelper.getReadableDatabase();
-        loggedInUserId = getIntent().getIntExtra("userid",-1);
+        groupHandler = new GroupHandler(this, FirebaseFirestore.getInstance()); // Initialize GroupHandler
+        loggedInUserId = getIntent().getIntExtra("userid", -1);
         loggedInUsername = getIntent().getStringExtra("username");
 
-        //create table if not exist
-        groupsDatabaseHelper.onCreate(groupsDatabase);
         cityContainer = findViewById(R.id.cityContainer);
         searchButton = findViewById(R.id.searchButton);
 
-
-        SQLiteDatabase db = groupsDatabaseHelper.getReadableDatabase();
-
-        // Retrieve groups where the logged-in user is the host
-        Cursor cursor = db.rawQuery("select distinct city from groups ", new String[]{});
-        addCitiesToTable(cursor);
-
-        cursor.close();
-        db.close();
+        loadCitiesFromDatabase();
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,12 +49,11 @@ public class SearchGroupsActivity extends AppCompatActivity {
         });
     }
 
-    private void addCitiesToTable(Cursor cursor) {
-        if (cursor.moveToFirst()) {
-            do {
-                @SuppressLint("Range") String city = cursor.getString(cursor.getColumnIndex("city"));
-                addCityElement(city);
-            } while (cursor.moveToNext());
+    private void loadCitiesFromDatabase() {
+        List<String> cities = groupHandler.getGroupsDistinctCities();
+
+        for (String city : cities) {
+            addCityElement(city);
         }
     }
 
@@ -82,10 +68,23 @@ public class SearchGroupsActivity extends AppCompatActivity {
                 selectedCities.remove(cityName);
             }
         });
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.setMargins(0, 0, 0, 8); // Set the margin bottom to add spacing between rows
+        cityView.setLayoutParams(layoutParams);
         cityContainer.addView(cityView);
     }
 
     private void performSearch() {
+        if (selectedCities.isEmpty()) {
+            // Show an error message if no cities are selected
+            Toast.makeText(this, "Please select at least one city.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Intent intent = new Intent(SearchGroupsActivity.this, SearchResultsActivity.class);
 
         Bundle extras = new Bundle();

@@ -8,12 +8,10 @@ public class CreateActivityValidator {
     }
 
     public static boolean isDateValid(String date) {
-        // You can implement date validation logic here if needed.
         return !TextUtils.isEmpty(date);
     }
 
     public static boolean isTimeValid(String time) {
-        // You can implement time validation logic here if needed.
         return !TextUtils.isEmpty(time);
     }
 

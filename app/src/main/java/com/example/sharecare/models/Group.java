@@ -28,6 +28,13 @@ public class Group {
         this.street = street;
     }
 
+    public Group(int groupId, String groupName, String description, String city, String street) {
+        this.groupName = groupName;
+        this.briefInformation = description;
+        this.city = city;
+        this.street = street;
+    }
+
 
     public int getId() {
         return id;
