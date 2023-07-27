@@ -9,7 +9,7 @@ import com.example.sharecare.models.Activity;
 public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "ShareCare.db";
     private static final int DATABASE_VERSION = 1;
-    private static final String TABLE_NAME = "activities";
+    private static final String ACTIVITIES_TABLE_NAME = "activities";
     private static final String COLUMN_ID = "id";
 
     private static final String GROUP_ID = "groupid";
@@ -17,13 +17,13 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ACTIVITY_TYPE = "activity_type";
     private static final String COLUMN_ACTIVITY_DATE = "date";
     private static final String COLUMN_ACTIVITY_TIME = "time";
-    private static final String COLUMN_CAPACITY = "capcaity";
+    private static final String COLUMN_CAPACITY = "capacity";
     private static final String COLUMN_AGE_FROM = "child_age_from";
     private static final String COLUMN_AGE_TO = "child_age_to";
     private static final String OWNER_ID = "owner_user_id";
 
     private static final String CREATE_TABLE =
-            "CREATE TABLE IF NOT EXISTS  " + TABLE_NAME + " (" +
+            "CREATE TABLE IF NOT EXISTS  " + ACTIVITIES_TABLE_NAME + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     GROUP_ID + " INTEGER, " +
                     COLUMN_ACTIVITY_NAME + " TEXT, " +
@@ -52,7 +52,7 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ACTIVITIES_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + "activitiesRequest");
         onCreate(db);
     }
@@ -72,7 +72,7 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
         long rowId=-1;
         try{
-              rowId= db.insertOrThrow(TABLE_NAME, null, values);
+              rowId= db.insertOrThrow(ACTIVITIES_TABLE_NAME, null, values);
         }catch(Exception ex)
         {
         }
