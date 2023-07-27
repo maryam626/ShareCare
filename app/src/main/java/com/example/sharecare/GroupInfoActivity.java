@@ -97,13 +97,13 @@ public class GroupInfoActivity extends AppCompatActivity {
         // you will join button if you are not joined in the activity
         SQLiteDatabase activityDatabase = activityDatabaseHelper.getReadableDatabase();
         Cursor cursor = activityDatabase.rawQuery(
-                "select distinct activity_id,activity_name,activity_type,date,time,capcaity,child_age_from,child_age_to,isaccept,isowner from ( " +
-                        "SELECT  activities.id as  activity_id ,  activity_name,activity_type,date,time,capcaity,child_age_from,child_age_to,case when activities.owner_user_id=? then 1 else 0 end  as  isaccept," +
+                "select distinct activity_id,activity_name,activity_type,date,time,capacity,child_age_from,child_age_to,isaccept,isowner from ( " +
+                        "SELECT  activities.id as  activity_id ,  activity_name,activity_type,date,time,capacity,child_age_from,child_age_to,case when activities.owner_user_id=? then 1 else 0 end  as  isaccept," +
                         "case when activities.owner_user_id=? then 1 else 0 end  as isowner" +
                 " from activities inner join groups on activities.groupid=groups.id where groups.id=?  " +
                 " union all " +
                 " SELECT  activities.id as activity_id , activity_name,activity_type,date,time, " +
-                " capcaity,child_age_from,child_age_to ,ar.isaccept as isaccept ,0 as isowner FROM activities " +
+                " capacity,child_age_from,child_age_to ,ar.isaccept as isaccept ,0 as isowner FROM activities " +
                 " inner join  activitiesRequest ar on ar.activityid =activities.id where groupid = ? and activities.owner_user_id<>? ) "
                 , new String[]{String.valueOf(loggedInUserId),String.valueOf(loggedInUserId),String.valueOf(groupId),String.valueOf(groupId),String.valueOf(loggedInUserId)});
 
@@ -113,7 +113,7 @@ public class GroupInfoActivity extends AppCompatActivity {
             String activity_type = cursor.getString(cursor.getColumnIndex("activity_type"));
             String date = cursor.getString(cursor.getColumnIndex("date"));
             String time = cursor.getString(cursor.getColumnIndex("time"));
-            String capcaity = cursor.getString(cursor.getColumnIndex("capcaity"));
+            String capacity = cursor.getString(cursor.getColumnIndex("capacity"));
             String child_age_from = cursor.getString(cursor.getColumnIndex("child_age_from"));
             String child_age_to = cursor.getString(cursor.getColumnIndex("child_age_to"));
             int isaccept = cursor.getInt(cursor.getColumnIndex("isaccept"));
@@ -136,7 +136,7 @@ public class GroupInfoActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // Handle the button click event
-                    openActivityDialog(activity_name,activity_type,date,time,capcaity,child_age_from,child_age_to);
+                    openActivityDialog(activity_name,activity_type,date,time,capacity,child_age_from,child_age_to);
                 }
             });
             row.addView(moreInfoButton);
@@ -255,11 +255,11 @@ public class GroupInfoActivity extends AppCompatActivity {
     }
 
     private void openActivityDialog(String activity_name,String activity_type,
-           String date,String time,String capcaity,String child_age_from,String child_age_to) {
+           String date,String time,String capacity,String child_age_from,String child_age_to) {
 
         // Create an instance of the ActivityDialog and display it
         ActivityDialog activityDialog = new ActivityDialog(this, activity_name, activity_type,
-                date,time,capcaity,child_age_from,child_age_to);
+                date,time,capacity,child_age_from,child_age_to);
         activityDialog.show();
     }
 

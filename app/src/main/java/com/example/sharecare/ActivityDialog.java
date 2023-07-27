@@ -14,7 +14,7 @@ public class ActivityDialog extends Dialog {
     private String date;
     private String time;
 
-    private String capcaity;
+    private String capacity;
     private String child_age_from;
 
     private String child_age_to;
@@ -22,13 +22,13 @@ public class ActivityDialog extends Dialog {
 
 
     public ActivityDialog(Context context, String activity_name, String activity_type , String date,
-                          String time, String capcaity ,String child_age_from , String child_age_to) {
+                          String time, String capacity ,String child_age_from , String child_age_to) {
         super(context);
         this.activity_name = activity_name;
         this.activity_type = activity_type;
         this.date = date;
         this.time = time;
-        this.capcaity = capcaity;
+        this.capacity = capacity;
         this.child_age_from = child_age_from;
         this.child_age_to = child_age_to;
     }
@@ -48,8 +48,8 @@ public class ActivityDialog extends Dialog {
         dateLabel.setText(date);
         TextView timeLabel = findViewById(R.id.time);
         timeLabel.setText(time);
-        TextView capcaityLabel = findViewById(R.id.capcaity);
-        capcaityLabel.setText(capcaity);
+        TextView capacityLabel = findViewById(R.id.capacity);
+        capacityLabel.setText(capacity);
 
         TextView child_age_fromLabel = findViewById(R.id.child_age_from);
         child_age_fromLabel.setText(child_age_from);

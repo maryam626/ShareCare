@@ -22,12 +22,19 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String createGroupsTableQuery = "CREATE TABLE IF NOT EXISTS  groups (id INTEGER PRIMARY KEY AUTOINCREMENT, groupName TEXT,description TEXT,city TEXT,street TEXT,language Text, religion TEXT, hostUserId INTEGER)";
-        db.execSQL(createGroupsTableQuery);
 
         // drop grougs table activate once whenever is needed
-//        String createGroupsTableQuery = "DROP TABLE groups ";
-//        db.execSQL(createGroupsTableQuery);
+//        String removegroupParticipants = "DROP TABLE groupParticipants ";
+//        db.execSQL(removegroupParticipants);
+//
+//        String removeGroupsRequest = "DROP TABLE groupsRequest ";
+//        db.execSQL(removeGroupsRequest);
+//
+//        String removeGroup = "DROP TABLE groups ";
+//        db.execSQL(removeGroup);
+
+        String createGroupsTableQuery = "CREATE TABLE IF NOT EXISTS  groups (id INTEGER PRIMARY KEY AUTOINCREMENT, groupName TEXT,description TEXT,city TEXT,street TEXT,language Text, religion TEXT, hostUserId INTEGER)";
+        db.execSQL(createGroupsTableQuery);
 
         String createGroupParticipantsTableQuery = "CREATE TABLE IF NOT EXISTS  groupParticipants (groupId INTEGER, userId INTEGER)";
         db.execSQL(createGroupParticipantsTableQuery);
