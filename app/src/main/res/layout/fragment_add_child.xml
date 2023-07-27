@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".addChildFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,5 +14,62 @@
         android:textAlignment="center"
         android:textSize="34sp"
         android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/nameEt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="204dp"
+        android:ems="10"
+        android:hint="@string/name22"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:importantForAutofill="no" />
+
+    <EditText
+        android:id="@+id/schoolNameEt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="356dp"
+        android:autofillHints="name"
+        android:ems="10"
+        android:hint="@string/school_name"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        tools:ignore="TextContrastCheck" />
+
+    <EditText
+        android:id="@+id/ageEt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="280dp"
+        android:ems="10"
+        android:hint="@string/age1"
+        android:inputType="number"
+        android:minHeight="48dp"
+        android:importantForAutofill="no" />
+
+    <Spinner
+        android:id="@+id/genderSpinner1"
+        android:layout_width="212dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="436dp"
+        android:entries="@array/Gender"
+        android:minHeight="48dp"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <Button
+        android:id="@+id/addchildBTN"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_row="7"
+        android:layout_column="0"
+        android:layout_marginTop="540dp"
+        android:backgroundTint="@color/purple_700"
+        android:clickable="false"
+        android:text="Add"
+        android:layout_gravity="center_horizontal"
+        tools:ignore="TextContrastCheck" />
+
 
 </FrameLayout>

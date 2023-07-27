@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -34,6 +35,9 @@ public class CreateGroupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         groupHandler = new GroupHandler(this, db);
         userHandler = new UserHandler(this);
@@ -78,6 +82,9 @@ public class CreateGroupActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void setSupportActionBar(Toolbar toolbar) {
     }
 
     private void loadCities() {

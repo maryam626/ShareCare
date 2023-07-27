@@ -3,6 +3,7 @@ package com.example.sharecare;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.example.sharecare.Logic.UsersSQLLiteDatabaseHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,7 +25,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
-public class parent_profile_activity extends AppCompatActivity {
+public class parent_profile_activity extends AppCompatActivity implements addChildFragment.ChildFragmentListener {
     private static final String TAG = "profile activity";
 
 
@@ -51,17 +53,30 @@ public class parent_profile_activity extends AppCompatActivity {
     private String language;
     private String religion;
 
+    private Button addchild;
+
     private UsersSQLLiteDatabaseHelper usersDatabaseHelper;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent_profile);
 
-        userNameTv = (TextView) findViewById(R.id.userNameTv);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        
+        // Add the ChildFragment to the activity
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragmentContainerView, new addChildFragment())
+                    .commit();
+        }
+
+        //userNameTv = (TextView) findViewById(R.id.userNameTv);
         phoneEt1 = (EditText) findViewById(R.id.phoneEt1);
         emailEt1 = (EditText) findViewById(R.id.emailEt1);
         languageEt = (EditText) findViewById(R.id.LanguageEt);
@@ -84,6 +99,7 @@ public class parent_profile_activity extends AppCompatActivity {
         gender = getIntent().getStringExtra("gender");
         language = getIntent().getStringExtra("language");
         religion = getIntent().getStringExtra("religion");
+        addchild = (Button) findViewById(R.id.addchildBTN);
 
         userNameTv.setText(userName);
         phoneEt1.setText(phoneNumber);
@@ -120,6 +136,13 @@ public class parent_profile_activity extends AppCompatActivity {
                 languageEt.setEnabled(true);
                 religionEt.setEnabled(true);
 
+
+            }
+        });
+
+        addchild.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
             }
         });
@@ -239,5 +262,18 @@ public class parent_profile_activity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onChildDataAdded(String name, int age, String gender, String schoolName) {
+         // Handle the data sent from the child fragment here
+        // You can do whatever you want with the data, e.g., save it to variables or display it
+        Log.d("MainActivity", "Child's Name: " + name);
+        Log.d("MainActivity", "Child's Age: " + age);
+        Log.d("MainActivity", "Child's Gender: " + gender);
+        Log.d("MainActivity", "Child's School Name: " + schoolName);
+    }
+
+    private void setSupportActionBar(Toolbar toolbar) {
     }
 }
