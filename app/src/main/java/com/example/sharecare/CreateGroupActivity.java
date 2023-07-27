@@ -36,8 +36,8 @@ public class CreateGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        // Toolbar toolbar = findViewById(R.id.toolbar);
+    //    setSupportActionBar(toolbar);
 
         groupHandler = new GroupHandler(this, db);
         userHandler = new UserHandler(this);
