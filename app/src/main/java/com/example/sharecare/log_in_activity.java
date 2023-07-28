@@ -104,6 +104,7 @@ public class log_in_activity extends AppCompatActivity {
                 if (validateCredentials(email, password)) {
                     Intent intent = new Intent(log_in_activity.this, home_page_parent_activity.class);
                     gettingUserData();
+                    getParentData(EtEmail.getText().toString(),log_in_activity.this);
                     //puttingDataInVariables(getParentData(EtUserName.getText().toString(),log_in_activity.this));
 
                     //Sending Data To Home Page Using Bundle
@@ -315,7 +316,7 @@ public class log_in_activity extends AppCompatActivity {
         return isValid;
     }
 
-    public ArrayList<QueryDocumentSnapshot> getParentData(String username, log_in_activity activity) {
+    public ArrayList<QueryDocumentSnapshot> getParentData(String email, log_in_activity activity) {
         ArrayList<QueryDocumentSnapshot> results = new ArrayList<>();
         Task<QuerySnapshot> task = db.collection("Parents").whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

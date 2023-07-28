@@ -97,7 +97,7 @@ public class SignUpFirebaseHandler {
         parent.put("language", language);
         parent.put("religion", religion);
 
-        db.collection("Parents").document(id).set(parent)
+        Task<Void> task = db.collection("Parents").document(id).set(parent)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -115,6 +115,10 @@ public class SignUpFirebaseHandler {
                         Log.w(TAG, "Error adding document", e);
                     }
                 });
+        while(!task.isComplete()){
+            
+        }
+
     }
 
 
@@ -128,7 +132,7 @@ public class SignUpFirebaseHandler {
         Map<String, Object> parentDetail = new HashMap<>();
         parentDetail.put("id", id);
 
-        db.collection("Parents")
+        Task<QuerySnapshot> task = db.collection("Parents")
                 .whereEqualTo("email", email)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -155,5 +159,8 @@ public class SignUpFirebaseHandler {
                         }
                     }
                 });
+        while(!task.isComplete()){
+
+        }
     }
 }
