@@ -53,11 +53,6 @@ public class GroupHandler {
     public List<String> getAllReligions() {
         return groupsDatabaseHelper.loadReligions();
     }
-    public ArrayList<Group> getGroupsForSearchResult(String language, String religion, String[] cities){
-        ArrayList<Group> groupsResult = groupsDatabaseHelper.getRowsByReligionLanguageAndCities(language, religion, cities);
-        return groupsResult;
-    }
-
     public long insertGroup(String groupName, String description, String city, String street, String language, String religion, int hostUserId) {
         if (!Validator.isValidGroupName(groupName)) {
             return -1; // Invalid group name
@@ -172,6 +167,52 @@ public class GroupHandler {
         cursor.close();
         db.close();
         return participantList;
+    }
+
+    public List<Group> getGroups(List<String> selectedCities, int loggedInUserId) {
+        List<Group> groupList = new ArrayList<>();
+        SQLiteDatabase db = groupsDatabaseHelper.getReadableDatabase();
+
+        String selectQuery = "SELECT id, groupName, description, city, street FROM groups WHERE hostUserId <> ? " +
+                "UNION ALL SELECT groups.id, groups.groupName, groups.description, groups.city, groups.street " +
+                "FROM groups " +
+                "INNER JOIN groupParticipants ON groups.id = groupParticipants.groupId " +
+                "WHERE groupParticipants.userId <> ? " +
+                "UNION ALL SELECT groups.id, groups.groupName, groups.description, groups.city, groups.street " +
+                "FROM groups " +
+                "INNER JOIN groupsRequest ON groups.id = groupsRequest.groupId " +
+                "WHERE groupsRequest.userId = ? AND isaccept = 0 AND groups.city IN (";
+
+        // Append each city name to the query
+        for (int i = 0; i < selectedCities.size(); i++) {
+            selectQuery += "'" + selectedCities.get(i) + "'";
+            if (i < selectedCities.size() - 1) {
+                selectQuery += ",";
+            }
+        }
+
+        selectQuery += ")";
+
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(loggedInUserId),
+                String.valueOf(loggedInUserId), String.valueOf(loggedInUserId)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                int groupId = cursor.getInt(cursor.getColumnIndex("id"));
+                String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
+                String description = cursor.getString(cursor.getColumnIndex("description"));
+                String city = cursor.getString(cursor.getColumnIndex("city"));
+                String street = cursor.getString(cursor.getColumnIndex("street"));
+
+                Group group = new Group(groupId, groupName, description, city, street);
+                groupList.add(group);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return groupList;
     }
 
     public ArrayList<Group> getGroupsResult(List<String> selectedCities,String language, String religion, int loggedInUserId) {
