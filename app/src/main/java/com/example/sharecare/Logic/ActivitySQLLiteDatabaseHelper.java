@@ -2,8 +2,10 @@ package com.example.sharecare.Logic;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import com.example.sharecare.models.Activity;
 
 public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
@@ -89,5 +91,33 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
         db.close();
         return rowId;
+    }
+
+    public Cursor getPendingRequestsCursor() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {"username", "activity_name", "requestDate", "userid", "activityid"};
+        String selection = "isaccept = ?";
+        String[] selectionArgs = {String.valueOf(0)};
+        Cursor cursor = db.query("activitiesRequest", columns, selection, selectionArgs, null, null, null);
+        return cursor;
+    }
+
+    public void updateRequestStatus(int userId, int activityId, boolean isAccept) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("isaccept", isAccept ? 1 : 0);
+
+        String whereClause = "userid = ? AND activityid = ?";
+        String[] whereArgs = {String.valueOf(userId), String.valueOf(activityId)};
+
+        int rowsAffected = db.update("activitiesRequest", values, whereClause, whereArgs);
+
+        if (rowsAffected > 0) {
+            // Update successful
+        } else {
+            // Update failed
+        }
+
+        db.close();
     }
 }

@@ -12,11 +12,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.handlers.ActivityHandler;
 import com.example.sharecare.models.Activity;
 import com.example.sharecare.valdiators.CreateActivityValidator;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -190,16 +194,21 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
 
         // Store user data in SQLite database
         long rowId = activityHandler.insertActivity(activity);
-        activityHandler.addingActivityDataToFirebase(activity);
-
-        if (rowId != -1) {
-            // Successful message
-            Toast.makeText(ChildrenActivityCreateActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-        } else {
-            // Error message
-            Toast.makeText(ChildrenActivityCreateActivity.this, "Registration failed. Please try again.", Toast.LENGTH_SHORT).show();
-        }
-
+        activityHandler.addingActivityDataToFirebase(activity,
+                new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        // Successful message
+                        Toast.makeText(ChildrenActivityCreateActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Error message
+                        Toast.makeText(ChildrenActivityCreateActivity.this, "Registration failed. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
         // Reset fields
         editActivityName.setText("");
         spinnerChooseActivity.setSelection(0);
