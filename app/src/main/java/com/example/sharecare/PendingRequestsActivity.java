@@ -1,55 +1,44 @@
 package com.example.sharecare;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.sharecare.Logic.ActivitySQLLiteDatabaseHelper;
+import com.example.sharecare.handlers.ActivityHandler;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class PendingRequestsActivity extends AppCompatActivity {
 
-    private ActivitySQLLiteDatabaseHelper activityDatabaseHelper;
-    private SQLiteDatabase activityDatabase;
     private TableLayout tableLayout;
     private int loggedInUserId;
     private String loggedInUsername;
     private int groupId;
+    private ActivityHandler activityHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pending_requests);
 
-        activityDatabaseHelper= new ActivitySQLLiteDatabaseHelper(this);
-        activityDatabase = activityDatabaseHelper.getReadableDatabase();
         Intent intent = getIntent();
         groupId = intent.getIntExtra("groupid", -1);
-        loggedInUserId = getIntent().getIntExtra("userid",-1);
+        loggedInUserId = getIntent().getIntExtra("userid", -1);
         loggedInUsername = getIntent().getStringExtra("username");
+         activityHandler = new ActivityHandler(this,  FirebaseFirestore.getInstance());
 
-        //create table if not exist
-        activityDatabaseHelper.onCreate(activityDatabase);
         tableLayout = findViewById(R.id.tableLayout);
-
         loadPendingRequests();
     }
 
     private void loadPendingRequests() {
-        // Query the activitiesRequest table to retrieve pending requests (isaccept = 0)
-        Cursor cursor = activityDatabase.rawQuery("SELECT u.id as userid,a.id as activityid, u.username, a.activity_name, r.requestDate " +
-                "FROM activitiesRequest r JOIN users u ON r.userid = u.id " +
-                "JOIN activities a ON r.activityid = a.id " +
-                "WHERE r.isaccept = 0", null);
+        Cursor cursor = activityHandler.getPendingRequestsCursor();
 
         while (cursor.moveToNext()) {
             String username = cursor.getString(cursor.getColumnIndex("username"));
@@ -80,7 +69,7 @@ public class PendingRequestsActivity extends AppCompatActivity {
             acceptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    updateRequestStatus(userid,activityid,true);
+                    activityHandler.updateRequestStatus(userid, activityid, true);
                 }
             });
             row.addView(acceptButton);
@@ -90,7 +79,7 @@ public class PendingRequestsActivity extends AppCompatActivity {
             rejectButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    updateRequestStatus(userid,activityid,false);
+                    activityHandler.updateRequestStatus(userid, activityid, false);
                 }
             });
             row.addView(rejectButton);
@@ -101,23 +90,6 @@ public class PendingRequestsActivity extends AppCompatActivity {
 
         cursor.close();
     }
-
-    private void updateRequestStatus(int userId, int activityId, boolean isAccept) {
-        ContentValues values = new ContentValues();
-        values.put("isaccept", isAccept ? 1 : 0);
-
-        String whereClause = "userid = ? AND activityid = ?";
-        String[] whereArgs = {String.valueOf(userId), String.valueOf(activityId)};
-
-        int rowsAffected = activityDatabase.update("activitiesRequest", values, whereClause, whereArgs);
-
-        if (rowsAffected > 0) {
-            Toast.makeText(this, "Request status updated successfully.", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Failed to update request status.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
 
     public void returnToPreviousActivity(View view) {
         Intent intent = new Intent(PendingRequestsActivity.this, GroupInfoActivity.class);
@@ -132,7 +104,5 @@ public class PendingRequestsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        activityDatabaseHelper.close();
-        activityDatabase.close();
-    }
+     }
 }
