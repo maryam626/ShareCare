@@ -66,15 +66,15 @@ public class parent_profile_activity extends AppCompatActivity implements addChi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent_profile);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
         
         // Add the ChildFragment to the activity
-        if (savedInstanceState == null) {
+        /*if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragmentContainerView, new addChildFragment())
                     .commit();
-        }
+        }*/
 
         //userNameTv = (TextView) findViewById(R.id.userNameTv);
         phoneEt1 = (EditText) findViewById(R.id.phoneEt1);
@@ -101,7 +101,7 @@ public class parent_profile_activity extends AppCompatActivity implements addChi
         religion = getIntent().getStringExtra("religion");
         addchild = (Button) findViewById(R.id.addchildBTN);
 
-        userNameTv.setText(userName);
+        //userNameTv.setText(userName);
         phoneEt1.setText(phoneNumber);
         phoneEt1.setEnabled(false);
         emailEt1.setText(email);
@@ -136,13 +136,6 @@ public class parent_profile_activity extends AppCompatActivity implements addChi
                 languageEt.setEnabled(true);
                 religionEt.setEnabled(true);
 
-
-            }
-        });
-
-        addchild.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
             }
         });

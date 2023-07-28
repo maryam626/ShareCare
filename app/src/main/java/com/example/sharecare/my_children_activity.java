@@ -337,10 +337,10 @@ public class my_children_activity extends AppCompatActivity {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for(int i = 0;i<queryDocumentSnapshots.getDocuments().size();i++) {
                     kidsMap.put(queryDocumentSnapshots.getDocuments().get(i).getData().get("name").toString(),queryDocumentSnapshots.getDocuments().get(i).getData());
+                    queryDocumentSnapshots.getDocuments().get(i).getData().remove("first kid");
+                    queryDocumentSnapshots.getDocuments().remove("first kid");
+                    kidsMap.remove("first kid");
                     kidsButtons.get(i).setText(queryDocumentSnapshots.getDocuments().get(i).getData().get("name").toString());
-
-                        kidsMap.remove("first kid");
-
                 }
                 System.out.println(kidsMap);
             }
