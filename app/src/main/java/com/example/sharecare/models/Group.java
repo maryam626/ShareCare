@@ -14,6 +14,8 @@ public class Group {
     private int ageTo;
     private String city;
     private String street;
+    private String language;
+    private String religion;
 
     public Group(String groupName, String briefInformation, Host host, ArrayList<Parent> participants, ArrayList<Activity> activities, int capacity, int ageFrom, int ageTo, String city, String street) {
         this.groupName = groupName;
@@ -35,6 +37,15 @@ public class Group {
         this.street = street;
     }
 
+    public Group(int groupId, String groupName, String description, String city, String street, String language, String religion) {
+        this.id = groupId;
+        this.groupName = groupName;
+        this.briefInformation = description;
+        this.city = city;
+        this.street = street;
+        this.language = language;
+        this.religion= religion;
+    }
 
     public int getId() {
         return id;
@@ -120,6 +131,8 @@ public class Group {
         return street;
     }
 
+    public String getLanguage(){return language;}
+    public String getReligion(){return religion;}
     public void setStreet(String street) {
         this.street = street;
     }

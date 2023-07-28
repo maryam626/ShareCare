@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,14 +78,13 @@ public class GroupHandler {
         return groupsDatabaseHelper.loadReligions();
     }
 
-
-
     /**
      * Inserts a new group into the local database and then to Firebase.
      *
      * @param ... Various parameters about the group.
      * @return The ID of the inserted group or -1 if insertion failed.
      */
+
     public long insertGroup(String groupName, String description, String city, String street, String language, String religion, int hostUserId) {
         if (!CreateGroupValidator.isGroupNameValid(groupName)) {
             return -1; // Invalid group name
@@ -280,12 +280,11 @@ public class GroupHandler {
 
             group = new Group(id, groupName, description, city, street);
         }
-
         cursor.close();
         db.close();
+
         return group;
     }
-
 
     public List<Activity> getActivitiesForGroup(int groupId, int loggedInUserId) {
         List<Activity> activityList = new ArrayList<>();
@@ -349,5 +348,45 @@ public class GroupHandler {
         SQLiteDatabase db = activityDatabaseHelper.getReadableDatabase();
         db.delete("activities", "id = ?", new String[]{String.valueOf(activityId)});
         db.close();
+    }
+
+    public ArrayList<Group> getGroupsResult(List<String> selectedCities,String language, String religion, int loggedInUserId) {
+        Log.d("getGroupsResult", "1st res");
+        ArrayList<Group> groupList = new ArrayList<>();
+        SQLiteDatabase db = groupsDatabaseHelper.getReadableDatabase();
+
+        String selectQuery = "SELECT id, groupName, description, city, street, language, religion FROM groups WHERE hostUserId <> ? AND language = ? AND religion = ? AND city IN (";
+
+        // Append each city name to the query
+        for (int i = 0; i < selectedCities.size(); i++) {
+            selectQuery += "'" + selectedCities.get(i) + "'";
+            if (i < selectedCities.size() - 1) {
+                selectQuery += ",";
+            }
+        }
+
+        selectQuery += ")";
+
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(loggedInUserId), language, religion});
+
+        if (cursor.moveToFirst()) {
+            do {
+                int groupId = cursor.getInt(cursor.getColumnIndex("id"));
+                String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
+                String description = cursor.getString(cursor.getColumnIndex("description"));
+                String city = cursor.getString(cursor.getColumnIndex("city"));
+                String street = cursor.getString(cursor.getColumnIndex("street"));
+                String groupLanguage = cursor.getString(cursor.getColumnIndex("language"));
+                String groupReligion = cursor.getString(cursor.getColumnIndex("religion"));
+
+                Group group = new Group(groupId, groupName, description, city, street, groupLanguage, groupReligion);
+                groupList.add(group);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return groupList;
     }
 }
