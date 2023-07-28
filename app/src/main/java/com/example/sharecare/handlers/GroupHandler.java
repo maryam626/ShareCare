@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 
 import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
 import com.example.sharecare.models.Group;
-import com.example.sharecare.valdiators.Validator;
+import com.example.sharecare.valdiators.CreateGroupValidator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -51,19 +51,19 @@ public class GroupHandler {
     }
 
     public long insertGroup(String groupName, String description, String city, String street, String language, String religion, int hostUserId) {
-        if (!Validator.isValidGroupName(groupName)) {
+        if (!CreateGroupValidator.isGroupNameValid(groupName)) {
             return -1; // Invalid group name
         }
 
-        if (!Validator.isValidDescription(description)) {
+        if (!CreateGroupValidator.isDescriptionValid(description)) {
             return -1; // Invalid description
         }
 
-        if (!Validator.isValidCity(city)) {
+        if (!CreateGroupValidator.isValidCity(city)) {
             return -1; // Invalid city
         }
 
-        if (!Validator.isValidStreet(street)) {
+        if (!CreateGroupValidator.isStreetValid(street)) {
             return -1; // Invalid street
         }
 

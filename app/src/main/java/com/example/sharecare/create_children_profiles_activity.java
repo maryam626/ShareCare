@@ -1,11 +1,10 @@
 package com.example.sharecare;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class create_children_profiles_activity extends AppCompatActivity {
     private Button continueBtn;
@@ -17,7 +16,6 @@ public class create_children_profiles_activity extends AppCompatActivity {
         setContentView(R.layout.activity_create_children_profiles);
 
         continueBtn = (Button) findViewById(R.id.continueBtn);
-
 
         continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
