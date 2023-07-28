@@ -2,14 +2,16 @@ package com.example.sharecare.Logic;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import com.example.sharecare.models.Activity;
 
 public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "ShareCare.db";
     private static final int DATABASE_VERSION = 1;
-    private static final String TABLE_NAME = "activities";
+    private static final String ACTIVITIES_TABLE_NAME = "activities";
     private static final String COLUMN_ID = "id";
 
     private static final String GROUP_ID = "groupid";
@@ -17,13 +19,15 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ACTIVITY_TYPE = "activity_type";
     private static final String COLUMN_ACTIVITY_DATE = "date";
     private static final String COLUMN_ACTIVITY_TIME = "time";
-    private static final String COLUMN_CAPACITY = "capcaity";
+    private static final String COLUMN_CAPACITY = "capacity";
     private static final String COLUMN_AGE_FROM = "child_age_from";
     private static final String COLUMN_AGE_TO = "child_age_to";
     private static final String OWNER_ID = "owner_user_id";
 
-    private static final String CREATE_TABLE =
-            "CREATE TABLE IF NOT EXISTS  " + TABLE_NAME + " (" +
+
+    /** SQL command to create the table for activities */
+    private static final String CREATE_TABLE_ACTIVITIES =
+            "CREATE TABLE IF NOT EXISTS  " + ACTIVITIES_TABLE_NAME + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     GROUP_ID + " INTEGER, " +
                     COLUMN_ACTIVITY_NAME + " TEXT, " +
@@ -36,6 +40,7 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_AGE_TO + " INTEGER)";
 
 
+    /** SQL command to create the table for pending activity requests */
     private static final String CREATE_TABLE_PENDING_REQUESTS =
             "CREATE TABLE IF NOT EXISTS   activitiesRequest (userid INTEGER, activityid INTEGER, requestDate TEXT, isaccept INTEGER)";
 
@@ -44,19 +49,26 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /** Create database tables when the database is created for the first time */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_TABLE);
+        db.execSQL(CREATE_TABLE_ACTIVITIES);
         db.execSQL(CREATE_TABLE_PENDING_REQUESTS);
     }
 
+    /** Handle database upgrades by dropping existing tables and creating them afresh */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ACTIVITIES_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + "activitiesRequest");
         onCreate(db);
     }
 
+    /**
+     * Insert a new activity into the activities table
+     * @param activity The activity object with details to be saved
+     * @return The row ID of the newly inserted activity, or -1 in case of an error
+     */
     public long  insertActivity(Activity activity) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -72,12 +84,40 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
         long rowId=-1;
         try{
-              rowId= db.insertOrThrow(TABLE_NAME, null, values);
+              rowId= db.insertOrThrow(ACTIVITIES_TABLE_NAME, null, values);
         }catch(Exception ex)
         {
         }
 
         db.close();
         return rowId;
+    }
+
+    public Cursor getPendingRequestsCursor() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {"username", "activity_name", "requestDate", "userid", "activityid"};
+        String selection = "isaccept = ?";
+        String[] selectionArgs = {String.valueOf(0)};
+        Cursor cursor = db.query("activitiesRequest", columns, selection, selectionArgs, null, null, null);
+        return cursor;
+    }
+
+    public void updateRequestStatus(int userId, int activityId, boolean isAccept) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("isaccept", isAccept ? 1 : 0);
+
+        String whereClause = "userid = ? AND activityid = ?";
+        String[] whereArgs = {String.valueOf(userId), String.valueOf(activityId)};
+
+        int rowsAffected = db.update("activitiesRequest", values, whereClause, whereArgs);
+
+        if (rowsAffected > 0) {
+            // Update successful
+        } else {
+            // Update failed
+        }
+
+        db.close();
     }
 }

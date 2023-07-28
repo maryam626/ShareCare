@@ -69,15 +69,15 @@
         android:textAppearance="?android:textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/text_activity_capcaity"
+        android:id="@+id/text_activity_capacity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:layout_weight="1"
-        android:text="Capcaity "
+        android:text="Capacity "
         android:textAppearance="?android:textAppearanceLarge" />
     <TextView
-        android:id="@+id/capcaity"
+        android:id="@+id/capacity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="end"

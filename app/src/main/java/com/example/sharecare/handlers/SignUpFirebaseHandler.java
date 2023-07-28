@@ -19,17 +19,34 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
+
+/**
+ * A handler class to manage Firebase sign-up operations.
+ */
 public class SignUpFirebaseHandler {
     private static final String TAG = "FirebaseHandler";
 
+    /** Firebase authentication instance */
     private FirebaseAuth mAuth;
+
+    /** Firestore database instance */
     private FirebaseFirestore db;
 
+
+    /**
+     * Constructor to initialize Firebase authentication and database instances.
+     */
     public SignUpFirebaseHandler() {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
     }
 
+    /**
+     * Registers a new user using email and password on Firebase.
+     * @param email User's email address.
+     * @param password User's password.
+     * @param activity The activity from which this method is called.
+     */
     public void registerUser(String email, String password, sign_up_activity activity) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
@@ -49,6 +66,23 @@ public class SignUpFirebaseHandler {
                 });
     }
 
+
+
+    /**
+     * Adds the parent's data to Firestore under the "Parents" collection.
+     * @param id Unique ID for the parent.
+     * @param username Username of the parent.
+     * @param phoneNumber Parent's phone number.
+     * @param email Parent's email address.
+     * @param address Parent's residential address.
+     * @param password Parent's password.
+     * @param numberOfKids Number of kids the parent has.
+     * @param maritalStatus Parent's marital status.
+     * @param gender Parent's gender.
+     * @param language Parent's primary language.
+     * @param religion Parent's religion.
+     * @param activity The activity from which this method is called.
+     */
     public void addParentDataToFirebase(String id, String username, String phoneNumber, String email, String address, String password, int numberOfKids, String maritalStatus, String gender, String language, String religion, sign_up_activity activity) {
         Map<String, Object> parent = new HashMap<>();
         parent.put("id", id);
@@ -63,7 +97,7 @@ public class SignUpFirebaseHandler {
         parent.put("language", language);
         parent.put("religion", religion);
 
-        db.collection("Parents").document(id).set(parent)
+        Task<Void> task = db.collection("Parents").document(id).set(parent)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -81,13 +115,24 @@ public class SignUpFirebaseHandler {
                         Log.w(TAG, "Error adding document", e);
                     }
                 });
+        while(!task.isComplete()){
+            
+        }
+
     }
 
+
+    /**
+     * Updates the ID field for a parent in the "Parents" collection of Firestore.
+     * @param id Unique ID of the parent.
+     * @param email Parent's email address used to query the database.
+     * @param activity The activity from which this method is called.
+     */
     private void updateIdForParent(String id, String email, sign_up_activity activity) {
         Map<String, Object> parentDetail = new HashMap<>();
         parentDetail.put("id", id);
 
-        db.collection("Parents")
+        Task<QuerySnapshot> task = db.collection("Parents")
                 .whereEqualTo("email", email)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -114,5 +159,8 @@ public class SignUpFirebaseHandler {
                         }
                     }
                 });
+        while(!task.isComplete()){
+
+        }
     }
 }

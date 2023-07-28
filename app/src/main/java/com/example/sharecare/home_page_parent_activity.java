@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -57,7 +56,6 @@ public class home_page_parent_activity extends AppCompatActivity {
         logOutIv = (ImageView) findViewById(R.id.logOutIv);
         id = getIntent().getStringExtra("id");
         userName = getIntent().getStringExtra("username");
-        userName = userName.substring(0,1).toUpperCase(Locale.ROOT) + userName.substring(1);
         nameTv.setText("     "+userName.substring(0,1).toUpperCase(Locale.ROOT) +  userName.substring(1));
         phoneNumber = getIntent().getStringExtra("phone_number");
         email = getIntent().getStringExtra("email");

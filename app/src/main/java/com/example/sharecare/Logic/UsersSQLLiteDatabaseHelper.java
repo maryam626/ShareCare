@@ -8,10 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.sharecare.models.User;
 
 public class UsersSQLLiteDatabaseHelper extends SQLiteOpenHelper {
-    private static final String TAG = "database";
     private static final String DATABASE_NAME = "ShareCare.db";
     private static final int DATABASE_VERSION = 1;
-
     private static final String TABLE_NAME = "users";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_USERNAME = "username";
@@ -39,21 +37,44 @@ public class UsersSQLLiteDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_LANGUAGE + " TEXT, " +
                     COLUMN_RELIGION + " TEXT)";
 
+    /**
+     * Constructor to initialize the SQLite database helper.
+     *
+     * @param context The context to use for locating paths to the database.
+     */
     public UsersSQLLiteDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * Called when the database is created for the first time.
+     *
+     * @param db The database where the new table will be created.
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE);
     }
 
+    /**
+     * Called when the database needs to be upgraded.
+     *
+     * @param db The database to upgrade.
+     * @param oldVersion The old database version.
+     * @param newVersion The new database version.
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
 
+    /**
+     * Inserts a user into the database.
+     *
+     * @param user The user object to be inserted.
+     * @return The row ID of the newly inserted row, or -1 if an error occurred.
+     */
     public long  insertUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -73,6 +94,22 @@ public class UsersSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         return rowId;
     }
 
+
+    /**
+     * Updates a user's details in the database.
+     *
+     * @param rowId The row ID of the user to be updated.
+     * @param username New username.
+     * @param phone New phone number.
+     * @param email New email address.
+     * @param address New address.
+     * @param password New password.
+     * @param numKids New number of kids.
+     * @param marital New marital status.
+     * @param gender New gender.
+     * @param language New language.
+     * @param religion New religion.
+     */
     public void updateUser(String rowId, String username, String phone, String email, String address, String password, int numKids, String marital, String gender, String language, String religion) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -88,7 +125,7 @@ public class UsersSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_LANGUAGE, language);
         values.put(COLUMN_RELIGION, religion);
 
-        long result = db.update(TABLE_NAME, values, "id=?", new String[]{rowId});
+        db.update(TABLE_NAME, values, "id=?", new String[]{rowId});
         db.close();
     }
 }

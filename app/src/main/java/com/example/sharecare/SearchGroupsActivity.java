@@ -18,6 +18,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * SearchGroupsActivity allows users to search for groups based on selected cities.
+ * Users can select cities from a list of available cities and perform a search.
+ * The selected cities are passed to the SearchResultsActivity to display search results.
+ */
 public class SearchGroupsActivity extends AppCompatActivity {
 
     private LinearLayout cityContainer;
@@ -26,6 +32,7 @@ public class SearchGroupsActivity extends AppCompatActivity {
     private List<String> selectedCities = new ArrayList<>();
     private Spinner languagesSpinner, religionsSpinner;
     private GroupHandler groupHandler; // New instance of GroupHandler class
+
     private int loggedInUserId;
     private String loggedInUsername;
 
@@ -54,6 +61,9 @@ public class SearchGroupsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Load cities from the database and populate the cityContainer with city elements (checkboxes).
+     */
     private void loadCitiesFromDatabase() {
         List<String> cities = groupHandler.getGroupsDistinctCities();
 
@@ -69,6 +79,7 @@ public class SearchGroupsActivity extends AppCompatActivity {
         languagesSpinner.setAdapter(adapter);
     }
 
+
     private void loadReligions() {
         groupHandler.open();
         List<String>  religionsList = groupHandler.getAllReligions();
@@ -76,6 +87,13 @@ public class SearchGroupsActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, religionsList);
         religionsSpinner.setAdapter(adapter);
     }
+
+    /**
+     * Add a city element (checkbox) to the cityContainer with the given city name.
+     *
+     * @param cityName The name of the city to be added as a city element.
+     */
+
     private void addCityElement(String cityName) {
         View cityView = getLayoutInflater().inflate(R.layout.item_city, cityContainer, false);
         CheckBox cityCheckbox = cityView.findViewById(R.id.cityCheckbox);
@@ -97,6 +115,13 @@ public class SearchGroupsActivity extends AppCompatActivity {
         cityContainer.addView(cityView);
     }
 
+
+    /**
+     * Perform the search for groups based on the selected cities.
+     * If no cities are selected, show an error message.
+     * If cities are selected, pass the selected cities to the SearchResultsActivity
+     * to display search results.
+     */
     private void performSearch() {
         if (selectedCities.isEmpty()) {
             // Show an error message if no cities are selected

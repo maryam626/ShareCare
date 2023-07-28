@@ -8,9 +8,11 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.sharecare.Logic.ActivitySQLLiteDatabaseHelper;
 import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
+import com.example.sharecare.models.Activity;
 import com.example.sharecare.models.Group;
-import com.example.sharecare.valdiators.Validator;
+import com.example.sharecare.valdiators.CreateGroupValidator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -18,24 +20,46 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * A handler class to manage group-related operations, including local database interactions and Firebase Firestore operations.
+ */
 public class GroupHandler {
 
     private static final String TAG = "GroupHandler";
-
     private GroupsSQLLiteDatabaseHelper groupsDatabaseHelper;
     private FirebaseFirestore firebaseDb;
+    private ActivitySQLLiteDatabaseHelper activityDatabaseHelper;
 
+
+    /**
+     * Constructor to initialize database helpers and Firestore instance.
+     *
+     * @param context Android context.
+     * @param firebaseDb Firebase Firestore instance.
+     */
     public GroupHandler(Context context, FirebaseFirestore firebaseDb) {
         groupsDatabaseHelper = new GroupsSQLLiteDatabaseHelper(context);
         this.firebaseDb = firebaseDb;
+        activityDatabaseHelper = new ActivitySQLLiteDatabaseHelper(context);
+    }
+
+    /**
+     * Constructor to initialize only the database helpers.
+     *
+     * @param context Android context.
+     */
+    public GroupHandler(Context context) {
+        groupsDatabaseHelper = new GroupsSQLLiteDatabaseHelper(context);
+        activityDatabaseHelper = new ActivitySQLLiteDatabaseHelper(context);
     }
 
     public void open() {
-        // Open the database for writing
+        // Open the database for writing if needed
     }
 
     public void close() {
-        // Close the database if it's open
+        // Close the database if it's open if needed
     }
 
     public List<String> getAllCities() {
@@ -53,20 +77,28 @@ public class GroupHandler {
     public List<String> getAllReligions() {
         return groupsDatabaseHelper.loadReligions();
     }
+
+    /**
+     * Inserts a new group into the local database and then to Firebase.
+     *
+     * @param ... Various parameters about the group.
+     * @return The ID of the inserted group or -1 if insertion failed.
+     */
+
     public long insertGroup(String groupName, String description, String city, String street, String language, String religion, int hostUserId) {
-        if (!Validator.isValidGroupName(groupName)) {
+        if (!CreateGroupValidator.isGroupNameValid(groupName)) {
             return -1; // Invalid group name
         }
 
-        if (!Validator.isValidDescription(description)) {
+        if (!CreateGroupValidator.isDescriptionValid(description)) {
             return -1; // Invalid description
         }
 
-        if (!Validator.isValidCity(city)) {
+        if (!CreateGroupValidator.isValidCity(city)) {
             return -1; // Invalid city
         }
 
-        if (!Validator.isValidStreet(street)) {
+        if (!CreateGroupValidator.isStreetValid(street)) {
             return -1; // Invalid street
         }
 
@@ -92,6 +124,12 @@ public class GroupHandler {
         return groupId;
     }
 
+    /**
+     * Adds group information to Firebase Firestore.
+     *
+     * @param groupId The ID of the group.
+     * @param values Content values representing the group information.
+     */
     private void addGroupToFirebase(long groupId, ContentValues values) {
         firebaseDb.collection("Groups")
                 .document(String.valueOf(groupId))
@@ -110,6 +148,13 @@ public class GroupHandler {
                 });
     }
 
+    /**
+     * Inserts a participant for a group into the local database and then to Firebase.
+     *
+     * @param groupId The ID of the group.
+     * @param participant Participant's name.
+     * @return true if insertion was successful, false otherwise.
+     */
     public boolean insertGroupParticipant(int groupId, String participant) {
         int userId = groupsDatabaseHelper.getUserIdByUsername(participant);
 
@@ -134,6 +179,12 @@ public class GroupHandler {
         return groupParticipantId != -1;
     }
 
+    /**
+     * Adds group participant information to Firebase Firestore.
+     *
+     * @param groupParticipantId The ID of the group participant relation.
+     * @param values Content values representing the group participant information.
+     */
     private void addGroupParticipantToFirebase(long groupParticipantId, ContentValues values) {
         firebaseDb.collection("groupParticipants")
                 .document(String.valueOf(groupParticipantId))
@@ -213,6 +264,90 @@ public class GroupHandler {
         db.close();
 
         return groupList;
+    }
+
+    public Group getGroupById(int groupId) {
+        Group group = null;
+        SQLiteDatabase db = groupsDatabaseHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT id, groupName, description, city, street FROM groups WHERE id = ?", new String[]{String.valueOf(groupId)});
+        if (cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndex("id"));
+            String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
+            String description = cursor.getString(cursor.getColumnIndex("description"));
+            String city = cursor.getString(cursor.getColumnIndex("city"));
+            String street = cursor.getString(cursor.getColumnIndex("street"));
+
+            group = new Group(id, groupName, description, city, street);
+        }
+        cursor.close();
+        db.close();
+
+        return group;
+    }
+
+    public List<Activity> getActivitiesForGroup(int groupId, int loggedInUserId) {
+        List<Activity> activityList = new ArrayList<>();
+        SQLiteDatabase db = activityDatabaseHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+
+                "SELECT activities.id as id,activity_name as activityName,activity_type as selectedActivity,date as selectedDate,time as selectedTime, capacity, " +
+                        "child_age_from as ageFrom,child_age_to as  ageTo, owner_user_id ownerUserId " +
+                        "FROM activities " +
+                        "WHERE groupId = ? AND (ownerUserId = ? OR EXISTS (SELECT 1 FROM activitiesRequest " +
+                        "WHERE activitiesRequest.activityId = activities.id AND activitiesRequest.userId = ?))",
+                new String[]{String.valueOf(groupId), String.valueOf(loggedInUserId), String.valueOf(loggedInUserId)}
+        );
+
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex("id"));
+            String activityName = cursor.getString(cursor.getColumnIndex("activityName"));
+            String selectedActivity = cursor.getString(cursor.getColumnIndex("selectedActivity"));
+            String selectedDate = cursor.getString(cursor.getColumnIndex("selectedDate"));
+            String selectedTime = cursor.getString(cursor.getColumnIndex("selectedTime"));
+            int capacity = cursor.getInt(cursor.getColumnIndex("capacity"));
+            int ageFrom = cursor.getInt(cursor.getColumnIndex("ageFrom"));
+            int ageTo = cursor.getInt(cursor.getColumnIndex("ageTo"));
+            int ownerUserId = cursor.getInt(cursor.getColumnIndex("ownerUserId"));
+            Activity activity = new Activity(id, activityName, selectedActivity, selectedDate, selectedTime, capacity, ageFrom, ageTo, groupId, ownerUserId);
+            activityList.add(activity);
+        }
+
+        cursor.close();
+        db.close();
+        return activityList;
+    }
+
+    public void insertActivityRequest(int userId, int activityId) {
+        SQLiteDatabase db = activityDatabaseHelper.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("userid", userId);
+        values.put("activityid", activityId);
+        values.put("requestDate", System.currentTimeMillis());
+        values.put("isaccept", 0); // 0 represents the request is not accepted yet
+
+        db.insert("activitiesRequest", null, values);
+        db.close();
+    }
+
+    public String getGroupNameById(int groupId) {
+        SQLiteDatabase db = activityDatabaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT groupName FROM groups WHERE id = ?", new String[]{String.valueOf(groupId)});
+        String groupName = null;
+        if (cursor.moveToFirst()) {
+            groupName = cursor.getString(cursor.getColumnIndex("groupName"));
+        }
+        cursor.close();
+        db.close();
+        return groupName;
+    }
+
+    // Add the deleteActivity method
+    public void deleteActivity(int activityId) {
+        SQLiteDatabase db = activityDatabaseHelper.getReadableDatabase();
+        db.delete("activities", "id = ?", new String[]{String.valueOf(activityId)});
+        db.close();
     }
 
     public ArrayList<Group> getGroupsResult(List<String> selectedCities,String language, String religion, int loggedInUserId) {

@@ -1,36 +1,28 @@
 package com.example.sharecare;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-import com.example.sharecare.models.Kid;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class my_children_activity extends AppCompatActivity {
-
     private static final String TAG = "my children activity";
-
-
     private Button kid1Btn;
     private Button kid2Btn;
     private Button kid3Btn;
@@ -58,14 +50,9 @@ public class my_children_activity extends AppCompatActivity {
     public static String language;
     public static String religion;
 
-    Map<String,Object> map;
-
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     HashMap<String, Map<String,Object>> kidsMap = new HashMap<>();
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -337,10 +324,10 @@ public class my_children_activity extends AppCompatActivity {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for(int i = 0;i<queryDocumentSnapshots.getDocuments().size();i++) {
                     kidsMap.put(queryDocumentSnapshots.getDocuments().get(i).getData().get("name").toString(),queryDocumentSnapshots.getDocuments().get(i).getData());
+                    queryDocumentSnapshots.getDocuments().get(i).getData().remove("first kid");
+                    queryDocumentSnapshots.getDocuments().remove("first kid");
+                    kidsMap.remove("first kid");
                     kidsButtons.get(i).setText(queryDocumentSnapshots.getDocuments().get(i).getData().get("name").toString());
-
-                        kidsMap.remove("first kid");
-
                 }
                 System.out.println(kidsMap);
             }
@@ -354,8 +341,5 @@ public class my_children_activity extends AppCompatActivity {
         while(!task.isComplete()){
 
         }
-
     }
-
-
 }

@@ -25,12 +25,20 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+        /** These drop table commands can be used when necessary to delete tables.
+         *  Use them cautiously.
+         */
+        // drop grougs table activate once whenever is needed
+        //String removegroupParticipants = "DROP TABLE groupParticipants ";
+        //db.execSQL(removegroupParticipants);
+        //String removeGroupsRequest = "DROP TABLE groupsRequest ";
+        //db.execSQL(removeGroupsRequest);
+        //String removeGroup = "DROP TABLE groups ";
+        //db.execSQL(removeGroup);
+
+        /** Create various tables for managing groups and their related information */
         String createGroupsTableQuery = "CREATE TABLE IF NOT EXISTS  groups (id INTEGER PRIMARY KEY AUTOINCREMENT, groupName TEXT,description TEXT,city TEXT,street TEXT,language Text, religion TEXT, hostUserId INTEGER)";
         db.execSQL(createGroupsTableQuery);
-
-        // drop grougs table activate once whenever is needed
-//        String createGroupsTableQuery = "DROP TABLE groups ";
-//        db.execSQL(createGroupsTableQuery);
 
         String createGroupParticipantsTableQuery = "CREATE TABLE IF NOT EXISTS  groupParticipants (groupId INTEGER, userId INTEGER)";
         db.execSQL(createGroupParticipantsTableQuery);
@@ -51,6 +59,7 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         addReligions(db);
     }
 
+    /** Populate the cities table with an extensive list of city names */
     private void addCities(SQLiteDatabase db) {
         List<String> cities = Arrays.asList("Jerusalem", "Tel Aviv", "Haifa", "Rishon LeZion", "Petah Tikva", "Ashdod", "Netanya", "Beersheba", "Holon", "Bnei Brak", "Ramat Gan", "Rehovot", "Bat Yam", "Ashkelon", "Jaffa", "Modi'in-Maccabim-Re'ut", "Herzliya", "Kfar Saba", "Ra'anana", "Bet Shemesh", "Lod", "Nahariya", "Hadera", "Beit Shemesh", "Kiryat Ata", "Kiryat Gat", "Giv'atayim", "Ramat HaSharon", "Yavne", "Modi'in Illit", "Tiberias", "Hod HaSharon", "Qiryat Motzkin", "Eilat", "Ra's al-'Ein", "Nablus", "Ariel", "Qiryat Yam", "Kiryat Bialik", "Qiryat Ono", "Or Yehuda", "Qiryat Shemona", "Kiryat Malakhi", "Dimona", "Yehud-Monosson", "Sderot", "Tirat Carmel", "Rosh Ha'Ayin", "Arad", "Kiryat Shmona", "Hod HaSharon", "Nazareth", "Qalansawe", "Karmiel", "Netivot", "Nesher", "Nahariya", "Ofakim", "Qiryat Gat", "Qiryat Ata", "Umm al-Fahm", "Tamra", "Migdal HaEmek", "Acre", "Yokneam", "Tayibe", "Beit Jann", "Qalqilya", "Shaghur", "Kafr Qasim", "Daliyat al-Karmel", "Afula", "Rahat", "Sakhnin", "Sderot", "Kiryat Yam", "Tuba-Zangariyye", "Beit She'an", "Shoham", "Kafr Manda", "Ofaqim", "Metula", "Ramat Yishai", "Sakhnin", "Nof HaGalil");
         String insertQuery = "INSERT OR IGNORE INTO cities (name) VALUES (?)";
@@ -63,6 +72,8 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(insertQuery, values);
         }
     }
+
+    /** Populate the languages table with a predefined list of languages */
     private void addLanguages(SQLiteDatabase db) {
         List<String> languages = Arrays.asList("Arabic", "English", "Hebrew", "Russian", "Spanish");
         String insertQuery = "INSERT OR IGNORE INTO languages (name) VALUES (?)";
@@ -75,6 +86,8 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(insertQuery, values);
         }
     }
+
+    /** Populate the religions table with a predefined list of religions */
     private void addReligions(SQLiteDatabase db) {
         List<String> religions = Arrays.asList("Muslim", "Christian", "Jewish", "Druz");
         String insertQuery = "INSERT OR IGNORE INTO religions (name) VALUES (?)";
@@ -88,7 +101,7 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-
+    /** Fetch a list of unique cities where groups are based */
     public List<String> getGroupsDistinctCities() {
         List<String> cityList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -107,7 +120,7 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         return cityList;
     }
 
-
+    /** Fetch a list of all cities stored in the database */
     public List<String> loadCities() {
         List<String> cityList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -126,6 +139,7 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         return cityList;
     }
 
+    /** Fetch a list of all languages stored in the database */
     public List<String> loadLanguages() {
         List<String> cityList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -144,6 +158,7 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         return cityList;
     }
 
+    /** Fetch a list of all religions stored in the database */
     public List<String> loadReligions() {
         List<String> cityList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -161,6 +176,8 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
         return cityList;
     }
+
+    /** Get the user ID based on the provided username */
     public int getUserIdByUsername(String username) {
         int userId = -1;
         SQLiteDatabase db = getReadableDatabase();

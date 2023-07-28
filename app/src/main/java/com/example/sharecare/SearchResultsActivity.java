@@ -14,20 +14,27 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
 import com.example.sharecare.handlers.GroupHandler;
 import com.example.sharecare.models.Group;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
+
+/**
+ * SearchResultsActivity displays search results for groups based on selected cities.
+ * This activity is called when the user searches for groups in a specific city or cities.
+ * It retrieves the selected cities and logged-in user information from the intent, and then
+ * uses the GroupHandler class to fetch the relevant groups from the database.
+ * The retrieved groups are displayed in a table format along with a "Join Group" button for each group.
+ * Users can join a group by clicking the "Join Group" button, and the request is sent to the group owner.
+ */
 public class SearchResultsActivity extends AppCompatActivity {
 
     private TableLayout resultTable;
     private int loggedInUserId;
     private String loggedInUsername;
-    private GroupsSQLLiteDatabaseHelper databaseHelper;
-    private GroupHandler groupHandler; // New instance of GroupHandler class
+    private GroupHandler groupHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +42,6 @@ public class SearchResultsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_results);
 
         resultTable = findViewById(R.id.resultTable);
-
-        databaseHelper = new GroupsSQLLiteDatabaseHelper(this);
         groupHandler = new GroupHandler(this, FirebaseFirestore.getInstance()); // Initialize GroupHandler
 
         Intent intent = getIntent();
@@ -70,8 +75,14 @@ public class SearchResultsActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * Dynamically add groups to the table layout.
+     *
+     * @param groups List of groups to be displayed in the table.
+     */
     private void addGroupsToTable(List<Group> groups) {
-        resultTable.removeAllViews(); // Clear the table before adding new data
+        resultTable.removeAllViews();
 
         TableRow headerRow = new TableRow(this);
 
@@ -177,6 +188,13 @@ public class SearchResultsActivity extends AppCompatActivity {
         }
     }
 
+
+
+    /**
+     * Handle the process of joining a group.
+     *
+     * @param groupId The ID of the group to join.
+     */
     private void joinGroup(int groupId) {
         boolean success = groupHandler.insertGroupParticipant(groupId, loggedInUsername);
         if (success) {

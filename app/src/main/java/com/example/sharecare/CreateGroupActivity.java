@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,7 +20,6 @@ import java.util.List;
 
 public class CreateGroupActivity extends AppCompatActivity {
     private EditText groupNameEditText, descriptionEditText, streetEditText;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Spinner participantsSpinner, CitySpinner, languageSpinner, religionSpinner;
     private Button createButton;
     private GroupHandler groupHandler;
@@ -29,7 +27,6 @@ public class CreateGroupActivity extends AppCompatActivity {
     private int loggedInUserId;
     private String loggedInUsername;
     private boolean isGroupInserted = false;
-
     int groupId;
 
     @Override
@@ -37,7 +34,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
 
-        groupHandler = new GroupHandler(this, db);
+        groupHandler = new GroupHandler(this, FirebaseFirestore.getInstance());
         userHandler = new UserHandler(this);
 
         groupNameEditText = findViewById(R.id.groupNameEditText);
@@ -86,6 +83,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         });
     }
 
+    /** Load the list of cities from the local database and populate the CitySpinner. */
     private void loadCities() {
         groupHandler.open();
         List<String>  cityList = groupHandler.getAllCities();
@@ -93,6 +91,8 @@ public class CreateGroupActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, cityList);
         CitySpinner.setAdapter(adapter);
     }
+
+    /** Load the list of participants from the local database (except the current user) and populate the ParticipantsSpinner. */
     private void loadParticipants() {
         groupHandler.open();
         List<String> participantList = groupHandler.getParticipantsExceptCurrent(loggedInUserId);
@@ -104,6 +104,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         participantsSpinner.setAdapter(adapter);
     }
 
+    /** Load the list of languages from the local database and populate the LanguageSpinner. */
     private void loadLanguages() {
         groupHandler.open();
         List<String>  languagesList = groupHandler.getAllLanguages();
@@ -112,6 +113,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         languageSpinner.setAdapter(adapter);
     }
 
+    /** Load the list of religions from the local database and populate the ReligionSpinner. */
     private void loadReligions() {
         groupHandler.open();
         List<String>  religionsList = groupHandler.getAllReligions();
@@ -119,6 +121,9 @@ public class CreateGroupActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, religionsList);
         religionSpinner.setAdapter(adapter);
     }
+
+    /** Create a new group with the provided data, validate the input,
+     * insert the group into the local database, and display appropriate messages. */
     private boolean createGroup() {
         String groupName = groupNameEditText.getText().toString();
         String description = descriptionEditText.getText().toString();

@@ -19,14 +19,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Add Child" />
+            android:text="@string/add_child1" />
 
         <Button
             android:id="@+id/mychildrenbtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="My Children" />
+            android:text="@string/my_children1"
+            tools:ignore="DuplicateSpeakableTextCheck" />
 
     </LinearLayout>
 

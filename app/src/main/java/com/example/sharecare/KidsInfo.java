@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class KidsInfo extends AppCompatActivity {
 
     private TextView kidNameTv;
@@ -26,6 +28,8 @@ public class KidsInfo extends AppCompatActivity {
     private String name;
     private String parent;
     private String schoolName;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,22 +56,39 @@ public class KidsInfo extends AppCompatActivity {
         ageEt1.setText(age);
         schoolNameEt.setText(schoolName);
 
+        nameEt.setEnabled(false);
+        ageEt1.setEnabled(false);
+        schoolNameEt.setEnabled(false);
+        genderSpinner1.setEnabled(false);
+
         //TODO gender spinner
 
 
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                nameEt.setEnabled(true);
+                ageEt1.setEnabled(true);
+                schoolNameEt.setEnabled(true);
+                genderSpinner1.setEnabled(true);
             }
         });
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                nameEt.setEnabled(false);
+                ageEt1.setEnabled(false);
+                schoolNameEt.setEnabled(false);
+                genderSpinner1.setEnabled(false);
+
+                updateKidInDatabase(nameEt.getText().toString(),ageEt1.getText().toString(),schoolNameEt.getText().toString(),genderSpinner1.getSelectedItem().toString());
 
             }
         });
 
+    }
+
+    private void updateKidInDatabase(String name, String age, String schoolName, String gender) {
     }
 }

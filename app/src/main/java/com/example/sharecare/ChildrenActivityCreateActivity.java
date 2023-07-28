@@ -12,11 +12,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.handlers.ActivityHandler;
 import com.example.sharecare.models.Activity;
 import com.example.sharecare.valdiators.CreateActivityValidator;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -29,17 +33,13 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
     private Button btnSelectDate, btnSelectTime, btnSave;
     private Calendar calendar;
     private SimpleDateFormat dateFormatter, timeFormatter;
-
     private String selectedActivity;
     private String[] activityOptions;
     private ActivityHandler activityHandler;
-
     private int loggedInUserId;
     private String loggedInUsername;
-
     private int groupId;
     private int ishost;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
 
         // Initialize activity options
         activityOptions = getResources().getStringArray(R.array.activity_options);
-        activityHandler = new ActivityHandler(this,db);
+        activityHandler = new ActivityHandler(this,FirebaseFirestore.getInstance());
 
         // Set up spinner with activity options
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
@@ -117,6 +117,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         }
     }
 
+    /** Show DatePickerDialog to select a date and update the editSelectedDate field. */
     private void showDatePickerDialog() {
         calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
@@ -130,6 +131,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         datePickerDialog.show();
     }
 
+    /** Show TimePickerDialog to select a time and update the editSelectedTime field. */
     private void showTimePickerDialog() {
         calendar = Calendar.getInstance();
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
@@ -144,6 +146,9 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         timePickerDialog.show();
     }
 
+/** Save the activity data to the local database and Firebase.
+ * Validate the user input and set errors if necessary.
+ * Display appropriate success/error messages. */
     private boolean saveActivity() {
         String activityName = editActivityName.getText().toString().trim();
         String selectedDate = editSelectedDate.getText().toString().trim();
@@ -189,16 +194,21 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
 
         // Store user data in SQLite database
         long rowId = activityHandler.insertActivity(activity);
-        activityHandler.addingActivityDataToFirebase(activity);
-
-        if (rowId != -1) {
-            // Successful message
-            Toast.makeText(ChildrenActivityCreateActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-        } else {
-            // Error message
-            Toast.makeText(ChildrenActivityCreateActivity.this, "Registration failed. Please try again.", Toast.LENGTH_SHORT).show();
-        }
-
+        activityHandler.addingActivityDataToFirebase(activity,
+                new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        // Successful message
+                        Toast.makeText(ChildrenActivityCreateActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Error message
+                        Toast.makeText(ChildrenActivityCreateActivity.this, "Registration failed. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
         // Reset fields
         editActivityName.setText("");
         spinnerChooseActivity.setSelection(0);
