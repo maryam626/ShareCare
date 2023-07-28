@@ -63,8 +63,6 @@ public class SearchResultsActivity extends AppCompatActivity {
         groupHandler.open(); // Open the database connection
 
         List<Group> groups = groupHandler.getGroupsResult(selectedCities,language, religion, loggedInUserId);
-//        List<Group> groups = groupHandler.getGroupsResult(selectedCities,language, religion, loggedInUserId);
-//        List<Group> groups = groupHandler.getGroupsForSearchResult(selectedCities,language, religion, loggedInUserId);
 
         groupHandler.close(); // Close the database connection
 
@@ -168,8 +166,8 @@ public class SearchResultsActivity extends AppCompatActivity {
             row.addView(languageTextView);
 
             TextView religionTextView = new TextView(this);
-            streetTextView.setText(group.getReligion());
-            streetTextView.setPadding(8, 8, 8, 8);
+            religionTextView.setText(group.getReligion());
+            religionTextView.setPadding(8, 8, 8, 8);
             row.addView(religionTextView);
 
             // Create a Button for "Join Group"
