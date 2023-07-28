@@ -43,19 +43,23 @@ public class SearchResultsActivity extends AppCompatActivity {
         loggedInUserId = intent.getIntExtra("userid", -1);
         loggedInUsername = intent.getStringExtra("username");
         List<String> selectedCities = intent.getStringArrayListExtra("selectedCities");
+        String language = intent.getStringExtra("language");
+        String religion = intent.getStringExtra("religion");
 
         // Scroll view reference
         HorizontalScrollView horizontalScrollView = findViewById(R.id.horizontalScrollView);
 
         // Scroll the view to the leftmost position (start) to show the beginning of the table
         horizontalScrollView.post(() -> horizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT));
-        loadGroups(selectedCities);
+        loadGroups(selectedCities, language, religion, loggedInUserId);
     }
 
-    private void loadGroups(List<String> selectedCities) {
+    private void loadGroups(List<String> selectedCities, String language, String religion, int loggedInUserId) {
         groupHandler.open(); // Open the database connection
 
-        List<Group> groups = groupHandler.getGroups(selectedCities, loggedInUserId);
+        List<Group> groups = groupHandler.getGroupsResult(selectedCities,language, religion, loggedInUserId);
+//        List<Group> groups = groupHandler.getGroupsResult(selectedCities,language, religion, loggedInUserId);
+//        List<Group> groups = groupHandler.getGroupsForSearchResult(selectedCities,language, religion, loggedInUserId);
 
         groupHandler.close(); // Close the database connection
 
@@ -105,6 +109,22 @@ public class SearchResultsActivity extends AppCompatActivity {
         streetLabelTextView.setTextColor(getResources().getColor(android.R.color.black));
         headerRow.addView(streetLabelTextView);
 
+        TextView languageLabelTextView = new TextView(this);
+        languageLabelTextView.setText("Language");
+        languageLabelTextView.setPadding(8, 8, 8, 8);
+        languageLabelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        languageLabelTextView.setTypeface(null, Typeface.BOLD);
+        languageLabelTextView.setTextColor(getResources().getColor(android.R.color.black));
+        headerRow.addView(languageLabelTextView);
+
+        TextView religionLabelTextView = new TextView(this);
+        religionLabelTextView.setText("Religion");
+        religionLabelTextView.setPadding(8, 8, 8, 8);
+        religionLabelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        religionLabelTextView.setTypeface(null, Typeface.BOLD);
+        religionLabelTextView.setTextColor(getResources().getColor(android.R.color.black));
+        headerRow.addView(religionLabelTextView);
+
         resultTable.addView(headerRow);
 
         for (Group group : groups) {
@@ -130,6 +150,16 @@ public class SearchResultsActivity extends AppCompatActivity {
             streetTextView.setText(group.getStreet());
             streetTextView.setPadding(8, 8, 8, 8);
             row.addView(streetTextView);
+
+            TextView languageTextView = new TextView(this);
+            languageTextView.setText(group.getLanguage());
+            languageTextView.setPadding(8, 8, 8, 8);
+            row.addView(languageTextView);
+
+            TextView religionTextView = new TextView(this);
+            streetTextView.setText(group.getReligion());
+            streetTextView.setPadding(8, 8, 8, 8);
+            row.addView(religionTextView);
 
             // Create a Button for "Join Group"
             Button openGroupButton = new Button(this);

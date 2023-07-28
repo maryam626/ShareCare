@@ -15,16 +15,18 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 public class GroupHandler {
 
     private static final String TAG = "GroupHandler";
-    private GroupsSQLLiteDatabaseHelper databaseHelper;
+
+    private GroupsSQLLiteDatabaseHelper groupsDatabaseHelper;
     private FirebaseFirestore firebaseDb;
 
     public GroupHandler(Context context, FirebaseFirestore firebaseDb) {
-        databaseHelper = new GroupsSQLLiteDatabaseHelper(context);
+        groupsDatabaseHelper = new GroupsSQLLiteDatabaseHelper(context);
         this.firebaseDb = firebaseDb;
     }
 
@@ -37,17 +39,23 @@ public class GroupHandler {
     }
 
     public List<String> getAllCities() {
-        return databaseHelper.loadCities();
+        return groupsDatabaseHelper.loadCities();
     }
+
     public List<String> getGroupsDistinctCities() {
-        return databaseHelper.getGroupsDistinctCities();
+        return groupsDatabaseHelper.getGroupsDistinctCities();
     }
+
     public List<String> getAllLanguages() {
-        return databaseHelper.loadLanguages();
+        return groupsDatabaseHelper.loadLanguages();
     }
 
     public List<String> getAllReligions() {
-        return databaseHelper.loadReligions();
+        return groupsDatabaseHelper.loadReligions();
+    }
+    public ArrayList<Group> getGroupsForSearchResult(String language, String religion, String[] cities){
+        ArrayList<Group> groupsResult = groupsDatabaseHelper.getRowsByReligionLanguageAndCities(language, religion, cities);
+        return groupsResult;
     }
 
     public long insertGroup(String groupName, String description, String city, String street, String language, String religion, int hostUserId) {
@@ -67,7 +75,7 @@ public class GroupHandler {
             return -1; // Invalid street
         }
 
-        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        SQLiteDatabase db = groupsDatabaseHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put("groupName", groupName);
@@ -108,13 +116,13 @@ public class GroupHandler {
     }
 
     public boolean insertGroupParticipant(int groupId, String participant) {
-        int userId = databaseHelper.getUserIdByUsername(participant);
+        int userId = groupsDatabaseHelper.getUserIdByUsername(participant);
 
         if (userId == -1) {
             return false; // User not found in the database
         }
 
-        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        SQLiteDatabase db = groupsDatabaseHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put("groupId", groupId);
@@ -151,7 +159,7 @@ public class GroupHandler {
 
     public List<String> getParticipantsExceptCurrent(int loggedInUserId) {
         List<String> participantList = new ArrayList<>();
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        SQLiteDatabase db = groupsDatabaseHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT username FROM users WHERE id <> ?", new String[]{String.valueOf(loggedInUserId)});
 
         if (cursor.moveToFirst()) {
@@ -166,19 +174,12 @@ public class GroupHandler {
         return participantList;
     }
 
-    public List<Group> getGroups(List<String> selectedCities, int loggedInUserId) {
-        List<Group> groupList = new ArrayList<>();
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+    public ArrayList<Group> getGroupsResult(List<String> selectedCities,String language, String religion, int loggedInUserId) {
+        Log.d("getGroupsResult", "1st res");
+        ArrayList<Group> groupList = new ArrayList<>();
+        SQLiteDatabase db = groupsDatabaseHelper.getReadableDatabase();
 
-        String selectQuery = "SELECT id, groupName, description, city, street FROM groups WHERE hostUserId <> ? " +
-                "UNION ALL SELECT groups.id, groups.groupName, groups.description, groups.city, groups.street " +
-                "FROM groups " +
-                "INNER JOIN groupParticipants ON groups.id = groupParticipants.groupId " +
-                "WHERE groupParticipants.userId <> ? " +
-                "UNION ALL SELECT groups.id, groups.groupName, groups.description, groups.city, groups.street " +
-                "FROM groups " +
-                "INNER JOIN groupsRequest ON groups.id = groupsRequest.groupId " +
-                "WHERE groupsRequest.userId = ? AND isaccept = 0 AND groups.city IN (";
+        String selectQuery = "SELECT id, groupName, description, city, street, language, religion FROM groups WHERE hostUserId <> ? AND language = ? AND religion = ? AND city IN (";
 
         // Append each city name to the query
         for (int i = 0; i < selectedCities.size(); i++) {
@@ -190,8 +191,7 @@ public class GroupHandler {
 
         selectQuery += ")";
 
-        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(loggedInUserId),
-                String.valueOf(loggedInUserId), String.valueOf(loggedInUserId)});
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(loggedInUserId), language, religion});
 
         if (cursor.moveToFirst()) {
             do {
@@ -200,8 +200,10 @@ public class GroupHandler {
                 String description = cursor.getString(cursor.getColumnIndex("description"));
                 String city = cursor.getString(cursor.getColumnIndex("city"));
                 String street = cursor.getString(cursor.getColumnIndex("street"));
+                String groupLanguage = cursor.getString(cursor.getColumnIndex("language"));
+                String groupReligion = cursor.getString(cursor.getColumnIndex("religion"));
 
-                Group group = new Group(groupId, groupName, description, city, street);
+                Group group = new Group(groupId, groupName, description, city, street, groupLanguage, groupReligion);
                 groupList.add(group);
             } while (cursor.moveToNext());
         }

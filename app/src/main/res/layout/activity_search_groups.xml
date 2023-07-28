@@ -10,15 +10,44 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
         android:layout_weight="1">
+
 
         <LinearLayout
             android:id="@+id/cityContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="vertical">
-        </LinearLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Select_Language"/>
+
+        <Spinner
+            android:id="@+id/LanguagesSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:minHeight="48dp"
+            android:minWidth="48dp"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Select_Religion"/>
+        <Spinner
+            android:id="@+id/ReligionsSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:minHeight="48dp"
+            android:minWidth="48dp"
+            tools:ignore="SpeakableTextPresentCheck" />
+        </LinearLayout>
     </ScrollView>
 
     <!-- Search button -->
@@ -27,5 +56,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Search" />
-
 </LinearLayout>

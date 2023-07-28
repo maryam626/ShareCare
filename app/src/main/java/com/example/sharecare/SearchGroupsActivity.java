@@ -3,9 +3,11 @@ package com.example.sharecare;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +24,7 @@ public class SearchGroupsActivity extends AppCompatActivity {
     private Button searchButton;
 
     private List<String> selectedCities = new ArrayList<>();
-
+    private Spinner languagesSpinner, religionsSpinner;
     private GroupHandler groupHandler; // New instance of GroupHandler class
     private int loggedInUserId;
     private String loggedInUsername;
@@ -38,9 +40,12 @@ public class SearchGroupsActivity extends AppCompatActivity {
 
         cityContainer = findViewById(R.id.cityContainer);
         searchButton = findViewById(R.id.searchButton);
+        languagesSpinner = findViewById(R.id.LanguagesSpinner);
+        religionsSpinner = findViewById(R.id.ReligionsSpinner);
 
         loadCitiesFromDatabase();
-
+        loadLanguages();
+        loadReligions();
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,7 +61,21 @@ public class SearchGroupsActivity extends AppCompatActivity {
             addCityElement(city);
         }
     }
+    private void loadLanguages() {
+        groupHandler.open();
+        List<String>  languagesList = groupHandler.getAllLanguages();
+        groupHandler.close();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, languagesList);
+        languagesSpinner.setAdapter(adapter);
+    }
 
+    private void loadReligions() {
+        groupHandler.open();
+        List<String>  religionsList = groupHandler.getAllReligions();
+        groupHandler.close();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, religionsList);
+        religionsSpinner.setAdapter(adapter);
+    }
     private void addCityElement(String cityName) {
         View cityView = getLayoutInflater().inflate(R.layout.item_city, cityContainer, false);
         CheckBox cityCheckbox = cityView.findViewById(R.id.cityCheckbox);
@@ -84,6 +103,8 @@ public class SearchGroupsActivity extends AppCompatActivity {
             Toast.makeText(this, "Please select at least one city.", Toast.LENGTH_SHORT).show();
             return;
         }
+        String language = languagesSpinner.getSelectedItem().toString();
+        String religion = religionsSpinner.getSelectedItem().toString();
 
         Intent intent = new Intent(SearchGroupsActivity.this, SearchResultsActivity.class);
 
@@ -91,8 +112,9 @@ public class SearchGroupsActivity extends AppCompatActivity {
         extras.putInt("userid", loggedInUserId);
         extras.putString("username", loggedInUsername);
         extras.putStringArrayList("selectedCities", new ArrayList<>(selectedCities));
+        extras.putString("language", language);
+        extras.putString("religion", religion);
         intent.putExtras(extras);
-
         startActivity(intent);
     }
 }
