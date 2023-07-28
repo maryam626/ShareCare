@@ -22,15 +22,15 @@ public class ActivityDialog extends Dialog {
 
 
     public ActivityDialog(Context context, String activity_name, String activity_type , String date,
-                          String time, String capacity ,String child_age_from , String child_age_to) {
+                          String time, int capacity ,int child_age_from , int child_age_to) {
         super(context);
         this.activity_name = activity_name;
         this.activity_type = activity_type;
         this.date = date;
         this.time = time;
-        this.capacity = capacity;
-        this.child_age_from = child_age_from;
-        this.child_age_to = child_age_to;
+        this.capacity = String.valueOf(capacity);
+        this.child_age_from = String.valueOf(child_age_from);
+        this.child_age_to = String.valueOf(child_age_to);
     }
 
     @Override

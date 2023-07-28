@@ -13,6 +13,8 @@ public class Activity {
     private int ownerUserId;
     private int groupId;
 
+
+
     public int getId() {
         return id;
     }
@@ -68,6 +70,21 @@ public class Activity {
 
     public Activity() {
         // Empty constructor needed for Firebase
+    }
+
+
+    public Activity(int id, String activityName, String selectedActivity, String selectedDate, String selectedTime,
+                    int capacity, int ageFrom, int ageTo, int groupId, int ownerUserId) {
+        this.id = id;
+        this.activityName = activityName;
+        this.selectedActivity = selectedActivity;
+        this.selectedDate = selectedDate;
+        this.selectedTime = selectedTime;
+        this.capacity = capacity;
+        this.ageFrom = ageFrom;
+        this.ageTo = ageTo;
+        this.groupId = groupId;
+        this.ownerUserId = ownerUserId;
     }
 
     public Activity(String activityName, String selectedActivity, String selectedDate, String selectedTime,
