@@ -1,5 +1,9 @@
 package com.example.sharecare;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,12 +15,20 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.sharecare.Logic.UsersSQLLiteDatabaseHelper;
+import com.example.sharecare.handlers.LogInFirebaseHandler;
+import com.example.sharecare.handlers.SignUpFirebaseHandler;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 public class log_in_activity extends AppCompatActivity {
+    private static final String TAG = "log in";
+
 
     private TextView messageTextView;
     private TextView forgetTv;
@@ -40,11 +52,18 @@ public class log_in_activity extends AppCompatActivity {
     private String religion;
 
     private UsersSQLLiteDatabaseHelper databaseHelper;
+    private LogInFirebaseHandler logInFirebaseHandler;
+    private FirebaseFirestore db;
+
+    ArrayList<QueryDocumentSnapshot> result = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
+
+        db = FirebaseFirestore.getInstance();
+
 
         databaseHelper = new UsersSQLLiteDatabaseHelper(this);
         forgetTv = (TextView) findViewById(R.id.forgetTv);
@@ -86,6 +105,7 @@ public class log_in_activity extends AppCompatActivity {
                 if (validateCredentials(username, password)) {
                     Intent intent = new Intent(log_in_activity.this, home_page_parent_activity.class);
                     gettingUserData();
+                    //puttingDataInVariables(getParentData(EtUserName.getText().toString(),log_in_activity.this));
 
                     //Sending Data To Home Page Using Bundle
                     Bundle extras = new Bundle();
@@ -110,6 +130,35 @@ public class log_in_activity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    private void puttingDataInVariables(ArrayList<QueryDocumentSnapshot> result) {
+        address = result.get(0).get("address").toString();
+        email = result.get(0).get("email").toString();
+        gender = result.get(0).get("gender").toString();
+        id = result.get(0).get("id").toString();
+        language = result.get(0).get("language").toString();
+        maritalStatus = result.get(0).get("maritalStatus").toString();
+        numberOfKids = result.get(0).get("numberOfKids").toString();
+        password = result.get(0).get("password").toString();
+        phoneNumber = result.get(0).get("phoneNumber").toString();
+        religion = result.get(0).get("religion").toString();
+        username = result.get(0).get("username").toString();
+
+        System.out.println(address);
+        System.out.println(email);
+        System.out.println(gender);
+        System.out.println(id);
+        System.out.println(language);
+        System.out.println(maritalStatus);
+        System.out.println(numberOfKids);
+        System.out.println(password);
+        System.out.println(phoneNumber);
+        System.out.println(religion);
+        System.out.println(username);
+
+
 
     }
 
@@ -229,6 +278,11 @@ public class log_in_activity extends AppCompatActivity {
             // Cursor is empty or null, handle this case accordingly
         }
 
+
+
+
+
+
         cursor.close();
         db.close();
     }
@@ -260,5 +314,31 @@ public class log_in_activity extends AppCompatActivity {
         db.close();
 
         return isValid;
+    }
+
+    public ArrayList<QueryDocumentSnapshot> getParentData(String username, log_in_activity activity) {
+        ArrayList<QueryDocumentSnapshot> results = new ArrayList<>();
+        Task<QuerySnapshot> task = db.collection("Parents").whereEqualTo("username", username).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        results.add(document);
+                        System.out.println(results.get(0));
+                        System.out.println(results);
+
+                        Log.d(TAG, document.getId() + " => " + document.getData());
+                    }
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+        while(!task.isComplete()){
+
+        }
+        return results;
+
     }
 }

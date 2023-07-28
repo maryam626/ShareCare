@@ -173,6 +173,8 @@
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="my_children1">My Children</string>
+    <string name="add_child1">Add Child</string>
 
 
 </resources>
