@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.example.sharecare.Logic.UsersSQLLiteDatabaseHelper;
 import com.example.sharecare.handlers.LogInFirebaseHandler;
-import com.example.sharecare.handlers.SignUpFirebaseHandler;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,7 +34,7 @@ public class log_in_activity extends AppCompatActivity {
     private TextView SignUpBtn;
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
-    private EditText EtUserName;
+    private EditText EtEmail;
     private EditText EtPassword;
     private Button logInBtn;
     private CheckBox rememberCheckBox;
@@ -68,7 +67,7 @@ public class log_in_activity extends AppCompatActivity {
         databaseHelper = new UsersSQLLiteDatabaseHelper(this);
         forgetTv = (TextView) findViewById(R.id.forgetTv);
         EtPassword = (EditText) findViewById(R.id.EtPassword);
-        EtUserName = (EditText) findViewById(R.id.EtUserName);
+        EtEmail = (EditText) findViewById(R.id.EtEmail);
         messageTextView =  findViewById(R.id.messageTextView);
         logInBtn = (Button) findViewById(R.id.logInBtn);
         rememberCheckBox = (CheckBox) findViewById(R.id.rememberCheckBox);
@@ -92,17 +91,17 @@ public class log_in_activity extends AppCompatActivity {
         logInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = EtUserName.getText().toString();
+                String email = EtEmail.getText().toString();
                 String password = EtPassword.getText().toString();
 
-                if(username.equals("")){
-                    EtPassword.setError("Enter Your Password");
+                if(email.equals("")){
+                    EtPassword.setError("Enter Your Email");
                 }
                 if(password.equals("")){
-                    EtUserName.setError("Enter Your Email");
+                    EtEmail.setError("Enter Your Password");
                 }
 
-                if (validateCredentials(username, password)) {
+                if (validateCredentials(email, password)) {
                     Intent intent = new Intent(log_in_activity.this, home_page_parent_activity.class);
                     gettingUserData();
                     //puttingDataInVariables(getParentData(EtUserName.getText().toString(),log_in_activity.this));
@@ -126,7 +125,7 @@ public class log_in_activity extends AppCompatActivity {
                     finish();
                 } else {
                     messageTextView.setVisibility(View.VISIBLE);
-                    messageTextView.setText("Username or password is incorrect");
+                    messageTextView.setText("Email or password is incorrect");
                 }
             }
         });
@@ -165,8 +164,8 @@ public class log_in_activity extends AppCompatActivity {
     private void gettingUserData() {
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         String[] columns = {"id","username","phone_number","email","address","password","number_of_kids","marital_status","gender", "language","religion"};
-        String selection = "username = ? AND password = ?";
-        String[] selectionArgs = {EtUserName.getText().toString(), EtPassword.getText().toString()};
+        String selection = "email = ? AND password = ?";
+        String[] selectionArgs = {EtEmail.getText().toString(), EtPassword.getText().toString()};
 
 
         Cursor cursor = db.query(
@@ -287,16 +286,16 @@ public class log_in_activity extends AppCompatActivity {
         db.close();
     }
 
-    private boolean validateCredentials(String username, String password) {
+    private boolean validateCredentials(String email, String password) {
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
 
         String[] projection = {
-                "username",
+                "email",
                 "password"
         };
 
-        String selection = "username = ? AND password = ?";
-        String[] selectionArgs = {username, password};
+        String selection = "email = ? AND password = ?";
+        String[] selectionArgs = {email, password};
 
         Cursor cursor = db.query(
                 "users",
@@ -318,7 +317,7 @@ public class log_in_activity extends AppCompatActivity {
 
     public ArrayList<QueryDocumentSnapshot> getParentData(String username, log_in_activity activity) {
         ArrayList<QueryDocumentSnapshot> results = new ArrayList<>();
-        Task<QuerySnapshot> task = db.collection("Parents").whereEqualTo("username", username).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        Task<QuerySnapshot> task = db.collection("Parents").whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
