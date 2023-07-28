@@ -22,8 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CreateKidProfile extends AppCompatActivity {
-    private static final String TAG = "create kid profile";
-
     private EditText nameEt;
     private EditText ageEt1;
     private EditText schoolNameEt;
@@ -117,6 +115,9 @@ public class CreateKidProfile extends AppCompatActivity {
         });
     }
 
+    /**
+     * Validates the form data and returns true if all fields are filled; otherwise, false.
+     */
     private boolean validateForm() {
         boolean isValid = true;
 
@@ -140,10 +141,17 @@ public class CreateKidProfile extends AppCompatActivity {
         return isValid;
     }
 
+    /**
+     *   Displays a short toast message with the provided text.
+     */
     private void showToast(String message) {
         Toast.makeText(CreateKidProfile.this, message, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     *  Updates the static boolean variable "doneX" in the FillKidsInformation class,
+     *  where X is the number of kids created, to track the completion status of each kid's information.
+     */
     private void changingDoneVariable() {
         int kidNumber = Integer.parseInt(kidNumberTv.getText().toString());
         if (kidNumber >= 1 && kidNumber <= 10) {

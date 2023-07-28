@@ -20,6 +20,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A handler class to manage group-related operations, including local database interactions and Firebase Firestore operations.
+ */
 public class GroupHandler {
 
     private static final String TAG = "GroupHandler";
@@ -28,12 +31,23 @@ public class GroupHandler {
     private ActivitySQLLiteDatabaseHelper activityDatabaseHelper;
 
 
+    /**
+     * Constructor to initialize database helpers and Firestore instance.
+     *
+     * @param context Android context.
+     * @param firebaseDb Firebase Firestore instance.
+     */
     public GroupHandler(Context context, FirebaseFirestore firebaseDb) {
         groupsDatabaseHelper = new GroupsSQLLiteDatabaseHelper(context);
         this.firebaseDb = firebaseDb;
         activityDatabaseHelper = new ActivitySQLLiteDatabaseHelper(context);
     }
 
+    /**
+     * Constructor to initialize only the database helpers.
+     *
+     * @param context Android context.
+     */
     public GroupHandler(Context context) {
         groupsDatabaseHelper = new GroupsSQLLiteDatabaseHelper(context);
         activityDatabaseHelper = new ActivitySQLLiteDatabaseHelper(context);
@@ -63,6 +77,14 @@ public class GroupHandler {
         return groupsDatabaseHelper.loadReligions();
     }
 
+
+
+    /**
+     * Inserts a new group into the local database and then to Firebase.
+     *
+     * @param ... Various parameters about the group.
+     * @return The ID of the inserted group or -1 if insertion failed.
+     */
     public long insertGroup(String groupName, String description, String city, String street, String language, String religion, int hostUserId) {
         if (!CreateGroupValidator.isGroupNameValid(groupName)) {
             return -1; // Invalid group name
@@ -102,6 +124,12 @@ public class GroupHandler {
         return groupId;
     }
 
+    /**
+     * Adds group information to Firebase Firestore.
+     *
+     * @param groupId The ID of the group.
+     * @param values Content values representing the group information.
+     */
     private void addGroupToFirebase(long groupId, ContentValues values) {
         firebaseDb.collection("Groups")
                 .document(String.valueOf(groupId))
@@ -120,6 +148,13 @@ public class GroupHandler {
                 });
     }
 
+    /**
+     * Inserts a participant for a group into the local database and then to Firebase.
+     *
+     * @param groupId The ID of the group.
+     * @param participant Participant's name.
+     * @return true if insertion was successful, false otherwise.
+     */
     public boolean insertGroupParticipant(int groupId, String participant) {
         int userId = groupsDatabaseHelper.getUserIdByUsername(participant);
 
@@ -144,6 +179,12 @@ public class GroupHandler {
         return groupParticipantId != -1;
     }
 
+    /**
+     * Adds group participant information to Firebase Firestore.
+     *
+     * @param groupParticipantId The ID of the group participant relation.
+     * @param values Content values representing the group participant information.
+     */
     private void addGroupParticipantToFirebase(long groupParticipantId, ContentValues values) {
         firebaseDb.collection("groupParticipants")
                 .document(String.valueOf(groupParticipantId))

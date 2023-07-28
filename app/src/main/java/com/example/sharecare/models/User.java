@@ -1,9 +1,6 @@
 package com.example.sharecare.models;
 public class User {
     private int id;
-
-
-
     private String username;
     private String phoneNumber;
     private String email;

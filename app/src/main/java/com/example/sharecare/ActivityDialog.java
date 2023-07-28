@@ -8,19 +8,28 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class ActivityDialog extends Dialog {
+
+    /* Activity data */
     private String activity_name;
     private String activity_type;
-
     private String date;
     private String time;
-
     private String capacity;
     private String child_age_from;
-
     private String child_age_to;
 
 
-
+    /**
+     * Constructor to initialize the ActivityDialog with activity information.
+     * @param context The context of the dialog.
+     * @param activity_name The name of the activity.
+     * @param activity_type The type of the activity.
+     * @param date The date of the activity.
+     * @param time The time of the activity.
+     * @param capacity The capacity of the activity.
+     * @param child_age_from The minimum age of children for the activity.
+     * @param child_age_to The maximum age of children for the activity.
+     */
     public ActivityDialog(Context context, String activity_name, String activity_type , String date,
                           String time, int capacity ,int child_age_from , int child_age_to) {
         super(context);
