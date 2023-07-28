@@ -29,17 +29,13 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
     private Button btnSelectDate, btnSelectTime, btnSave;
     private Calendar calendar;
     private SimpleDateFormat dateFormatter, timeFormatter;
-
     private String selectedActivity;
     private String[] activityOptions;
     private ActivityHandler activityHandler;
-
     private int loggedInUserId;
     private String loggedInUsername;
-
     private int groupId;
     private int ishost;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +71,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
 
         // Initialize activity options
         activityOptions = getResources().getStringArray(R.array.activity_options);
-        activityHandler = new ActivityHandler(this,db);
+        activityHandler = new ActivityHandler(this,FirebaseFirestore.getInstance());
 
         // Set up spinner with activity options
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
@@ -117,6 +113,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         }
     }
 
+    /** Show DatePickerDialog to select a date and update the editSelectedDate field. */
     private void showDatePickerDialog() {
         calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
@@ -130,6 +127,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         datePickerDialog.show();
     }
 
+    /** Show TimePickerDialog to select a time and update the editSelectedTime field. */
     private void showTimePickerDialog() {
         calendar = Calendar.getInstance();
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
@@ -144,6 +142,9 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         timePickerDialog.show();
     }
 
+/** Save the activity data to the local database and Firebase.
+ * Validate the user input and set errors if necessary.
+ * Display appropriate success/error messages. */
     private boolean saveActivity() {
         String activityName = editActivityName.getText().toString().trim();
         String selectedDate = editSelectedDate.getText().toString().trim();

@@ -22,7 +22,9 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_AGE_TO = "child_age_to";
     private static final String OWNER_ID = "owner_user_id";
 
-    private static final String CREATE_TABLE =
+
+    /** SQL command to create the table for activities */
+    private static final String CREATE_TABLE_ACTIVITIES =
             "CREATE TABLE IF NOT EXISTS  " + ACTIVITIES_TABLE_NAME + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     GROUP_ID + " INTEGER, " +
@@ -36,6 +38,7 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_AGE_TO + " INTEGER)";
 
 
+    /** SQL command to create the table for pending activity requests */
     private static final String CREATE_TABLE_PENDING_REQUESTS =
             "CREATE TABLE IF NOT EXISTS   activitiesRequest (userid INTEGER, activityid INTEGER, requestDate TEXT, isaccept INTEGER)";
 
@@ -44,12 +47,14 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /** Create database tables when the database is created for the first time */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_TABLE);
+        db.execSQL(CREATE_TABLE_ACTIVITIES);
         db.execSQL(CREATE_TABLE_PENDING_REQUESTS);
     }
 
+    /** Handle database upgrades by dropping existing tables and creating them afresh */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + ACTIVITIES_TABLE_NAME);
@@ -57,6 +62,11 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    /**
+     * Insert a new activity into the activities table
+     * @param activity The activity object with details to be saved
+     * @return The row ID of the newly inserted activity, or -1 in case of an error
+     */
     public long  insertActivity(Activity activity) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();

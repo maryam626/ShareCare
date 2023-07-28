@@ -1,8 +1,5 @@
 package com.example.sharecare;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,6 +10,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.Logic.UsersSQLLiteDatabaseHelper;
 
@@ -228,11 +228,6 @@ public class log_in_activity extends AppCompatActivity {
 
             // Cursor is empty or null, handle this case accordingly
         }
-
-
-
-
-
 
         cursor.close();
         db.close();

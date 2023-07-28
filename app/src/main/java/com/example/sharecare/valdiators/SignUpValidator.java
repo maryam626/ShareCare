@@ -15,6 +15,12 @@ public class SignUpValidator {
     // Password pattern: At least one digit, one letter, and one special character, minimum 6 characters
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[@$!%*?&]).{6,}$");
 
+
+    /**
+     * Validate the user name entered in the EditText.
+     * @param editText The EditText containing the user name.
+     * @return True if the user name is valid, false otherwise.
+     */
     public static boolean isUserNameValid(EditText editText) {
         String userName = editText.getText().toString().trim();
 
@@ -32,6 +38,11 @@ public class SignUpValidator {
         return true;
     }
 
+    /**
+     * Validate the phone number entered in the EditText.
+     * @param editText The EditText containing the phone number.
+     * @return True if the phone number is valid, false otherwise.
+     */
     public static boolean isPhoneNumberValid(EditText editText) {
         String phoneNumber = editText.getText().toString().trim();
 
@@ -52,6 +63,11 @@ public class SignUpValidator {
         return true;
     }
 
+    /**
+     * Validate the address entered in the EditText.
+     * @param editText The EditText containing the address.
+     * @return True if the address is valid, false otherwise.
+     */
     public static boolean isAddressValid(EditText editText) {
         String address = editText.getText().toString().trim();
 
@@ -66,6 +82,11 @@ public class SignUpValidator {
         return true;
     }
 
+    /**
+     * Validate the password entered in the EditText.
+     * @param editText The EditText containing the password.
+     * @return True if the password is valid, false otherwise.
+     */
     public static boolean isPasswordValid(EditText editText) {
         String password = editText.getText().toString().trim();
 
@@ -80,6 +101,12 @@ public class SignUpValidator {
         return true;
     }
 
+
+    /**
+     * Validate the email address entered in the EditText.
+     * @param editText The EditText containing the email address.
+     * @return True if the email address is valid, false otherwise.
+     */
     public static boolean isEmailValid(EditText editText) {
         String email = editText.getText().toString().trim();
 
@@ -94,6 +121,12 @@ public class SignUpValidator {
         return true;
     }
 
+    /**
+     * Validate the selected value of a Spinner.
+     * @param spinner The Spinner to validate.
+     * @param selectionType The type of selection (e.g., "country," "city").
+     * @return True if a valid value is selected, false otherwise.
+     */
     public static boolean isSpinnerSelectionValid(Spinner spinner, String selectionType) {
         String selectedValue = spinner.getSelectedItem().toString();
 

@@ -16,6 +16,12 @@ import com.example.sharecare.models.Activity;
 
 import java.util.List;
 
+
+/**
+ * GroupInfoActivity displays information about a specific group and its activities.
+ * It allows the user to view group details, create new activities for the group,
+ * view and join existing activities, and manage group activities if the user is the owner of the group.
+ */
 public class GroupInfoActivity extends AppCompatActivity {
     private GroupHandler groupHandler;
     private int ishost;
@@ -59,12 +65,18 @@ public class GroupInfoActivity extends AppCompatActivity {
         loadGroupActivityData();
     }
 
+    /**
+     * Load and display the group name.
+     */
     private void loadGroupData() {
         String groupName = groupHandler.getGroupNameById(groupId);
         TextView groupNameTextView = findViewById(R.id.groupNameTextView);
         groupNameTextView.setText("Group Name : " + groupName);
     }
 
+    /**
+     * Load and display group activity data.
+     */
     private void loadGroupActivityData() {
         List<Activity> activityList = groupHandler.getActivitiesForGroup(groupId, loggedInUserId);
 
@@ -145,6 +157,18 @@ public class GroupInfoActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * Display a dialog with detailed information about the selected activity.
+     *
+     * @param activity_name   The name of the activity.
+     * @param activity_type   The type of the activity.
+     * @param date            The date of the activity.
+     * @param time            The time of the activity.
+     * @param capacity        The capacity of the activity.
+     * @param child_age_from  The minimum age requirement for the activity.
+     * @param child_age_to    The maximum age requirement for the activity.
+     */
     private void openActivityDialog(String activity_name, String activity_type,
                                     String date, String time, int capacity, int child_age_from, int child_age_to) {
         ActivityDialog activityDialog = new ActivityDialog(this, activity_name, activity_type,
@@ -157,6 +181,10 @@ public class GroupInfoActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+
+    /**
+     * Reload the group activity data when needed (e.g., after an activity is deleted).
+     */
     private void reloadGroupActivityData() {
         tableLayout.removeAllViews();
         loadGroupActivityData();
