@@ -167,7 +167,25 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
     /** Fetch a list of all languages stored in the database */
     public List<String> loadLanguages() {
-        List<String> cityList = new ArrayList<>();
+
+        List<String> languagesList = new ArrayList<>();
+
+        firebaseDb.collection("Languages").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(int i = 0; i<queryDocumentSnapshots.size();i++) {
+                    languagesList.add(queryDocumentSnapshots.getDocuments().get(i).get("name").toString());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+        return languagesList;
+
+        /*List<String> cityList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT DISTINCT name FROM languages ORDER BY name ASC", null);
 
@@ -181,7 +199,7 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        return cityList;
+        return cityList;*/
     }
 
     /** Fetch a list of all religions stored in the database */
