@@ -1,5 +1,9 @@
 package com.example.sharecare;
 
+import static com.example.sharecare.Logic.ActivitySQLLiteDatabaseHelper.REQUEST_STATUS_ACCEPTED;
+import static com.example.sharecare.Logic.ActivitySQLLiteDatabaseHelper.REQUEST_STATUS_PENDING;
+import static com.example.sharecare.Logic.ActivitySQLLiteDatabaseHelper.REQUEST_STATUS_REJECTED;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -53,8 +57,6 @@ public class GroupInfoActivity extends AppCompatActivity {
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
     private SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
     private EditText durationFromEditText, durationToEditText,capacityFromEditText, capacityToEditText, ageFromEditText, ageToEditText;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -342,17 +344,25 @@ public class GroupInfoActivity extends AppCompatActivity {
                                 }
                             });
                             row.addView(manageRequestsButton);
-                        } else if (activityShare.isSharedWithMe()) {
-                            TextView activityjoinedTextView = new TextView(this);
-                            activityjoinedTextView.setText("joined");
-                            row.addView(activityjoinedTextView);
-                        } else if (!activityShare.isSharedWithMe()) {
+
+                        }else if (activityShare.getRequestStatusCode() == REQUEST_STATUS_REJECTED) {
+                            Button joinButton = new Button(this);
+                            joinButton.setText("Rejected");
+                            joinButton.setEnabled(false);
+                            row.addView(joinButton);
+
+                        } else if (activityShare.getRequestStatusCode() ==REQUEST_STATUS_ACCEPTED) {
+                            Button joinButton = new Button(this);
+                            joinButton.setText("Joined");
+                            joinButton.setEnabled(false);
+                            row.addView(joinButton);
+                        } else if (activityShare.getRequestStatusCode()==REQUEST_STATUS_PENDING) {
                             Button joinButton = new Button(this);
                             joinButton.setText("Join");
                             joinButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    groupHandler.insertActivityRequest(loggedInUserId, activity_id);
+                                    groupHandler.insertActivityRequest(loggedInUserId, activity_id,groupId);
                                     Toast.makeText(GroupInfoActivity.this, "Your request submitted to activity owner ", Toast.LENGTH_SHORT).show();
                                 }
                             });
