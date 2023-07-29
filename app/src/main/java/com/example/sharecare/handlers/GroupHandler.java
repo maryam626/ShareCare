@@ -350,6 +350,7 @@ public class GroupHandler {
         db.close();
     }
 
+    //query to all according to all filters
     public ArrayList<Group> getGroupsResult(List<String> selectedCities,String language, String religion, int loggedInUserId) {
         Log.d("getGroupsResult", "1st res");
         ArrayList<Group> groupList = new ArrayList<>();
@@ -384,6 +385,208 @@ public class GroupHandler {
             } while (cursor.moveToNext());
         }
 
+        cursor.close();
+        db.close();
+
+        return groupList;
+    }
+    //query according to city filter
+    public ArrayList<Group> getCityGroupsResults(List<String> selectedCities, int loggedInUserId) {
+
+        ArrayList<Group> groupList = new ArrayList<>();
+        SQLiteDatabase db = groupsDatabaseHelper.getReadableDatabase();
+
+        String selectQuery = "SELECT id, groupName, description, city, street, language, religion FROM groups WHERE hostUserId <> ? AND city IN (";
+
+        // Append each city name to the query
+        for (int i = 0; i < selectedCities.size(); i++) {
+            selectQuery += "'" + selectedCities.get(i) + "'";
+            if (i < selectedCities.size() - 1) {
+                selectQuery += ",";
+            }
+        }
+
+        selectQuery += ")";
+
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(loggedInUserId)});
+        if (cursor.moveToFirst()) {
+            do {
+                int groupId = cursor.getInt(cursor.getColumnIndex("id"));
+                String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
+                String description = cursor.getString(cursor.getColumnIndex("description"));
+                String city = cursor.getString(cursor.getColumnIndex("city"));
+                String street = cursor.getString(cursor.getColumnIndex("street"));
+                String groupLanguage = cursor.getString(cursor.getColumnIndex("language"));
+                String groupReligion = cursor.getString(cursor.getColumnIndex("religion"));
+
+                Group group = new Group(groupId, groupName, description, city, street, groupLanguage, groupReligion);
+                groupList.add(group);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        return groupList;
+    }
+
+    //query according to language filter
+    public ArrayList<Group> getLanguageGroupsResults(String language, int loggedInUserId) {
+
+        ArrayList<Group> groupList = new ArrayList<>();
+        SQLiteDatabase db = groupsDatabaseHelper.getReadableDatabase();
+
+        String selectQuery = "SELECT id, groupName, description, city, street, language, religion FROM groups WHERE hostUserId <> ? AND language = ? ";
+
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(loggedInUserId), language});
+        if (cursor.moveToFirst()) {
+            do {
+                int groupId = cursor.getInt(cursor.getColumnIndex("id"));
+                String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
+                String description = cursor.getString(cursor.getColumnIndex("description"));
+                String city = cursor.getString(cursor.getColumnIndex("city"));
+                String street = cursor.getString(cursor.getColumnIndex("street"));
+                String groupLanguage = cursor.getString(cursor.getColumnIndex("language"));
+                String groupReligion = cursor.getString(cursor.getColumnIndex("religion"));
+
+                Group group = new Group(groupId, groupName, description, city, street, groupLanguage, groupReligion);
+                groupList.add(group);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        return groupList;
+    }
+
+    //query according to religion filter
+    public ArrayList<Group> getReligionGroupsResults(String religion, int loggedInUserId) {
+
+        ArrayList<Group> groupList = new ArrayList<>();
+        SQLiteDatabase db = groupsDatabaseHelper.getReadableDatabase();
+
+        String selectQuery = "SELECT id, groupName, description, city, street, language, religion FROM groups WHERE hostUserId <> ? AND religion = ? ";
+
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(loggedInUserId), religion});
+        if (cursor.moveToFirst()) {
+            do {
+                int groupId = cursor.getInt(cursor.getColumnIndex("id"));
+                String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
+                String description = cursor.getString(cursor.getColumnIndex("description"));
+                String city = cursor.getString(cursor.getColumnIndex("city"));
+                String street = cursor.getString(cursor.getColumnIndex("street"));
+                String groupLanguage = cursor.getString(cursor.getColumnIndex("language"));
+                String groupReligion = cursor.getString(cursor.getColumnIndex("religion"));
+
+                Group group = new Group(groupId, groupName, description, city, street, groupLanguage, groupReligion);
+                groupList.add(group);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        return groupList;
+    }
+
+    //query according to combination of city and language filters
+    public ArrayList<Group> getCityLanguageGroupsResults(List<String> selectedCities,String language, int loggedInUserId) {
+
+        ArrayList<Group> groupList = new ArrayList<>();
+        SQLiteDatabase db = groupsDatabaseHelper.getReadableDatabase();
+
+        String selectQuery = "SELECT id, groupName, description, city, street, language, religion FROM groups WHERE hostUserId <> ? AND language = ? AND city IN (";
+
+        // Append each city name to the query
+        for (int i = 0; i < selectedCities.size(); i++) {
+            selectQuery += "'" + selectedCities.get(i) + "'";
+            if (i < selectedCities.size() - 1) {
+                selectQuery += ",";
+            }
+        }
+
+        selectQuery += ")";
+
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(loggedInUserId), language});
+        if (cursor.moveToFirst()) {
+            do {
+                int groupId = cursor.getInt(cursor.getColumnIndex("id"));
+                String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
+                String description = cursor.getString(cursor.getColumnIndex("description"));
+                String city = cursor.getString(cursor.getColumnIndex("city"));
+                String street = cursor.getString(cursor.getColumnIndex("street"));
+                String groupLanguage = cursor.getString(cursor.getColumnIndex("language"));
+                String groupReligion = cursor.getString(cursor.getColumnIndex("religion"));
+
+                Group group = new Group(groupId, groupName, description, city, street, groupLanguage, groupReligion);
+                groupList.add(group);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        return groupList;
+    }
+
+    //query according to combination of city and religion filters
+    public ArrayList<Group> getCityReligionGroupsResults(List<String> selectedCities,String religion, int loggedInUserId) {
+
+        ArrayList<Group> groupList = new ArrayList<>();
+        SQLiteDatabase db = groupsDatabaseHelper.getReadableDatabase();
+
+        String selectQuery = "SELECT id, groupName, description, city, street, language, religion FROM groups WHERE hostUserId <> ? AND religion = ? AND city IN (";
+
+        // Append each city name to the query
+        for (int i = 0; i < selectedCities.size(); i++) {
+            selectQuery += "'" + selectedCities.get(i) + "'";
+            if (i < selectedCities.size() - 1) {
+                selectQuery += ",";
+            }
+        }
+
+        selectQuery += ")";
+
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(loggedInUserId), religion});
+        if (cursor.moveToFirst()) {
+            do {
+                int groupId = cursor.getInt(cursor.getColumnIndex("id"));
+                String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
+                String description = cursor.getString(cursor.getColumnIndex("description"));
+                String city = cursor.getString(cursor.getColumnIndex("city"));
+                String street = cursor.getString(cursor.getColumnIndex("street"));
+                String groupLanguage = cursor.getString(cursor.getColumnIndex("language"));
+                String groupReligion = cursor.getString(cursor.getColumnIndex("religion"));
+
+                Group group = new Group(groupId, groupName, description, city, street, groupLanguage, groupReligion);
+                groupList.add(group);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        return groupList;
+    }
+
+    public ArrayList<Group> getLanguageReligionGroupsResults(String religion,String language, int loggedInUserId) {
+
+        ArrayList<Group> groupList = new ArrayList<>();
+        SQLiteDatabase db = groupsDatabaseHelper.getReadableDatabase();
+
+        String selectQuery = "SELECT id, groupName, description, city, street, language, religion FROM groups WHERE hostUserId <> ? AND language = ? AND religion = ?";
+
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(loggedInUserId),language , religion});
+        if (cursor.moveToFirst()) {
+            do {
+                int groupId = cursor.getInt(cursor.getColumnIndex("id"));
+                String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
+                String description = cursor.getString(cursor.getColumnIndex("description"));
+                String city = cursor.getString(cursor.getColumnIndex("city"));
+                String street = cursor.getString(cursor.getColumnIndex("street"));
+                String groupLanguage = cursor.getString(cursor.getColumnIndex("language"));
+                String groupReligion = cursor.getString(cursor.getColumnIndex("religion"));
+
+                Group group = new Group(groupId, groupName, description, city, street, groupLanguage, groupReligion);
+                groupList.add(group);
+            } while (cursor.moveToNext());
+        }
         cursor.close();
         db.close();
 

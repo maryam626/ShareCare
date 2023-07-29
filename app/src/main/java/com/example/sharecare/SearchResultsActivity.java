@@ -18,6 +18,7 @@ import com.example.sharecare.handlers.GroupHandler;
 import com.example.sharecare.models.Group;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -50,20 +51,35 @@ public class SearchResultsActivity extends AppCompatActivity {
         List<String> selectedCities = intent.getStringArrayListExtra("selectedCities");
         String language = intent.getStringExtra("language");
         String religion = intent.getStringExtra("religion");
+        boolean[] searchFiltersVector = intent.getBooleanArrayExtra("filtersVector");
 
         // Scroll view reference
         HorizontalScrollView horizontalScrollView = findViewById(R.id.horizontalScrollView);
 
         // Scroll the view to the leftmost position (start) to show the beginning of the table
         horizontalScrollView.post(() -> horizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT));
-        loadGroups(selectedCities, language, religion, loggedInUserId);
+        loadGroups(selectedCities, language, religion,searchFiltersVector , loggedInUserId);
     }
 
-    private void loadGroups(List<String> selectedCities, String language, String religion, int loggedInUserId) {
+    private void loadGroups(List<String> selectedCities, String language, String religion,boolean[] searchFiltersVector, int loggedInUserId) {
         groupHandler.open(); // Open the database connection
+        List<Group> groups;
 
-        List<Group> groups = groupHandler.getGroupsResult(selectedCities,language, religion, loggedInUserId);
-
+        if(searchFiltersVector[0] && !searchFiltersVector[1] && !searchFiltersVector[2]){
+            groups = groupHandler.getCityGroupsResults(selectedCities, loggedInUserId);
+        }else if(!searchFiltersVector[0] && searchFiltersVector[1] && !searchFiltersVector[2]){
+           groups = groupHandler.getLanguageGroupsResults(language, loggedInUserId);
+        }else if(!searchFiltersVector[0] && !searchFiltersVector[1] && searchFiltersVector[2]){
+            groups = groupHandler.getReligionGroupsResults(religion, loggedInUserId);
+        }else if(searchFiltersVector[0] && searchFiltersVector[1] && !searchFiltersVector[2]){
+            groups = groupHandler.getCityLanguageGroupsResults(selectedCities, language, loggedInUserId);
+        }else if(searchFiltersVector[0] && !searchFiltersVector[1] && searchFiltersVector[2]){
+            groups = groupHandler.getCityReligionGroupsResults(selectedCities, religion, loggedInUserId);
+        }else if(!searchFiltersVector[0] && searchFiltersVector[1] && searchFiltersVector[2]){
+            groups = groupHandler.getLanguageReligionGroupsResults(language, religion, loggedInUserId);
+        }else{
+            groups = groupHandler.getGroupsResult(selectedCities,language, religion, loggedInUserId);
+        }
         groupHandler.close(); // Close the database connection
 
         if (groups.isEmpty()) {
@@ -185,8 +201,6 @@ public class SearchResultsActivity extends AppCompatActivity {
             resultTable.addView(row);
         }
     }
-
-
 
     /**
      * Handle the process of joining a group.
