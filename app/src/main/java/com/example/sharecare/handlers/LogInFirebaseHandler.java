@@ -8,11 +8,13 @@ import com.example.sharecare.log_in_activity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class LogInFirebaseHandler {
     private static final String TAG = "FirebaseLogHandler";
@@ -22,6 +24,9 @@ public class LogInFirebaseHandler {
 
     /** Firestore database instance */
     private FirebaseFirestore db;
+    DocumentSnapshot result;
+    ArrayList<DocumentSnapshot> results = new ArrayList<>();
+
 
 
     /**
@@ -32,18 +37,18 @@ public class LogInFirebaseHandler {
         db = FirebaseFirestore.getInstance();
     }
 
-    public ArrayList<QueryDocumentSnapshot> getParentData(String email, log_in_activity activity) {
-        ArrayList<QueryDocumentSnapshot> results = new ArrayList<>();
+    public ArrayList<DocumentSnapshot> getParentData(String email, log_in_activity activity) {
+
         Task<QuerySnapshot> task = db.collection("Parents").whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        results.add(document);
-                        System.out.println(results);
 
-                        Log.d(TAG, document.getId() + " => " + document.getData());
-                    }
+                    results.add(task.getResult().getDocuments().get(0));
+                    result = task.getResult().getDocuments().get(0);
+                    log_in_activity.puttingDataInVariables(result);
+                    Log.d(TAG, results.get(0).getId() + " => " + results.get(0).getData());
+
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
@@ -53,7 +58,10 @@ public class LogInFirebaseHandler {
         while(!task.isComplete()){
 
         }
+        System.out.println(results);
+        System.out.println(result);
         return results;
 
     }
+
 }

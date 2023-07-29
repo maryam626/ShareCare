@@ -1,6 +1,5 @@
 package com.example.sharecare;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,11 +16,9 @@ import android.widget.TextView;
 
 import com.example.sharecare.Logic.UsersSQLLiteDatabaseHelper;
 import com.example.sharecare.handlers.LogInFirebaseHandler;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -38,17 +35,17 @@ public class log_in_activity extends AppCompatActivity {
     private EditText EtPassword;
     private Button logInBtn;
     private CheckBox rememberCheckBox;
-    private String id;
-    private String username;
-    private String phoneNumber;
-    private String email;
-    private String address;
-    private String password;
-    private String numberOfKids;
-    private String maritalStatus;
-    private String gender;
-    private String language;
-    private String religion;
+    private static String id;
+    private static String username;
+    private static String phoneNumber;
+    private static String email;
+    private static String address;
+    private static String password;
+    private static String numberOfKids;
+    private static String maritalStatus;
+    private static String gender;
+    private static String language;
+    private static String religion;
 
     private UsersSQLLiteDatabaseHelper databaseHelper;
     private LogInFirebaseHandler logInFirebaseHandler;
@@ -107,7 +104,7 @@ public class log_in_activity extends AppCompatActivity {
                     Intent intent = new Intent(log_in_activity.this, home_page_parent_activity.class);
                     gettingUserData();
                     logInFirebaseHandler.getParentData(EtEmail.getText().toString(),log_in_activity.this);
-                    //puttingDataInVariables(getParentData(EtUserName.getText().toString(),log_in_activity.this));
+                    //puttingDataInVariables(logInFirebaseHandler.getParentData(EtEmail.getText().toString(),log_in_activity.this));
 
                     //Sending Data To Home Page Using Bundle
                     Bundle extras = new Bundle();
@@ -135,18 +132,18 @@ public class log_in_activity extends AppCompatActivity {
 
     }
 
-    private void puttingDataInVariables(ArrayList<QueryDocumentSnapshot> result) {
-        address = result.get(0).get("address").toString();
-        email = result.get(0).get("email").toString();
-        gender = result.get(0).get("gender").toString();
-        id = result.get(0).get("id").toString();
-        language = result.get(0).get("language").toString();
-        maritalStatus = result.get(0).get("maritalStatus").toString();
-        numberOfKids = result.get(0).get("numberOfKids").toString();
-        password = result.get(0).get("password").toString();
-        phoneNumber = result.get(0).get("phoneNumber").toString();
-        religion = result.get(0).get("religion").toString();
-        username = result.get(0).get("username").toString();
+    public static void puttingDataInVariables(DocumentSnapshot result) {
+        address = result.get("address").toString();
+        email = result.get("email").toString();
+        gender = result.get("gender").toString();
+        id = result.get("id").toString();
+        language = result.get("language").toString();
+        maritalStatus = result.get("maritalStatus").toString();
+        numberOfKids = result.get("numberOfKids").toString();
+        password = result.get("password").toString();
+        phoneNumber = result.get("phoneNumber").toString();
+        religion = result.get("religion").toString();
+        username = result.get("username").toString();
 
         System.out.println(address);
         System.out.println(email);
