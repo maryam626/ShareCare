@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.handlers.GroupHandler;
 import com.example.sharecare.models.Activity;
+import com.example.sharecare.models.ActivityShareDTO;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,13 +43,8 @@ public class GroupInfoActivity extends AppCompatActivity {
     private int loggedInUserId;
     private String loggedInUsername;
     private int groupId;
-
     private LinearLayout filterLayout;
-    private DatePicker startDate;
-    private DatePicker endDate;
     private Spinner activityTypes;
-    private TimePicker startTime;
-    private TimePicker endTime;
     private Button filterToggleButton;
     private Button submitFilterButton;
 
@@ -162,7 +158,7 @@ public class GroupInfoActivity extends AppCompatActivity {
             }
         });
 
-        loadGroupData();
+        loadGroupName();
         loadGroupActivityData();
     }
 
@@ -203,7 +199,7 @@ public class GroupInfoActivity extends AppCompatActivity {
     /**
      * Load and display the group name.
      */
-    private void loadGroupData() {
+    private void loadGroupName() {
         String groupName = groupHandler.getGroupNameById(groupId);
         TextView groupNameTextView = findViewById(R.id.groupNameTextView);
         groupNameTextView.setText("Group Name : " + groupName);
@@ -269,9 +265,10 @@ public class GroupInfoActivity extends AppCompatActivity {
         String selectedActivityType = activityTypes.getSelectedItem().toString();
 
 
-        List<Activity> activityList = groupHandler.getActivitiesForGroup(groupId, loggedInUserId);
-        for (Activity activity : activityList) {
+        List<ActivityShareDTO> activityList = groupHandler.getActivitiesForGroup(groupId, loggedInUserId);
+        for (ActivityShareDTO activityShare : activityList) {
             try {
+                Activity activity=activityShare.getActivity();
                 Date activityDate = dateFormatter.parse(activity.getSelectedDate());
                 Date activityTime = timeFormatter.parse(activity.getSelectedTime());
 
@@ -287,7 +284,8 @@ public class GroupInfoActivity extends AppCompatActivity {
 
 
                     if (activity.getCapacity() >= capacityFrom && activity.getCapacity() <= capacityTo &&
-                            activity.getAgeFrom() >= ageFrom && activity.getAgeTo() <= ageTo) {
+                            activity.getAgeFrom() >= ageFrom && activity.getAgeTo() <= ageTo &&
+                        activity.getDuration() >= durationFrom && activity.getDuration() <= durationTo ) {
 
                         int activity_id = activity.getId();
                         String activity_name = activity.getActivityName();
@@ -298,8 +296,6 @@ public class GroupInfoActivity extends AppCompatActivity {
                         int duration = activity.getDuration();
                         int child_age_from = activity.getAgeFrom();
                         int child_age_to = activity.getAgeTo();
-                        int isaccept = (activity.getOwnerUserId() == loggedInUserId) ? 1 : 0;
-                        int isowner = (activity.getGroupId() == loggedInUserId) ? 1 : 0;
 
                         TableRow row = new TableRow(this);
 
@@ -317,7 +313,7 @@ public class GroupInfoActivity extends AppCompatActivity {
                         });
                         row.addView(moreInfoButton);
 
-                        if (isowner == 1) {
+                        if (activityShare.isiAmOwner()) {
                             Button deleteButton = new Button(this);
                             deleteButton.setText("Delete");
                             deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -346,11 +342,11 @@ public class GroupInfoActivity extends AppCompatActivity {
                                 }
                             });
                             row.addView(manageRequestsButton);
-                        } else if (isaccept == 1) {
+                        } else if (activityShare.isSharedWithMe()) {
                             TextView activityjoinedTextView = new TextView(this);
                             activityjoinedTextView.setText("joined");
                             row.addView(activityjoinedTextView);
-                        } else if (isaccept == 0) {
+                        } else if (!activityShare.isSharedWithMe()) {
                             Button joinButton = new Button(this);
                             joinButton.setText("Join");
                             joinButton.setOnClickListener(new View.OnClickListener() {

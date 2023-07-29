@@ -18,7 +18,6 @@ import com.example.sharecare.handlers.GroupHandler;
 import com.example.sharecare.models.Group;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -187,16 +186,16 @@ public class SearchResultsActivity extends AppCompatActivity {
             row.addView(religionTextView);
 
             // Create a Button for "Join Group"
-            Button openGroupButton = new Button(this);
-            openGroupButton.setText("Join Group");
-            openGroupButton.setPadding(8, 8, 8, 8);
-            openGroupButton.setOnClickListener(new View.OnClickListener() {
+            Button joinGroupButton = new Button(this);
+            joinGroupButton.setText("Join Group");
+            joinGroupButton.setPadding(8, 8, 8, 8);
+            joinGroupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     joinGroup(group.getId());
                 }
             });
-            row.addView(openGroupButton);
+            row.addView(joinGroupButton);
 
             resultTable.addView(row);
         }

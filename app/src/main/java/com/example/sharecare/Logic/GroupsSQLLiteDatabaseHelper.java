@@ -19,8 +19,15 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    private static final String CREATE_TABLE_GROUP_PENDING_REQUESTS =
-            "CREATE TABLE IF NOT EXISTS groupsRequest (userid INTEGER, groupid INTEGER, requestDate TEXT, isaccept INTEGER)";
+
+    private void DropTablesForDebug(SQLiteDatabase db)
+    {
+
+        String removeGroupsRequest = "DROP TABLE groupsRequest ";
+        db.execSQL(removeGroupsRequest);
+//        String removeGroup = "DROP TABLE groups ";
+//        db.execSQL(removeGroup);
+    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -28,20 +35,15 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         /** These drop table commands can be used when necessary to delete tables.
          *  Use them cautiously.
          */
-        // drop grougs table activate once whenever is needed
-        //String removegroupParticipants = "DROP TABLE groupParticipants ";
-        //db.execSQL(removegroupParticipants);
-        //String removeGroupsRequest = "DROP TABLE groupsRequest ";
-        //db.execSQL(removeGroupsRequest);
-        //String removeGroup = "DROP TABLE groups ";
-        //db.execSQL(removeGroup);
+        //drop grougs table activate once whenever is needed
+      //  DropTablesForDebug(db);
 
         /** Create various tables for managing groups and their related information */
         String createGroupsTableQuery = "CREATE TABLE IF NOT EXISTS  groups (id INTEGER PRIMARY KEY AUTOINCREMENT, groupName TEXT,description TEXT,city TEXT,street TEXT,language Text, religion TEXT, hostUserId INTEGER)";
         db.execSQL(createGroupsTableQuery);
 
-        String createGroupParticipantsTableQuery = "CREATE TABLE IF NOT EXISTS  groupParticipants (groupId INTEGER, userId INTEGER)";
-        db.execSQL(createGroupParticipantsTableQuery);
+        String createGroupRequestTableQuery = "CREATE TABLE IF NOT EXISTS  groupsRequest (id INTEGER PRIMARY KEY AUTOINCREMENT,userid INTEGER, groupid INTEGER, requestDate TEXT, isaccept INTEGER)";
+        db.execSQL(createGroupRequestTableQuery);
 
         String createCitiesTableQuery = "CREATE TABLE IF NOT EXISTS  cities (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)";
         db.execSQL(createCitiesTableQuery);
@@ -52,7 +54,7 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         String createReligionTableQuery = "CREATE TABLE IF NOT EXISTS  religions (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)";
         db.execSQL(createReligionTableQuery);
 
-        db.execSQL(CREATE_TABLE_GROUP_PENDING_REQUESTS);
+
 
         addCities(db);
         addLanguages(db);
