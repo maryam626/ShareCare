@@ -1,6 +1,7 @@
 package com.example.sharecare;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -37,7 +38,7 @@ public class home_page_parent_activity extends AppCompatActivity {
 
     private TextView nameTv;
 
-
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,7 @@ public class home_page_parent_activity extends AppCompatActivity {
         language = getIntent().getStringExtra("language");
         religion = getIntent().getStringExtra("religion");
 
+        sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
 
         loggedInUser = new User(userName,phoneNumber,email,address,password,Integer.parseInt(numberOfKids),maritalStatus,gender,language,religion);
 
@@ -125,7 +127,13 @@ public class home_page_parent_activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(home_page_parent_activity.this, log_in_activity.class);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("remember_me", false);
+                editor.remove("email");
+                editor.remove("password");
+                editor.apply();
                 startActivity(intent);
+
                 finish();
             }
         });
