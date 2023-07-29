@@ -333,7 +333,7 @@ public class GroupInfoActivity extends AppCompatActivity {
                             manageRequestsButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent intent = new Intent(GroupInfoActivity.this, PendingGroupRequestsActivity.class);
+                                    Intent intent = new Intent(GroupInfoActivity.this, PendingRequestsActivity.class);
                                     Bundle extras = new Bundle();
                                     extras.putInt("userid", loggedInUserId);
                                     extras.putInt("groupid", groupId);
