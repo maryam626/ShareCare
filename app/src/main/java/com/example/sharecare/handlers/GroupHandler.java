@@ -17,6 +17,7 @@ import com.example.sharecare.valdiators.CreateGroupValidator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -214,6 +215,22 @@ public class GroupHandler {
 
     public List<String> getParticipantsExceptCurrent(int loggedInUserId) {
         List<String> participantList = new ArrayList<>();
+        firebaseDb.collection("Parents").whereNotEqualTo("id",loggedInUserId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(int i = 0;i< queryDocumentSnapshots.size();i++){
+                    participantList.add(queryDocumentSnapshots.getDocuments().get(i).get("username").toString());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+        return participantList;
+
+        /*List<String> participantList = new ArrayList<>();
         SQLiteDatabase db = groupsDatabaseHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT username FROM users WHERE id <> ?", new String[]{String.valueOf(loggedInUserId)});
 
@@ -226,7 +243,7 @@ public class GroupHandler {
 
         cursor.close();
         db.close();
-        return participantList;
+        return participantList;*/
     }
 
     public List<Group> getGroups(List<String> selectedCities, int loggedInUserId) {

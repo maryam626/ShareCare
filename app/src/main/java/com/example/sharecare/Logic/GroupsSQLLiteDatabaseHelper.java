@@ -204,7 +204,25 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
     /** Fetch a list of all religions stored in the database */
     public List<String> loadReligions() {
-        List<String> cityList = new ArrayList<>();
+
+        List<String> religionsList = new ArrayList<>();
+
+        firebaseDb.collection("Religions").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(int i = 0; i<queryDocumentSnapshots.size();i++) {
+                    religionsList.add(queryDocumentSnapshots.getDocuments().get(i).get("name").toString());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+        return religionsList;
+
+        /*List<String> cityList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT DISTINCT name FROM religions ORDER BY name ASC", null);
 
@@ -218,7 +236,7 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        return cityList;
+        return cityList;*/
     }
 
     /** Get the user ID based on the provided username */
