@@ -35,6 +35,8 @@ public class SearchGroupsActivity extends AppCompatActivity {
 
     private int loggedInUserId;
     private String loggedInUsername;
+    private boolean city_box_is_checked, language_spinner_is_on, religion_spinner_is_on;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,10 @@ public class SearchGroupsActivity extends AppCompatActivity {
         searchButton = findViewById(R.id.searchButton);
         languagesSpinner = findViewById(R.id.LanguagesSpinner);
         religionsSpinner = findViewById(R.id.ReligionsSpinner);
+
+        city_box_is_checked= false;
+        language_spinner_is_on = false;
+        religion_spinner_is_on=false;
 
         loadCitiesFromDatabase();
         loadLanguages();
@@ -131,23 +137,48 @@ public class SearchGroupsActivity extends AppCompatActivity {
      * to display search results.
      */
     private void performSearch() {
-        if (selectedCities.isEmpty()) {
-            // Show an error message if no cities are selected
-            Toast.makeText(this, "Please select at least one city.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        String language = languagesSpinner.getSelectedItem().toString();
-        String religion = religionsSpinner.getSelectedItem().toString();
-
-        Intent intent = new Intent(SearchGroupsActivity.this, SearchResultsActivity.class);
 
         Bundle extras = new Bundle();
         extras.putInt("userid", loggedInUserId);
         extras.putString("username", loggedInUsername);
-        extras.putStringArrayList("selectedCities", new ArrayList<>(selectedCities));
-        extras.putString("language", language);
-        extras.putString("religion", religion);
-        intent.putExtras(extras);
+
+        String language = languagesSpinner.getSelectedItem().toString();
+        String religion = religionsSpinner.getSelectedItem().toString();
+
+        if(selectedCities.isEmpty() && !checkSpinnerStatus(languagesSpinner) && !checkSpinnerStatus(religionsSpinner)){
+            Toast.makeText(this, "you need to choose at least one filter", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (!selectedCities.isEmpty() && !checkSpinnerStatus(languagesSpinner) && !checkSpinnerStatus(religionsSpinner)) {
+            // Show an error message if no cities are selected
+            Toast.makeText(this, "Cities only haha", Toast.LENGTH_SHORT).show();
+            extras.putStringArrayList("selectedCities", new ArrayList<>(selectedCities));
+            prepareAndCallIntent(extras);
+        } else if (selectedCities.isEmpty() && checkSpinnerStatus(languagesSpinner) && !checkSpinnerStatus(religionsSpinner)) {
+            Toast.makeText(this, "languages only haha", Toast.LENGTH_SHORT).show();
+            extras.putString("language", language);
+            prepareAndCallIntent(extras);
+        } else if (selectedCities.isEmpty() && !checkSpinnerStatus(languagesSpinner) && checkSpinnerStatus(religionsSpinner)) {
+            Toast.makeText(this, "religions only haha", Toast.LENGTH_SHORT).show();
+            extras.putString("religion", religion);
+            prepareAndCallIntent(extras);
+        }
+
+    }
+
+    public void prepareAndCallIntent(Bundle extra){
+
+        Intent intent = new Intent(SearchGroupsActivity.this, SearchResultsActivity.class);
+        intent.putExtras(extra);
         startActivity(intent);
+    }
+
+    public boolean checkSpinnerStatus(Spinner spinner){
+
+        if(spinner.getSelectedItem().toString().equals("--")){
+            return false;
+        }else{
+            return true;
+        }
     }
 }

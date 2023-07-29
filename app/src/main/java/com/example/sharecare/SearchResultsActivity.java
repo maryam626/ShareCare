@@ -62,8 +62,10 @@ public class SearchResultsActivity extends AppCompatActivity {
     private void loadGroups(List<String> selectedCities, String language, String religion, int loggedInUserId) {
         groupHandler.open(); // Open the database connection
 
-        List<Group> groups = groupHandler.getGroupsResult(selectedCities,language, religion, loggedInUserId);
-
+//        List<Group> groups = groupHandler.getGroupsResult(selectedCities,language, religion, loggedInUserId);
+//        List<Group> groups = groupHandler.getCityGroupsResults(selectedCities, loggedInUserId);
+//        List<Group> groups = groupHandler.getLanguageGroupsResults(language, loggedInUserId);
+        List<Group> groups = groupHandler.getReligionGroupsResults(religion, loggedInUserId);
         groupHandler.close(); // Close the database connection
 
         if (groups.isEmpty()) {
@@ -185,8 +187,6 @@ public class SearchResultsActivity extends AppCompatActivity {
             resultTable.addView(row);
         }
     }
-
-
 
     /**
      * Handle the process of joining a group.
