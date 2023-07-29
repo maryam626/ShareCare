@@ -32,7 +32,7 @@ public class LogInFirebaseHandler {
         db = FirebaseFirestore.getInstance();
     }
 
-    public ArrayList<QueryDocumentSnapshot> getParentData(String id, String email, log_in_activity activity) {
+    public ArrayList<QueryDocumentSnapshot> getParentData(String email, log_in_activity activity) {
         ArrayList<QueryDocumentSnapshot> results = new ArrayList<>();
         Task<QuerySnapshot> task = db.collection("Parents").whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -40,6 +40,8 @@ public class LogInFirebaseHandler {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         results.add(document);
+                        System.out.println(results);
+
                         Log.d(TAG, document.getId() + " => " + document.getData());
                     }
                 } else {

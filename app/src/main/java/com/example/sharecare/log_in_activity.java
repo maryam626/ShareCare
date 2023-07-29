@@ -73,6 +73,8 @@ public class log_in_activity extends AppCompatActivity {
         rememberCheckBox = (CheckBox) findViewById(R.id.rememberCheckBox);
         SignUpBtn = (TextView) findViewById(R.id.SignUpBtn);
 
+        logInFirebaseHandler = new LogInFirebaseHandler();
+
         forgetTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,7 +106,7 @@ public class log_in_activity extends AppCompatActivity {
                 if (validateCredentials(email, password)) {
                     Intent intent = new Intent(log_in_activity.this, home_page_parent_activity.class);
                     gettingUserData();
-                    getParentData(EtEmail.getText().toString(),log_in_activity.this);
+                    logInFirebaseHandler.getParentData(EtEmail.getText().toString(),log_in_activity.this);
                     //puttingDataInVariables(getParentData(EtUserName.getText().toString(),log_in_activity.this));
 
                     //Sending Data To Home Page Using Bundle
@@ -316,29 +318,5 @@ public class log_in_activity extends AppCompatActivity {
         return isValid;
     }
 
-    public ArrayList<QueryDocumentSnapshot> getParentData(String email, log_in_activity activity) {
-        ArrayList<QueryDocumentSnapshot> results = new ArrayList<>();
-        Task<QuerySnapshot> task = db.collection("Parents").whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        results.add(document);
-                        System.out.println(results.get(0));
-                        System.out.println(results);
 
-                        Log.d(TAG, document.getId() + " => " + document.getData());
-                    }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
-
-        while(!task.isComplete()){
-
-        }
-        return results;
-
-    }
 }
