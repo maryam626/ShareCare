@@ -49,6 +49,22 @@ public class CreateActivityValidator {
         }
     }
 
+
+    /**
+     * Checks if the duration is valid (between 1 and 23).
+     *
+     * @param duration Duration value as a string.
+     * @return true if valid, false otherwise.
+     */
+    public static boolean isDurationValid(String duration) {
+        try {
+            int capacityValue = Integer.parseInt(duration);
+            return capacityValue >= 1 && capacityValue <= 23;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     /**
      * Checks if the age range is valid (from 1-99 and 'from' age is less than 'to' age).
      *

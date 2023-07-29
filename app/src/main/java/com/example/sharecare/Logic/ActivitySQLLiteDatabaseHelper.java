@@ -20,6 +20,7 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ACTIVITY_DATE = "date";
     private static final String COLUMN_ACTIVITY_TIME = "time";
     private static final String COLUMN_CAPACITY = "capacity";
+    private static final String COLUMN_DURATION = "duration";
     private static final String COLUMN_AGE_FROM = "child_age_from";
     private static final String COLUMN_AGE_TO = "child_age_to";
     private static final String OWNER_ID = "owner_user_id";
@@ -35,6 +36,7 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_ACTIVITY_DATE + " TEXT, " +
                     COLUMN_ACTIVITY_TIME + " TEXT, " +
                     COLUMN_CAPACITY + " INTEGER, " +
+                    COLUMN_DURATION + " INTEGER, " +
                     OWNER_ID + " INTEGER, " +
                     COLUMN_AGE_FROM + " INTEGER, " +
                     COLUMN_AGE_TO + " INTEGER)";
@@ -47,6 +49,8 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
     public ActivitySQLLiteDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        SQLiteDatabase db = this.getWritableDatabase();
+        onCreate(db);
     }
 
     /** Create database tables when the database is created for the first time */
@@ -77,6 +81,7 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_ACTIVITY_DATE, activity.getSelectedDate());
         values.put(COLUMN_ACTIVITY_TIME, activity.getSelectedTime());
         values.put(COLUMN_CAPACITY, activity.getCapacity());
+        values.put(COLUMN_DURATION, activity.getDuration());
         values.put(COLUMN_AGE_FROM, activity.getAgeFrom());
         values.put(COLUMN_AGE_TO, activity.getAgeTo());
         values.put(GROUP_ID, activity.getGroupId());

@@ -56,7 +56,7 @@ public class GroupInfoActivity extends AppCompatActivity {
     private Button selectStartDateButton, selectEndDateButton, selectStartTimeButton, selectEndTimeButton;
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
     private SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
-    private EditText capacityFromEditText, capacityToEditText, ageFromEditText, ageToEditText;
+    private EditText durationFromEditText, durationToEditText,capacityFromEditText, capacityToEditText, ageFromEditText, ageToEditText;
 
 
 
@@ -97,6 +97,8 @@ public class GroupInfoActivity extends AppCompatActivity {
         selectEndTimeButton = findViewById(R.id.selectEndTimeButton);
         capacityFromEditText = findViewById(R.id.capacityFrom);
         capacityToEditText = findViewById(R.id.capacityTo);
+        durationFromEditText = findViewById(R.id.durationFrom);
+        durationToEditText = findViewById(R.id.durationTo);
         ageFromEditText = findViewById(R.id.ageFrom);
         ageToEditText = findViewById(R.id.ageTo);
 
@@ -221,6 +223,8 @@ public class GroupInfoActivity extends AppCompatActivity {
     private void loadGroupActivityData() {
         int capacityFrom = -1;
         int capacityTo = Integer.MAX_VALUE;
+        int durationFrom = -1;
+        int durationTo = Integer.MAX_VALUE;
         int ageFrom = -1;
         int ageTo = Integer.MAX_VALUE;
 
@@ -231,7 +235,14 @@ public class GroupInfoActivity extends AppCompatActivity {
             if(!capacityToEditText.getText().toString().isEmpty()) {
                 capacityTo = Integer.parseInt(capacityToEditText.getText().toString());
             }
-            if(!ageFromEditText.getText().toString().isEmpty()) {
+
+            if(!durationFromEditText.getText().toString().isEmpty()) {
+                durationFrom = Integer.parseInt(durationFromEditText.getText().toString());
+            }
+            if(!durationToEditText.getText().toString().isEmpty()) {
+                durationTo = Integer.parseInt(durationToEditText.getText().toString());
+            }
+             if(!ageFromEditText.getText().toString().isEmpty()) {
                 ageFrom = Integer.parseInt(ageFromEditText.getText().toString());
             }
             if(!ageToEditText.getText().toString().isEmpty()) {
@@ -284,6 +295,7 @@ public class GroupInfoActivity extends AppCompatActivity {
                         String date = activity.getSelectedDate();
                         String time = activity.getSelectedTime();
                         int capacity = activity.getCapacity();
+                        int duration = activity.getDuration();
                         int child_age_from = activity.getAgeFrom();
                         int child_age_to = activity.getAgeTo();
                         int isaccept = (activity.getOwnerUserId() == loggedInUserId) ? 1 : 0;
@@ -300,7 +312,7 @@ public class GroupInfoActivity extends AppCompatActivity {
                         moreInfoButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                openActivityDialog(activity_name, activity_type, date, time, capacity, child_age_from, child_age_to);
+                                openActivityDialog(activity_name, activity_type, date, time, capacity,duration, child_age_from, child_age_to);
                             }
                         });
                         row.addView(moreInfoButton);
@@ -372,9 +384,9 @@ public class GroupInfoActivity extends AppCompatActivity {
      * @param child_age_to    The maximum age requirement for the activity.
      */
     private void openActivityDialog(String activity_name, String activity_type,
-                                    String date, String time, int capacity, int child_age_from, int child_age_to) {
+                                    String date, String time, int capacity,int duration, int child_age_from, int child_age_to) {
         ActivityDialog activityDialog = new ActivityDialog(this, activity_name, activity_type,
-                date, time, capacity, child_age_from, child_age_to);
+                date, time, capacity,duration, child_age_from, child_age_to);
         activityDialog.show();
     }
 

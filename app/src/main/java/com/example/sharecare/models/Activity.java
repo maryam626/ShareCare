@@ -8,11 +8,11 @@ public class Activity {
     private String selectedDate;
     private String selectedTime;
     private int capacity;
+    private int duration;
     private int ageFrom;
     private int ageTo;
     private int ownerUserId;
     private int groupId;
-
 
 
     public int getId() {
@@ -41,6 +41,14 @@ public class Activity {
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 
     public void setAgeFrom(int ageFrom) {
@@ -74,13 +82,14 @@ public class Activity {
 
 
     public Activity(int id, String activityName, String selectedActivity, String selectedDate, String selectedTime,
-                    int capacity, int ageFrom, int ageTo, int groupId, int ownerUserId) {
+                    int capacity, int duration,int ageFrom, int ageTo, int groupId, int ownerUserId) {
         this.id = id;
         this.activityName = activityName;
         this.selectedActivity = selectedActivity;
         this.selectedDate = selectedDate;
         this.selectedTime = selectedTime;
         this.capacity = capacity;
+        this.duration = duration;
         this.ageFrom = ageFrom;
         this.ageTo = ageTo;
         this.groupId = groupId;
@@ -88,12 +97,13 @@ public class Activity {
     }
 
     public Activity(String activityName, String selectedActivity, String selectedDate, String selectedTime,
-                    int capacity, int ageFrom, int ageTo,int groupId,int ownerUserId) {
+                    int capacity, int duration, int ageFrom, int ageTo,int groupId,int ownerUserId) {
         this.activityName = activityName;
         this.selectedActivity = selectedActivity;
         this.selectedDate = selectedDate;
         this.selectedTime = selectedTime;
         this.capacity = capacity;
+        this.duration=duration;
         this.ageFrom = ageFrom;
         this.ageTo = ageTo;
         this.groupId = groupId;

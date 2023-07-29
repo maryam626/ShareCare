@@ -5,17 +5,19 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
+        <!-- Group Name TextView (Centered) -->
         <TextView
             android:id="@+id/groupNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Group Name: " />
+            android:text="Group Name: "
+            android:layout_centerHorizontal="true" />
 
+        <!-- Filter Toggle Button (Left-aligned) -->
         <Button
             android:id="@+id/filterToggleButton"
             android:layout_width="wrap_content"
@@ -24,7 +26,21 @@
             android:layout_marginTop="10dp"
             android:drawableLeft="@drawable/ic_filter"
             android:background="@drawable/filter_button_background"
-            android:textColor="#FFFFFF"/>
+            android:textColor="#FFFFFF"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/groupNameTextView" />
+
+        <!-- Create Activity Button (Right-aligned) -->
+        <Button
+            android:id="@+id/createActivityButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Activity"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/groupNameTextView" />
+
+        <!-- Rest of the layout remains the same -->
 
         <LinearLayout
             android:id="@+id/filterLayout"
@@ -32,23 +48,22 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/filterToggleButton">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Activity Type"
-                android:layout_marginBottom="5dp"/>
+                android:layout_marginBottom="5dp" />
 
-            <!-- Activity Type Spinner -->
             <Spinner
                 android:id="@+id/activityTypes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:entries="@array/activity_types"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="10dp" />
 
-            <!-- Capacity Range -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,7 +92,34 @@
 
             </LinearLayout>
 
-            <!-- Age Range -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Duration In Hours Range" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/durationFrom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:hint="From" />
+
+                <EditText
+                    android:id="@+id/durationTo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:hint="To" />
+
+            </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -106,12 +148,11 @@
 
             </LinearLayout>
 
-            <!-- Date Range -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Date Range"
-                android:layout_marginBottom="5dp"/>
+                android:layout_marginBottom="5dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -123,22 +164,21 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Select Start Date"/>
+                    android:text="Select Start Date" />
                 <Button
                     android:id="@+id/selectEndDateButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Select End Date"/>
+                    android:text="Select End Date" />
             </LinearLayout>
 
-            <!-- Time Range -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Time Range"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"/>
+                android:layout_marginBottom="5dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -149,7 +189,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Select Start Time"/>
+                    android:text="Select Start Time" />
 
 
                 <Button
@@ -157,7 +197,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Select End Time"/>
+                    android:text="Select End Time" />
             </LinearLayout>
 
             <Button
@@ -169,21 +209,15 @@
                 android:layout_marginTop="10dp" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/createActivityButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Create Activity"
-            android:layout_marginTop="10dp" />
-
         <TableLayout
             android:id="@+id/tableLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/filterLayout">
 
             <!-- Your Table Rows will be added here -->
 
         </TableLayout>
-    </LinearLayout>
+    </RelativeLayout>
 </ScrollView>

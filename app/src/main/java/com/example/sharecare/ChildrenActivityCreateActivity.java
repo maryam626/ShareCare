@@ -28,7 +28,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class ChildrenActivityCreateActivity extends AppCompatActivity implements View.OnClickListener {
-    private EditText editActivityName, editSelectedDate, editSelectedTime, editCapacity, editAgeFrom, editAgeTo;
+    private EditText editActivityName, editSelectedDate, editSelectedTime, editDuration,editCapacity, editAgeFrom, editAgeTo;
     private Spinner spinnerChooseActivity;
     private Button btnSelectDate, btnSelectTime, btnSave;
     private Calendar calendar;
@@ -51,6 +51,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         editSelectedDate = findViewById(R.id.edit_selected_date);
         editSelectedTime = findViewById(R.id.edit_selected_time);
         editCapacity = findViewById(R.id.edit_capacity);
+        editDuration = findViewById(R.id.edit_duration);
         editAgeFrom = findViewById(R.id.edit_age_from);
         editAgeTo = findViewById(R.id.edit_age_to);
         spinnerChooseActivity = findViewById(R.id.spinner_choose_activity);
@@ -154,6 +155,8 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
         String selectedDate = editSelectedDate.getText().toString().trim();
         String selectedTime = editSelectedTime.getText().toString().trim();
         String capacity = editCapacity.getText().toString().trim();
+        String duration = editDuration.getText().toString().trim();
+
         String ageFrom = editAgeFrom.getText().toString().trim();
         String ageTo = editAgeTo.getText().toString().trim();
 
@@ -182,6 +185,12 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
             return false;
         }
 
+        if (!CreateActivityValidator.isDurationValid(duration)) {
+            editDuration.setError("Duration must be between 1 and 23");
+            editDuration.requestFocus();
+            return false;
+        }
+
         if (!CreateActivityValidator.isAgeRangeValid(ageFrom, ageTo)) {
             editAgeFrom.setError("Invalid age range");
             editAgeFrom.requestFocus();
@@ -190,7 +199,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
 
         // Create Activity object
         Activity activity = new Activity(activityName, selectedActivity, selectedDate, selectedTime,
-                Integer.parseInt(capacity), Integer.parseInt(ageFrom), Integer.parseInt(ageTo), groupId, loggedInUserId);
+                Integer.parseInt(capacity), Integer.parseInt(duration), Integer.parseInt(ageFrom), Integer.parseInt(ageTo), groupId, loggedInUserId);
 
         // Store user data in SQLite database
         long rowId = activityHandler.insertActivity(activity);
