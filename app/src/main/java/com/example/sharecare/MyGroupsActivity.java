@@ -29,15 +29,12 @@ import java.util.List;
 
 public class MyGroupsActivity extends AppCompatActivity {
     private static final String TAG = "my groups activity";
-
-
     private Button createGroupButton;
     private TableLayout groupsTableLayout;
     private GroupsSQLLiteDatabaseHelper databaseHelper;
     private int loggedInUserId;
     private String loggedInUsername;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +75,7 @@ public class MyGroupsActivity extends AppCompatActivity {
         List<GroupDataDTO> groupsList = new ArrayList<>();
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
 
-        String query = "SELECT " +
+        String query = "SELECT distinct " +
                 "groups.id AS groupid, " +
                 "groups.groupName, " +
                 "CASE " +

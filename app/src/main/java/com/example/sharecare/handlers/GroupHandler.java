@@ -307,7 +307,7 @@ public class GroupHandler {
                         " FROM activities AS a " +
                         "LEFT JOIN activitiesRequest AS ar " +
                         "ON a.id = ar.activityid WHERE a.groupid = ?;\n",
-                new String[]{String.valueOf(groupId), String.valueOf(loggedInUserId), String.valueOf(loggedInUserId)}
+                new String[]{String.valueOf(loggedInUserId),String.valueOf(groupId)}
         );
 
         while (cursor.moveToNext()) {
@@ -323,6 +323,7 @@ public class GroupHandler {
             int ageTo = cursor.getInt(cursor.getColumnIndex("child_age_to"));
             int ownerUserId = cursor.getInt(cursor.getColumnIndex("owner_user_id"));
             Activity activity = new Activity(id, activityName, selectedActivity, selectedDate, selectedTime, capacity, duration,ageFrom, ageTo, groupId, ownerUserId);
+            activity.setGroupId(groupid);
             ActivityShareDTO sharedto = new ActivityShareDTO(activity);
             sharedto.setiAmOwner(cursor.getInt(cursor.getColumnIndex("isSharedWithMe")) ==1);
             sharedto.setiAmOwner(cursor.getInt(cursor.getColumnIndex("IAmOwner")) ==1);
