@@ -11,15 +11,18 @@ import androidx.annotation.NonNull;
 import com.example.sharecare.Logic.ActivitySQLLiteDatabaseHelper;
 import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
 import com.example.sharecare.models.Activity;
+import com.example.sharecare.models.ActivityShareDTO;
 import com.example.sharecare.models.Group;
 import com.example.sharecare.valdiators.CreateGroupValidator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A handler class to manage group-related operations, including local database interactions and Firebase Firestore operations.
@@ -168,7 +171,13 @@ public class GroupHandler {
         values.put("groupId", groupId);
         values.put("userId", userId);
 
-        long groupParticipantId = db.insert("groupParticipants", null, values);
+        // Get the current date and time in the required format
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(new Date());
+        values.put("requestDate", currentDate);
+
+        values.put("isaccept", -1);
+
+        long groupParticipantId = db.insert("groupsRequest", null, values);
 
         db.close();
 
@@ -286,38 +295,45 @@ public class GroupHandler {
         return group;
     }
 
-    public List<Activity> getActivitiesForGroup(int groupId, int loggedInUserId) {
-        List<Activity> activityList = new ArrayList<>();
+    public List<ActivityShareDTO> getActivitiesForGroup(int groupId, int loggedInUserId) {
+        List<ActivityShareDTO> activityShareList = new ArrayList<>();
         SQLiteDatabase db = activityDatabaseHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-
-                "SELECT activities.id as id,activity_name as activityName,activity_type as selectedActivity,date as selectedDate,time as selectedTime, capacity,duration, " +
-                        "child_age_from as ageFrom,child_age_to as  ageTo, owner_user_id ownerUserId " +
-                        "FROM activities " +
-                        "WHERE groupId = ? AND (ownerUserId = ? OR EXISTS (SELECT 1 FROM activitiesRequest " +
-                        "WHERE activitiesRequest.activityId = activities.id AND activitiesRequest.userId = ?))",
-                new String[]{String.valueOf(groupId), String.valueOf(loggedInUserId), String.valueOf(loggedInUserId)}
+                "SELECT a.id, a.groupid, a.activity_name, a.activity_type, a.date, a.time, a.capacity," +
+                        " a.duration, a.owner_user_id, a.child_age_from, a.child_age_to," +
+                        " CASE WHEN ar.isaccept = 1 THEN 1 ELSE 0 END AS isSharedWithMe," +
+                        " CASE WHEN a.owner_user_id = ? THEN 1 ELSE 0 END AS IAmOwner" +
+                        " FROM activities AS a " +
+                        "LEFT JOIN activitiesRequest AS ar " +
+                        "ON a.id = ar.activityid WHERE a.groupid = ?;\n",
+                new String[]{String.valueOf(loggedInUserId),String.valueOf(groupId)}
         );
 
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex("id"));
-            String activityName = cursor.getString(cursor.getColumnIndex("activityName"));
-            String selectedActivity = cursor.getString(cursor.getColumnIndex("selectedActivity"));
-            String selectedDate = cursor.getString(cursor.getColumnIndex("selectedDate"));
-            String selectedTime = cursor.getString(cursor.getColumnIndex("selectedTime"));
+            int groupid = cursor.getInt(cursor.getColumnIndex("groupid"));
+            String activityName = cursor.getString(cursor.getColumnIndex("activity_name"));
+            String selectedActivity = cursor.getString(cursor.getColumnIndex("activity_type"));
+            String selectedDate = cursor.getString(cursor.getColumnIndex("date"));
+            String selectedTime = cursor.getString(cursor.getColumnIndex("time"));
             int capacity = cursor.getInt(cursor.getColumnIndex("capacity"));
             int duration = cursor.getInt(cursor.getColumnIndex("duration"));
-            int ageFrom = cursor.getInt(cursor.getColumnIndex("ageFrom"));
-            int ageTo = cursor.getInt(cursor.getColumnIndex("ageTo"));
-            int ownerUserId = cursor.getInt(cursor.getColumnIndex("ownerUserId"));
+            int ageFrom = cursor.getInt(cursor.getColumnIndex("child_age_from"));
+            int ageTo = cursor.getInt(cursor.getColumnIndex("child_age_to"));
+            int ownerUserId = cursor.getInt(cursor.getColumnIndex("owner_user_id"));
             Activity activity = new Activity(id, activityName, selectedActivity, selectedDate, selectedTime, capacity, duration,ageFrom, ageTo, groupId, ownerUserId);
-            activityList.add(activity);
+            activity.setGroupId(groupid);
+            ActivityShareDTO sharedto = new ActivityShareDTO(activity);
+            sharedto.setiAmOwner(cursor.getInt(cursor.getColumnIndex("isSharedWithMe")) ==1);
+            sharedto.setiAmOwner(cursor.getInt(cursor.getColumnIndex("IAmOwner")) ==1);
+            activityShareList.add(sharedto);
+
         }
 
         cursor.close();
         db.close();
-        return activityList;
+        return activityShareList;
     }
 
     public void insertActivityRequest(int userId, int activityId) {

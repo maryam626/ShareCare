@@ -1,8 +1,7 @@
 package com.example.sharecare;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,23 +16,25 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
+import com.example.sharecare.models.GroupDataDTO;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyGroupsActivity extends AppCompatActivity {
     private static final String TAG = "my groups activity";
-
-
     private Button createGroupButton;
     private TableLayout groupsTableLayout;
     private GroupsSQLLiteDatabaseHelper databaseHelper;
     private int loggedInUserId;
     private String loggedInUsername;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,29 +67,55 @@ public class MyGroupsActivity extends AppCompatActivity {
     }
 
     private void loadGroups() {
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
-
-        // Retrieve groups where the logged-in user is the host
-        Cursor hostCursor = db.rawQuery("select distinct groupid,groupname,ishost from (SELECT id as groupid,groupname as groupname ,1 as ishost  FROM groups" +
-                "  WHERE hostUserId = ? union all SELECT groups.id as groupid, groups.groupname as groupname ,0 as ishost" +
-                " FROM groups INNER JOIN groupParticipants ON groups.id = groupParticipants.groupId " +
-                " WHERE groupParticipants.userId = ?" +
-                "union all SELECT groups.id as groupid,groupname as groupname ,0 as ishost  FROM groups " +
-                "INNER JOIN  groupsRequest gr on gr.groupid=groups.id and isaccept=1)", new String[]{String.valueOf(getLoggedInUserId()),String.valueOf(getLoggedInUserId())});
-        addGroupsToTable(hostCursor);
-
-        hostCursor.close();
-
-        db.close();
+        List<GroupDataDTO> groupsList =getGroupsForUser(  getLoggedInUserId());
+        addGroupsToTable(groupsList);
     }
 
-    private void addGroupsToTable(Cursor cursor) {
+    public List<GroupDataDTO> getGroupsForUser(int currentUserId) {
+        List<GroupDataDTO> groupsList = new ArrayList<>();
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
 
-        if (cursor.moveToFirst()) {
+        String query = "SELECT distinct " +
+                "groups.id AS groupid, " +
+                "groups.groupName, " +
+                "CASE " +
+                "   WHEN groups.hostUserId = ? THEN 1 " +
+                "   ELSE 0 " +
+                "END AS iamhost " +
+                "FROM " +
+                "groups " +
+                "LEFT JOIN " +
+                "groupsRequest ON groups.id = groupsRequest.groupid AND groupsRequest.userid = ? AND groupsRequest.isaccept = 1 " +
+                "WHERE " +
+                "groups.hostUserId = ? OR groupsRequest.id IS NOT NULL";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(currentUserId), String.valueOf(currentUserId), String.valueOf(currentUserId)});
+
+        if (cursor != null && cursor.moveToFirst()) {
             do {
                 int groupId = cursor.getInt(cursor.getColumnIndex("groupid"));
-                String groupName = cursor.getString(cursor.getColumnIndex("groupname"));
-                int ishost = cursor.getInt(cursor.getColumnIndex("ishost"));
+                String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
+                boolean iamHost = cursor.getInt(cursor.getColumnIndex("iamhost")) == 1;
+
+                GroupDataDTO groupData = new GroupDataDTO(groupId, groupName, iamHost);
+                groupsList.add(groupData);
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        db.close();
+        return groupsList;
+    }
+
+    private void addGroupsToTable(List<GroupDataDTO> groupsList) {
+
+        for (GroupDataDTO groupdata: groupsList) {
+                int groupId = groupdata.getGroupId();
+                String groupName = groupdata.getGroupName();
+                boolean isIamHost = groupdata.isIamHost();
 
                 // Create a new row in the table
                 TableRow row = new TableRow(this);
@@ -115,7 +142,7 @@ public class MyGroupsActivity extends AppCompatActivity {
                         Intent intent = new Intent(MyGroupsActivity.this, GroupInfoActivity.class);
                         Bundle extras = new Bundle();
                         extras.putInt("groupid", groupId);
-                        extras.putInt("ishost",ishost);
+                        extras.putInt("ishost",isIamHost ? 1 : 0);
                         extras.putInt("userid", loggedInUserId);
                         extras.putString("username", loggedInUsername);
                         intent.putExtras(extras);
@@ -125,7 +152,7 @@ public class MyGroupsActivity extends AppCompatActivity {
                 });
                 row.addView(openGroupButton);
 
-                if(ishost ==1)
+                if(isIamHost)
                 {
                     // Create buttons for delete, and manage requests
                     Button deleteButton = new Button(this);
@@ -162,7 +189,7 @@ public class MyGroupsActivity extends AppCompatActivity {
                             extras.putInt("userid", loggedInUserId);
                             extras.putInt("groupid", groupId);
                             extras.putString("username", loggedInUsername);
-                            extras.putInt("ishost", ishost);
+                            extras.putInt("ishost", isIamHost ? 1 : 0);
 
                             intent.putExtras(extras);
                             startActivity(intent);
@@ -173,9 +200,9 @@ public class MyGroupsActivity extends AppCompatActivity {
 
                 // Add the row to the table
                 groupsTableLayout.addView(row);
-            } while (cursor.moveToNext());
+            }
         }
-    }
+
 
     private void showDeleteConfirmationDialog(int groupId,String groupName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

@@ -70,6 +70,7 @@ public class PendingRequestsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     activityHandler.updateRequestStatus(userid, activityid, true);
+                    returnToPreviousActivity(v);
                 }
             });
             row.addView(acceptButton);
@@ -80,6 +81,7 @@ public class PendingRequestsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     activityHandler.updateRequestStatus(userid, activityid, false);
+                    returnToPreviousActivity(v);
                 }
             });
             row.addView(rejectButton);

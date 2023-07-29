@@ -51,7 +51,7 @@ public class PendingGroupRequestsActivity extends AppCompatActivity {
                 "FROM groupsRequest gr " +
                 "JOIN users u ON gr.userid = u.id " +
                 "JOIN groups g ON gr.groupid = g.id " +
-                "WHERE gr.isaccept = 0 and g.id=?",  new String[]{String.valueOf(groupId)});
+                "WHERE gr.isaccept = -1 and g.id=?",  new String[]{String.valueOf(groupId)});
 
         while (cursor.moveToNext()) {
             int userid = cursor.getInt(cursor.getColumnIndex("userid"));
@@ -77,6 +77,7 @@ public class PendingGroupRequestsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     updateRequestStatus(userid,groupId,true);
+                    returnToPreviousActivity(v);
                 }
             });
             row.addView(acceptButton);
@@ -87,6 +88,7 @@ public class PendingGroupRequestsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     updateRequestStatus(userid,groupId,false);
+                    returnToPreviousActivity(v);
                 }
             });
             row.addView(rejectButton);
