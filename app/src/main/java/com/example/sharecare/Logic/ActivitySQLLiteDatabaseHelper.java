@@ -42,6 +42,11 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_AGE_TO + " INTEGER)";
 
 
+
+
+
+
+
     /** SQL command to create the table for pending activity requests */
     private static final String CREATE_TABLE_PENDING_REQUESTS =
             "CREATE TABLE IF NOT EXISTS   activitiesRequest (userid INTEGER, activityid INTEGER, requestDate TEXT, isaccept INTEGER)";
