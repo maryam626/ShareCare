@@ -76,6 +76,7 @@ public class SearchGroupsActivity extends AppCompatActivity {
         List<String>  languagesList = groupHandler.getAllLanguages();
         groupHandler.close();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, languagesList);
+        setSpinnersDefaultValues(languagesSpinner, languagesList);
         languagesSpinner.setAdapter(adapter);
     }
 
@@ -85,9 +86,16 @@ public class SearchGroupsActivity extends AppCompatActivity {
         List<String>  religionsList = groupHandler.getAllReligions();
         groupHandler.close();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, religionsList);
+        setSpinnersDefaultValues(religionsSpinner, religionsList);
         religionsSpinner.setAdapter(adapter);
     }
 
+    public void setSpinnersDefaultValues(Spinner spinner,List<String> spinnerValues){
+
+        String defaultValue = "--";
+        spinnerValues.add(0,defaultValue);
+        spinner.setSelection(0);
+    }
     /**
      * Add a city element (checkbox) to the cityContainer with the given city name.
      *
