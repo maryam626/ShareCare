@@ -302,7 +302,7 @@ public class GroupHandler {
         Cursor cursor = db.rawQuery(
                 "SELECT a.id, a.groupid, a.activity_name, a.activity_type, a.date, a.time, a.capacity," +
                         " a.duration, a.owner_user_id, a.child_age_from, a.child_age_to," +
-                        " CASE WHEN ar.isaccept = 1 THEN 1 ELSE 0 END AS isSharedWithMe," +
+                        "ar.isaccept as requestStatusCode," +
                         " CASE WHEN a.owner_user_id = ? THEN 1 ELSE 0 END AS IAmOwner" +
                         " FROM activities AS a " +
                         "LEFT JOIN activitiesRequest AS ar " +
@@ -325,10 +325,9 @@ public class GroupHandler {
             Activity activity = new Activity(id, activityName, selectedActivity, selectedDate, selectedTime, capacity, duration,ageFrom, ageTo, groupId, ownerUserId);
             activity.setGroupId(groupid);
             ActivityShareDTO sharedto = new ActivityShareDTO(activity);
-            sharedto.setiAmOwner(cursor.getInt(cursor.getColumnIndex("isSharedWithMe")) ==1);
+            sharedto.setRequestStatusCode(cursor.getInt(cursor.getColumnIndex("requestStatusCode")));
             sharedto.setiAmOwner(cursor.getInt(cursor.getColumnIndex("IAmOwner")) ==1);
             activityShareList.add(sharedto);
-
         }
 
         cursor.close();
@@ -336,13 +335,18 @@ public class GroupHandler {
         return activityShareList;
     }
 
-    public void insertActivityRequest(int userId, int activityId) {
+    public void insertActivityRequest(int userId, int activityId,int groupid) {
         SQLiteDatabase db = activityDatabaseHelper.getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put("userid", userId);
+        values.put("groupid", groupid);
         values.put("activityid", activityId);
-        values.put("requestDate", System.currentTimeMillis());
-        values.put("isaccept", 0); // 0 represents the request is not accepted yet
+
+        // Get the current date in the desired format (e.g., "yyyy-MM-dd HH:mm:ss")
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+        values.put("requestDate", currentDate);
+        values.put("isaccept", -1);
 
         db.insert("activitiesRequest", null, values);
         db.close();

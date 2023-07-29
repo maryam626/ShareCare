@@ -1,7 +1,6 @@
 package com.example.sharecare;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +11,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.handlers.ActivityHandler;
+import com.example.sharecare.models.PendingActivityRequestDTO;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.List;
 
 public class PendingRequestsActivity extends AppCompatActivity {
 
@@ -38,14 +40,14 @@ public class PendingRequestsActivity extends AppCompatActivity {
     }
 
     private void loadPendingRequests() {
-        Cursor cursor = activityHandler.getPendingRequestsCursor();
+        List<PendingActivityRequestDTO> pendingActivityRequestList = activityHandler.getPendingActivityRequestsByGroupId(groupId);
 
-        while (cursor.moveToNext()) {
-            String username = cursor.getString(cursor.getColumnIndex("username"));
-            String activityName = cursor.getString(cursor.getColumnIndex("activity_name"));
-            String requestDate = cursor.getString(cursor.getColumnIndex("requestDate"));
-            int userid = cursor.getInt(cursor.getColumnIndex("userid"));
-            int activityid = cursor.getInt(cursor.getColumnIndex("activityid"));
+        for (PendingActivityRequestDTO request: pendingActivityRequestList) {
+            String username = request.getUsername();
+            String activityName = request.getActivityName();
+            String requestDate = request.getRequestDate();
+            int userid = request.getUserId();
+            int activityid = request.getActivityId();
 
             // Create a new row in the table
             TableRow row = new TableRow(this);
@@ -89,8 +91,6 @@ public class PendingRequestsActivity extends AppCompatActivity {
             // Add the row to the table
             tableLayout.addView(row);
         }
-
-        cursor.close();
     }
 
     public void returnToPreviousActivity(View view) {

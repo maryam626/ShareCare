@@ -1,14 +1,16 @@
 package com.example.sharecare.handlers;
 
 import android.content.Context;
-import android.database.Cursor;
 
 import com.example.sharecare.Logic.ActivitySQLLiteDatabaseHelper;
 import com.example.sharecare.models.Activity;
+import com.example.sharecare.models.PendingActivityRequestDTO;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.List;
 
 public class ActivityHandler {
     private ActivitySQLLiteDatabaseHelper databaseHelper;
@@ -31,9 +33,10 @@ public class ActivityHandler {
         databaseHelper.updateRequestStatus(userId, activityId, isAccept);
     }
 
-    public Cursor getPendingRequestsCursor() {
-        return databaseHelper.getPendingRequestsCursor();
+    public List<PendingActivityRequestDTO> getPendingActivityRequestsByGroupId(int groupid) {
+        return databaseHelper.getPendingActivityRequestsByGroupId(groupid);
     }
+
 
     // Add other methods for handling database operations, if needed.
 }

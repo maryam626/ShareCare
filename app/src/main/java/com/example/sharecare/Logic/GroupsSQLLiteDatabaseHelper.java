@@ -19,7 +19,6 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-
     private void DropTablesForDebug(SQLiteDatabase db)
     {
 

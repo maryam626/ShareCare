@@ -7,6 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.sharecare.models.Activity;
+import com.example.sharecare.models.PendingActivityRequestDTO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "ShareCare.db";
@@ -24,7 +28,9 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_AGE_FROM = "child_age_from";
     private static final String COLUMN_AGE_TO = "child_age_to";
     private static final String OWNER_ID = "owner_user_id";
-
+    public static final int REQUEST_STATUS_PENDING = 0;
+    public static final int REQUEST_STATUS_ACCEPTED= 2;
+    public static final int REQUEST_STATUS_REJECTED= 2;
 
     /** SQL command to create the table for activities */
     private static final String CREATE_TABLE_ACTIVITIES =
@@ -41,16 +47,10 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_AGE_FROM + " INTEGER, " +
                     COLUMN_AGE_TO + " INTEGER)";
 
-
-
-
-
-
-
     /** SQL command to create the table for pending activity requests */
     private static final String CREATE_TABLE_PENDING_REQUESTS =
-            "CREATE TABLE IF NOT EXISTS   activitiesRequest (userid INTEGER, activityid INTEGER, requestDate TEXT, isaccept INTEGER)";
-
+            "CREATE TABLE IF NOT EXISTS   activitiesRequest (id INTEGER PRIMARY KEY AUTOINCREMENT,userid INTEGER," +
+                    " groupid INTEGER, activityid INTEGER, requestDate TEXT, isaccept INTEGER)";
 
     public ActivitySQLLiteDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -63,7 +63,7 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // run this to update activity table first drop tables and then recreate
         //db.execSQL("DROP TABLE IF EXISTS " + ACTIVITIES_TABLE_NAME);
-        // db.execSQL("DROP TABLE IF EXISTS " + "activitiesRequest");
+        db.execSQL("DROP TABLE IF EXISTS " + "activitiesRequest");
 
         db.execSQL(CREATE_TABLE_ACTIVITIES);
         db.execSQL(CREATE_TABLE_PENDING_REQUESTS);
@@ -107,19 +107,45 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
         return rowId;
     }
 
-    public Cursor getPendingRequestsCursor() {
+    public List<PendingActivityRequestDTO> getPendingActivityRequestsByGroupId(int groupId) {
+        List<PendingActivityRequestDTO> pendingRequests = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] columns = {"username", "activity_name", "requestDate", "userid", "activityid"};
-        String selection = "isaccept = ?";
-        String[] selectionArgs = {String.valueOf(0)};
-        Cursor cursor = db.query("activitiesRequest", columns, selection, selectionArgs, null, null, null);
-        return cursor;
+
+        String query = "SELECT activitiesRequest.userid, users.username, activitiesRequest.activityid, " +
+                "activitiesRequest.isaccept, activitiesRequest.requestDate, activities.activity_name " +
+                "FROM activitiesRequest " +
+                "INNER JOIN users ON activitiesRequest.userid = users.id " +
+                "INNER JOIN activities ON activitiesRequest.activityid = activities.id " +
+                "WHERE activitiesRequest.groupid = ? AND activitiesRequest.isaccept = 0";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(groupId)});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                PendingActivityRequestDTO requestDTO = new PendingActivityRequestDTO();
+
+                requestDTO.setUserId(cursor.getInt(cursor.getColumnIndex("userid")));
+                requestDTO.setUsername(cursor.getString(cursor.getColumnIndex("username")));
+                requestDTO.setActivityId(cursor.getInt(cursor.getColumnIndex("activityid")));
+                requestDTO.setIsAccept(cursor.getInt(cursor.getColumnIndex("isaccept")));
+                requestDTO.setRequestDate(cursor.getString(cursor.getColumnIndex("requestDate")));
+                requestDTO.setActivityName(cursor.getString(cursor.getColumnIndex("activity_name")));
+
+                pendingRequests.add(requestDTO);
+            } while (cursor.moveToNext());
+
+            cursor.close();
+        }
+
+        db.close();
+
+        return pendingRequests;
     }
 
     public void updateRequestStatus(int userId, int activityId, boolean isAccept) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("isaccept", isAccept ? 1 : 0);
+        values.put("isaccept", isAccept ? REQUEST_STATUS_ACCEPTED :REQUEST_STATUS_REJECTED);
 
         String whereClause = "userid = ? AND activityid = ?";
         String[] whereArgs = {String.valueOf(userId), String.valueOf(activityId)};

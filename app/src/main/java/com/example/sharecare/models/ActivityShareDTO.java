@@ -11,14 +11,14 @@ public class ActivityShareDTO {
     }
 
     private Activity activity;
-    private boolean isSharedWithMe;
+    private int requestStatusCode;
 
-    public boolean isSharedWithMe() {
-        return isSharedWithMe;
+    public int getRequestStatusCode() {
+        return requestStatusCode;
     }
 
-    public void setSharedWithMe(boolean sharedWithMe) {
-        isSharedWithMe = sharedWithMe;
+    public void setRequestStatusCode(int sharedWithMe) {
+        requestStatusCode = sharedWithMe;
     }
 
     public boolean isiAmOwner() {
