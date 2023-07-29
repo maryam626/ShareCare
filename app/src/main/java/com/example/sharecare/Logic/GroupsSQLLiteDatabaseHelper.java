@@ -5,7 +5,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.sharecare.models.Group;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +20,8 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "ShareCare.db";
     private static final int DATABASE_VERSION = 1;
+    private FirebaseFirestore firebaseDb = FirebaseFirestore.getInstance();
+
 
     public GroupsSQLLiteDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -35,7 +43,7 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
          *  Use them cautiously.
          */
         //drop grougs table activate once whenever is needed
-      //  DropTablesForDebug(db);
+        // DropTablesForDebug(db);
 
         /** Create various tables for managing groups and their related information */
         String createGroupsTableQuery = "CREATE TABLE IF NOT EXISTS  groups (id INTEGER PRIMARY KEY AUTOINCREMENT, groupName TEXT,description TEXT,city TEXT,street TEXT,language Text, religion TEXT, hostUserId INTEGER)";
@@ -124,6 +132,23 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
     /** Fetch a list of all cities stored in the database */
     public List<String> loadCities() {
         List<String> cityList = new ArrayList<>();
+
+        firebaseDb.collection("Cities").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(int i = 0; i<queryDocumentSnapshots.size();i++) {
+                    cityList.add(queryDocumentSnapshots.getDocuments().get(i).get("name").toString());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+        return cityList;
+
+        /*List<String> cityList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT DISTINCT name FROM cities ORDER BY name ASC", null);
 
@@ -137,7 +162,7 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        return cityList;
+        return cityList;*/
     }
 
     /** Fetch a list of all languages stored in the database */
