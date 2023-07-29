@@ -140,6 +140,7 @@
     <string name="religion_label">Religion</string>
     <string name="Select_Language">Select Language</string>
     <string name="Select_Religion">Select Religion</string>
+    <string name="Select_City">Select City</string>
 
     <!-- Hints -->
     <string name="user_name_hint">(4-20 chars, alphanumeric, _, -)</string>
