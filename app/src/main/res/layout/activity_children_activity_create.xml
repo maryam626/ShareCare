@@ -93,10 +93,27 @@
         android:minHeight="48dp" />
 
     <TextView
-        android:id="@+id/text_capacity"
+        android:id="@+id/text_duration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_selected_time"
+        android:layout_marginTop="16dp"
+        android:text="@string/duration" />
+
+    <EditText
+        android:id="@+id/edit_duration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_duration"
+        android:autofillHints=""
+        android:hint="@string/enter_duration"
+        android:inputType="number"
+        android:minHeight="48dp" />
+    <TextView
+        android:id="@+id/text_capacity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_duration"
         android:layout_marginTop="16dp"
         android:text="@string/capacity" />
 

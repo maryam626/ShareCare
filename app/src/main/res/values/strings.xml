@@ -108,10 +108,12 @@
     <string name="time">Time</string>
     <string name="select_time">Select Time</string>
     <string name="capacity">Capacity</string>
+    <string name="duration">Duration In Hours</string>
     <string name="save1">Save</string>
     <string name="selected_date">Selected Date</string>
     <string name="selected_time">Selected Time</string>
     <string name="enter_capacity">Enter capacity</string>
+    <string name="enter_duration">Enter duration</string>
     <string name="todo20">TODO</string>
     <string name="todo21">TODO</string>
     <string name="todo22">TODO</string>

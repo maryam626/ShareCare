@@ -292,7 +292,7 @@ public class GroupHandler {
 
         Cursor cursor = db.rawQuery(
 
-                "SELECT activities.id as id,activity_name as activityName,activity_type as selectedActivity,date as selectedDate,time as selectedTime, capacity, " +
+                "SELECT activities.id as id,activity_name as activityName,activity_type as selectedActivity,date as selectedDate,time as selectedTime, capacity,duration, " +
                         "child_age_from as ageFrom,child_age_to as  ageTo, owner_user_id ownerUserId " +
                         "FROM activities " +
                         "WHERE groupId = ? AND (ownerUserId = ? OR EXISTS (SELECT 1 FROM activitiesRequest " +
@@ -307,10 +307,11 @@ public class GroupHandler {
             String selectedDate = cursor.getString(cursor.getColumnIndex("selectedDate"));
             String selectedTime = cursor.getString(cursor.getColumnIndex("selectedTime"));
             int capacity = cursor.getInt(cursor.getColumnIndex("capacity"));
+            int duration = cursor.getInt(cursor.getColumnIndex("duration"));
             int ageFrom = cursor.getInt(cursor.getColumnIndex("ageFrom"));
             int ageTo = cursor.getInt(cursor.getColumnIndex("ageTo"));
             int ownerUserId = cursor.getInt(cursor.getColumnIndex("ownerUserId"));
-            Activity activity = new Activity(id, activityName, selectedActivity, selectedDate, selectedTime, capacity, ageFrom, ageTo, groupId, ownerUserId);
+            Activity activity = new Activity(id, activityName, selectedActivity, selectedDate, selectedTime, capacity, duration,ageFrom, ageTo, groupId, ownerUserId);
             activityList.add(activity);
         }
 

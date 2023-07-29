@@ -22,6 +22,7 @@ public class FirebaseHandler {
         activityMap.put("selectedDate", activity.getSelectedDate());
         activityMap.put("selectedTime", activity.getSelectedTime());
         activityMap.put("capacity", activity.getCapacity());
+        activityMap.put("duration", activity.getDuration());
         activityMap.put("ageFrom", activity.getAgeFrom());
         activityMap.put("ageTo", activity.getAgeTo());
         activityMap.put("ownerUserId", activity.getOwnerUserId());
