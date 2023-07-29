@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.sharecare.handlers.GroupHandler;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +37,7 @@ public class SearchGroupsActivity extends AppCompatActivity {
     private int loggedInUserId;
     private String loggedInUsername;
     private boolean city_box_is_checked, language_spinner_is_on, religion_spinner_is_on;
-
-
+    private boolean[] filtersVector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +55,8 @@ public class SearchGroupsActivity extends AppCompatActivity {
         city_box_is_checked= false;
         language_spinner_is_on = false;
         religion_spinner_is_on=false;
+
+        filtersVector = new boolean[3];
 
         loadCitiesFromDatabase();
         loadLanguages();
@@ -142,34 +144,66 @@ public class SearchGroupsActivity extends AppCompatActivity {
         extras.putInt("userid", loggedInUserId);
         extras.putString("username", loggedInUsername);
 
+        language_spinner_is_on = checkSpinnerStatus(languagesSpinner);
+        religion_spinner_is_on = checkSpinnerStatus(religionsSpinner);
+
+        buildFiltersVector(!selectedCities.isEmpty(),language_spinner_is_on, religion_spinner_is_on);
+
         String language = languagesSpinner.getSelectedItem().toString();
         String religion = religionsSpinner.getSelectedItem().toString();
 
-        if(selectedCities.isEmpty() && !checkSpinnerStatus(languagesSpinner) && !checkSpinnerStatus(religionsSpinner)){
+        if(selectedCities.isEmpty() && !language_spinner_is_on && !religion_spinner_is_on){
             Toast.makeText(this, "you need to choose at least one filter", Toast.LENGTH_SHORT).show();
             return;
         }
-        else if (!selectedCities.isEmpty() && !checkSpinnerStatus(languagesSpinner) && !checkSpinnerStatus(religionsSpinner)) {
+        else if (!selectedCities.isEmpty() && !language_spinner_is_on && !religion_spinner_is_on) {
             // Show an error message if no cities are selected
             Toast.makeText(this, "Cities only haha", Toast.LENGTH_SHORT).show();
             extras.putStringArrayList("selectedCities", new ArrayList<>(selectedCities));
             prepareAndCallIntent(extras);
-        } else if (selectedCities.isEmpty() && checkSpinnerStatus(languagesSpinner) && !checkSpinnerStatus(religionsSpinner)) {
+        } else if (selectedCities.isEmpty() && language_spinner_is_on && !religion_spinner_is_on) {
             Toast.makeText(this, "languages only haha", Toast.LENGTH_SHORT).show();
             extras.putString("language", language);
             prepareAndCallIntent(extras);
-        } else if (selectedCities.isEmpty() && !checkSpinnerStatus(languagesSpinner) && checkSpinnerStatus(religionsSpinner)) {
+
+        } else if (selectedCities.isEmpty() && !language_spinner_is_on && religion_spinner_is_on) {
             Toast.makeText(this, "religions only haha", Toast.LENGTH_SHORT).show();
             extras.putString("religion", religion);
             prepareAndCallIntent(extras);
-        }
 
+        }else if(selectedCities.isEmpty() && language_spinner_is_on && religion_spinner_is_on){
+            Toast.makeText(this, "religions and language", Toast.LENGTH_SHORT).show();
+            extras.putString("language", language);
+            extras.putString("religion", religion);
+            prepareAndCallIntent(extras);
+
+        }else if(!selectedCities.isEmpty() && !language_spinner_is_on && religion_spinner_is_on ){
+            Toast.makeText(this, "religions and city", Toast.LENGTH_SHORT).show();
+            extras.putStringArrayList("selectedCities", new ArrayList<>(selectedCities));
+            extras.putString("religion", religion);
+            prepareAndCallIntent(extras);
+
+        }else if(!selectedCities.isEmpty() && language_spinner_is_on && !religion_spinner_is_on){
+            Toast.makeText(this, "language and city", Toast.LENGTH_SHORT).show();
+            extras.putStringArrayList("selectedCities", new ArrayList<>(selectedCities));
+            extras.putString("language", language);
+            prepareAndCallIntent(extras);
+
+        }else if(!selectedCities.isEmpty() && language_spinner_is_on && religion_spinner_is_on){
+            Toast.makeText(this, "religions and city", Toast.LENGTH_SHORT).show();
+            extras.putStringArrayList("selectedCities", new ArrayList<>(selectedCities));
+            extras.putString("religion", religion);
+            extras.putString("language", language);
+            prepareAndCallIntent(extras);
+        }
     }
 
-    public void prepareAndCallIntent(Bundle extra){
+    public void prepareAndCallIntent(Bundle extras){
 
         Intent intent = new Intent(SearchGroupsActivity.this, SearchResultsActivity.class);
-        intent.putExtras(extra);
+//        extras.putStringArray("filtersVector",filtersVector);
+        extras.putBooleanArray("filtersVector", filtersVector);
+        intent.putExtras(extras);
         startActivity(intent);
     }
 
@@ -180,5 +214,26 @@ public class SearchGroupsActivity extends AppCompatActivity {
         }else{
             return true;
         }
+    }
+    public void buildFiltersVector(Boolean city, Boolean language, Boolean religion){
+
+//        if(city){
+//           filtersVector[0] = true;
+//        }else{
+//            filtersVector[0] = false;
+//        }
+//        if(language){
+//            filtersVector[1] = true;
+//        }else{
+//            filtersVector[1] = false;
+//        }
+//        if(religion){
+//            filtersVector[2] = true;
+//        }else{
+//            filtersVector[2] = false;
+//        }
+        filtersVector[0] = city;
+        filtersVector[1] = language;
+        filtersVector[2] = religion;
     }
 }
