@@ -1,9 +1,7 @@
 package com.example.sharecare;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -13,6 +11,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.Logic.UsersSQLLiteDatabaseHelper;
 import com.example.sharecare.handlers.LogInFirebaseHandler;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 
 public class log_in_activity extends AppCompatActivity {
     private static final String TAG = "log in";
-
+    private SharedPreferences sharedPreferences;
 
     private TextView messageTextView;
     private TextView forgetTv;
@@ -72,6 +73,24 @@ public class log_in_activity extends AppCompatActivity {
 
         logInFirebaseHandler = new LogInFirebaseHandler();
 
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
+
+        // Check if rememberCheckBox state is saved and set it accordingly
+        boolean rememberMeChecked = sharedPreferences.getBoolean("remember_me", false);
+        rememberCheckBox.setChecked(rememberMeChecked);
+
+        // If rememberMeChecked is true and credentials are saved, attempt automatic login
+        if (rememberMeChecked) {
+            String savedEmail = sharedPreferences.getString("email", "");
+            String savedPassword = sharedPreferences.getString("password", "");
+            EtEmail.setText(savedEmail);
+            EtPassword.setText(savedPassword);
+
+            // Attempt automatic login by calling the login method
+            performLogin(savedEmail, savedPassword);
+        }
+
         forgetTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,45 +112,67 @@ public class log_in_activity extends AppCompatActivity {
                 String email = EtEmail.getText().toString();
                 String password = EtPassword.getText().toString();
 
-                if(email.equals("")){
+                if (email.equals("")) {
                     EtPassword.setError("Enter Your Email");
                 }
-                if(password.equals("")){
+                if (password.equals("")) {
                     EtEmail.setError("Enter Your Password");
                 }
 
-                if (validateCredentials(email, password)) {
-                    Intent intent = new Intent(log_in_activity.this, home_page_parent_activity.class);
-                    gettingUserData();
-                    logInFirebaseHandler.getParentData(EtEmail.getText().toString(),log_in_activity.this);
-                    //puttingDataInVariables(logInFirebaseHandler.getParentData(EtEmail.getText().toString(),log_in_activity.this));
-
-                    //Sending Data To Home Page Using Bundle
-                    Bundle extras = new Bundle();
-                    extras.putString("id", id);
-                    extras.putString("username", username);
-                    extras.putString("phone_number", phoneNumber);
-                    extras.putString("email", email);
-                    extras.putString("address",address);
-                    extras.putString("password", password);
-                    extras.putString("number_of_kids", numberOfKids);
-                    extras.putString("marital_status", maritalStatus);
-                    extras.putString("gender", gender);
-                    extras.putString("language", language);
-                    extras.putString("religion", religion);
-
-                    intent.putExtras(extras);
-                    startActivity(intent);
-                    finish();
+                boolean rememberMe = rememberCheckBox.isChecked();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("remember_me", rememberMe);
+                if (rememberMe) {
+                    editor.putString("email", email);
+                    editor.putString("password", password);
                 } else {
-                    messageTextView.setVisibility(View.VISIBLE);
-                    messageTextView.setText("Email or password is incorrect");
+                    // Clear saved credentials if rememberMe is false
+                    editor.remove("email");
+                    editor.remove("password");
                 }
+                editor.apply();
+
+                // Attempt login when the login button is clicked
+                performLogin(email, password);
             }
         });
 
     }
 
+
+    private void performLogin(String email, String password) {
+        // Your login authentication logic here
+        // If login is successful, redirect to the main page
+        // If login fails, show an error message or handle accordingly
+
+        if (validateCredentials(email, password)) {
+            Intent intent = new Intent(log_in_activity.this, home_page_parent_activity.class);
+            gettingUserData();
+            logInFirebaseHandler.getParentData(EtEmail.getText().toString(), log_in_activity.this);
+            //puttingDataInVariables(logInFirebaseHandler.getParentData(EtEmail.getText().toString(),log_in_activity.this));
+
+            //Sending Data To Home Page Using Bundle
+            Bundle extras = new Bundle();
+            extras.putString("id", id);
+            extras.putString("username", username);
+            extras.putString("phone_number", phoneNumber);
+            extras.putString("email", email);
+            extras.putString("address", address);
+            extras.putString("password", password);
+            extras.putString("number_of_kids", numberOfKids);
+            extras.putString("marital_status", maritalStatus);
+            extras.putString("gender", gender);
+            extras.putString("language", language);
+            extras.putString("religion", religion);
+
+            intent.putExtras(extras);
+            startActivity(intent);
+            finish();
+        } else {
+            messageTextView.setVisibility(View.VISIBLE);
+            messageTextView.setText("Email or password is incorrect");
+        }
+    }
     public static void puttingDataInVariables(DocumentSnapshot result) {
         address = result.get("address").toString();
         email = result.get("email").toString();
