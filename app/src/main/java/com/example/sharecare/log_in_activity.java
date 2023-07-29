@@ -35,17 +35,17 @@ public class log_in_activity extends AppCompatActivity {
     private EditText EtPassword;
     private Button logInBtn;
     private CheckBox rememberCheckBox;
-    private static String id;
-    private static String username;
-    private static String phoneNumber;
-    private static String email;
-    private static String address;
-    private static String password;
-    private static String numberOfKids;
-    private static String maritalStatus;
-    private static String gender;
-    private static String language;
-    private static String religion;
+    public static String id;
+    public static String username;
+    public static String phoneNumber;
+    public static String email;
+    public static String address;
+    public static String password;
+    public static String numberOfKids;
+    public static String maritalStatus;
+    public static String gender;
+    public static String language;
+    public static String religion;
 
     private UsersSQLLiteDatabaseHelper databaseHelper;
     private LogInFirebaseHandler logInFirebaseHandler;

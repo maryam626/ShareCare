@@ -1,6 +1,7 @@
 package com.example.sharecare.handlers;
 
 import com.example.sharecare.models.Activity;
+import com.example.sharecare.models.Host;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,6 +30,27 @@ public class FirebaseHandler {
 
         firebaseDb.collection("Activities")
                 .add(activityMap)
+                .addOnSuccessListener(successListener)
+                .addOnFailureListener(failureListener);
+    }
+
+    public void addingHostDataToFirebase(Host host, OnSuccessListener successListener, OnFailureListener failureListener){
+        Map<String, Object> hostMap = new HashMap<>();
+        hostMap.put("id", "0");
+        hostMap.put("username", host.getUsername());
+        hostMap.put("phoneNumber", host.getPhoneNumber());
+        hostMap.put("email", host.getEmail());
+        hostMap.put("address", host.getAddress());
+        hostMap.put("password", host.getPassword());
+        hostMap.put("numberOfKids", host.getNumberOfKids());
+        hostMap.put("maritalStatus", host.getMaritalStatus());
+        hostMap.put("gender", host.getGender());
+        hostMap.put("language", host.getLanguage());
+        hostMap.put("religion", host.getReligion());
+
+
+        firebaseDb.collection("Hosts")
+                .add(hostMap)
                 .addOnSuccessListener(successListener)
                 .addOnFailureListener(failureListener);
     }

@@ -2,6 +2,7 @@ package com.example.sharecare;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -9,21 +10,29 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sharecare.handlers.FirebaseHandler;
 import com.example.sharecare.handlers.GroupHandler;
 import com.example.sharecare.handlers.UserHandler;
+import com.example.sharecare.models.Host;
 import com.example.sharecare.valdiators.CreateGroupValidator;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
 public class CreateGroupActivity extends AppCompatActivity {
+    private static final String TAG = "Create Group";
+
     private EditText groupNameEditText, descriptionEditText, streetEditText;
     private Spinner participantsSpinner, CitySpinner, languageSpinner, religionSpinner;
     private Button createButton;
     private GroupHandler groupHandler;
     private UserHandler userHandler;
+    private FirebaseHandler firebaseHandler;
     private int loggedInUserId;
     private String loggedInUsername;
     private boolean isGroupInserted = false;
@@ -36,6 +45,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
         groupHandler = new GroupHandler(this, FirebaseFirestore.getInstance());
         userHandler = new UserHandler(this);
+        firebaseHandler = new FirebaseHandler(FirebaseFirestore.getInstance());
 
         groupNameEditText = findViewById(R.id.groupNameEditText);
         descriptionEditText = findViewById(R.id.descriptionEditText);
@@ -153,6 +163,22 @@ public class CreateGroupActivity extends AppCompatActivity {
         groupHandler.open();
         groupId = (int) groupHandler.insertGroup(groupName, description, city, street, language, religion, loggedInUserId);
         groupHandler.close();
+
+        Host host = new Host(log_in_activity.username,log_in_activity.phoneNumber,log_in_activity.email,log_in_activity.address, log_in_activity.password,Integer.parseInt(log_in_activity.numberOfKids), log_in_activity.maritalStatus,log_in_activity.gender,log_in_activity.language,log_in_activity.religion);
+
+        firebaseHandler.addingHostDataToFirebase(host, new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                Log.d(TAG, "Host added to Firebase");
+
+            }
+        }, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Adding Host Failed");
+
+            }
+        });
 
         if (groupId == -1) {
             Toast.makeText(this, "Failed to create group. Please try again.", Toast.LENGTH_SHORT).show();
