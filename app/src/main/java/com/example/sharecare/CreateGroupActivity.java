@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.sharecare.handlers.FirebaseHandler;
 import com.example.sharecare.handlers.GroupHandler;
 import com.example.sharecare.handlers.UserHandler;
+import com.example.sharecare.models.Group;
 import com.example.sharecare.models.Host;
 import com.example.sharecare.valdiators.CreateGroupValidator;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -71,7 +72,10 @@ public class CreateGroupActivity extends AppCompatActivity {
 
                 if (isGroupInserted) {
                     groupHandler.open();
-                    boolean isParticipantInserted = groupHandler.insertGroupParticipant(groupId, participantsSpinner.getSelectedItem().toString());
+                    Host host = new Host(log_in_activity.username,log_in_activity.phoneNumber,log_in_activity.email,log_in_activity.address, log_in_activity.password,Integer.parseInt(log_in_activity.numberOfKids), log_in_activity.maritalStatus,log_in_activity.gender,log_in_activity.language,log_in_activity.religion);
+                    Group group = new Group(groupNameEditText.getText().toString(),descriptionEditText.getText().toString(),host, CitySpinner.getSelectedItem().toString(),streetEditText.getText().toString(), languageSpinner.getSelectedItem().toString(),religionSpinner.getSelectedItem().toString());
+                    groupHandler.addGroupToFirebase(groupId, group);
+                    boolean isParticipantInserted = groupHandler.insertGroupParticipant(groupId,participantsSpinner.getSelectedItem().toString());
                     groupHandler.close();
 
                     if (isParticipantInserted) {

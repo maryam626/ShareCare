@@ -118,7 +118,7 @@ public class GroupHandler {
         db.close();
 
         if (groupId != -1) {
-            addGroupToFirebase(groupId, values);
+            //addGroupToFirebase(groupId, values);
         }
 
         return groupId;
@@ -128,12 +128,12 @@ public class GroupHandler {
      * Adds group information to Firebase Firestore.
      *
      * @param groupId The ID of the group.
-     * @param values Content values representing the group information.
+     * @param group Content values representing the group information.
      */
-    private void addGroupToFirebase(long groupId, ContentValues values) {
+    public void addGroupToFirebase(long groupId, Group group) {
         firebaseDb.collection("Groups")
                 .document(String.valueOf(groupId))
-                .set(values)
+                .set(group)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
