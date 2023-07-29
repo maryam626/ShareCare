@@ -145,7 +145,7 @@
     <!-- Hints -->
     <string name="user_name_hint">(4-20 chars, alphanumeric, _, -)</string>
     <string name="phone_number_hint">Phone (10 digits)</string>
-    <string name="address_hint">Address (max 100 chars)</string>
+    <string name="address_hint">Address (5 - 100 chars)</string>
     <string name="password_hint">Password (min 6 chars, letters, numbers, special chars)</string>
     <string name="email_hint">Email (e.g., abc@example.com)</string>
 

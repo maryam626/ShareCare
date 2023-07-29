@@ -13,7 +13,7 @@ public class SignUpValidator {
     private static final Pattern USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]{2,20}$");
 
     // Password pattern: At least one digit, one letter, and one special character, minimum 6 characters
-    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[@$!%*?&]).{6,}$");
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[@$!%*?&_^#+\\\\\\-{}\\[\\]\\\\/.<>,;:~()]).{6,}$");
 
 
     /**
@@ -74,7 +74,11 @@ public class SignUpValidator {
         if (address.isEmpty()) {
             editText.setError("Address is required.");
             return false;
-        } else if (address.length() > 100) {
+        }
+        else if (address.length() <5) {
+            editText.setError("Address can't be less than 5 characters.");
+            return false;
+        }else if (address.length() > 100) {
             editText.setError("Address can't exceed 100 characters.");
             return false;
         }
