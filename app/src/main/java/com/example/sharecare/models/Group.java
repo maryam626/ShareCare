@@ -29,6 +29,15 @@ public class Group {
         this.city = city;
         this.street = street;
     }
+    public Group(String groupName, String briefInformation, Host host,String city, String street,String language, String religion) {
+        this.groupName = groupName;
+        this.briefInformation = briefInformation;
+        this.host = host;
+        this.city = city;
+        this.street = street;
+        this.language = language;
+        this.religion = religion;
+    }
 
     public Group(int groupId, String groupName, String description, String city, String street) {
         this.groupName = groupName;
