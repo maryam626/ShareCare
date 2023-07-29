@@ -346,7 +346,7 @@ public class GroupHandler {
         String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
         values.put("requestDate", currentDate);
-        values.put("isaccept", -1);
+        values.put("isaccept", 0);
 
         db.insert("activitiesRequest", null, values);
         db.close();

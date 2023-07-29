@@ -63,8 +63,6 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // run this to update activity table first drop tables and then recreate
         //db.execSQL("DROP TABLE IF EXISTS " + ACTIVITIES_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + "activitiesRequest");
-
         db.execSQL(CREATE_TABLE_ACTIVITIES);
         db.execSQL(CREATE_TABLE_PENDING_REQUESTS);
     }
