@@ -8,12 +8,13 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#9C27B0"
+        android:background="@color/white"
         android:paddingTop="20dp"
-        android:text="Add Child"
+        android:text="@string/add_child2"
         android:textAlignment="center"
         android:textSize="34sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:ignore="TextContrastCheck" />
 
     <EditText
         android:id="@+id/nameEt"
@@ -22,9 +23,10 @@
         android:layout_marginTop="204dp"
         android:ems="10"
         android:hint="@string/name22"
+        android:importantForAutofill="no"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        android:importantForAutofill="no" />
+        tools:ignore="TextContrastCheck" />
 
     <EditText
         android:id="@+id/schoolNameEt"
@@ -45,9 +47,10 @@
         android:layout_marginTop="280dp"
         android:ems="10"
         android:hint="@string/age1"
+        android:importantForAutofill="no"
         android:inputType="number"
         android:minHeight="48dp"
-        android:importantForAutofill="no" />
+        tools:ignore="TextContrastCheck" />
 
     <Spinner
         android:id="@+id/genderSpinner1"
@@ -64,11 +67,11 @@
         android:layout_height="50dp"
         android:layout_row="7"
         android:layout_column="0"
-        android:layout_marginTop="540dp"
-        android:backgroundTint="@color/purple_700"
-        android:clickable="false"
-        android:text="Add"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="540dp"
+        android:backgroundTint="@color/teal_700"
+        android:clickable="false"
+        android:text="@string/add"
         tools:ignore="TextContrastCheck" />
 
 

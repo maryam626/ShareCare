@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -11,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textStyle="bold"
-        android:text="Name"
+        android:text="@string/name99"
         android:textAppearance="?android:textAppearanceLarge"/>
 
     <TextView
@@ -27,7 +28,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:layout_weight="1"
-        android:text="Type"
+        android:text="@string/type98"
         android:textAppearance="?android:textAppearanceLarge" />
 
     <TextView
@@ -43,7 +44,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:layout_weight="1"
-        android:text="Date "
+        android:text="@string/date97"
         android:textAppearance="?android:textAppearanceLarge" />
 
     <TextView
@@ -59,7 +60,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:layout_weight="1"
-        android:text="Time "
+        android:text="@string/time96"
         android:textAppearance="?android:textAppearanceLarge" />
     <TextView
         android:id="@+id/time"
@@ -75,7 +76,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:layout_weight="1"
-        android:text="Duration In Hours"
+        android:text="@string/duration_in_hours95"
         android:textAppearance="?android:textAppearanceLarge" />
     <TextView
         android:id="@+id/duration"
@@ -90,7 +91,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:layout_weight="1"
-        android:text="Capacity "
+        android:text="@string/h94"
         android:textAppearance="?android:textAppearanceLarge" />
     <TextView
         android:id="@+id/capacity"
@@ -105,7 +106,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:layout_weight="1"
-        android:text="Ages From :  "
+        android:text="@string/ages_from93"
         android:textAppearance="?android:textAppearanceLarge" />
 
     <TextView
@@ -120,7 +121,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:text=" To :  "
+        android:text="@string/to92"
         android:textAppearance="?android:textAppearanceLarge" />
 
     <TextView
@@ -135,6 +136,8 @@
         android:id="@+id/closeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Close" />
+        android:backgroundTint="#24978C"
+        android:text="@string/close91"
+        tools:ignore="TextContrastCheck" />
 
 </LinearLayout>

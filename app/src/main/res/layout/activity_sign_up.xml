@@ -1,5 +1,6 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -21,8 +22,10 @@
             android:id="@+id/userNameEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="@string/user_name_hint"
             android:inputType="textPersonName"
-            android:hint="@string/user_name_hint" />
+            tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,8 +38,10 @@
             android:id="@+id/phoneEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="@string/phone_number_hint"
             android:inputType="phone"
-            android:hint="@string/phone_number_hint" />
+            tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -49,8 +54,10 @@
             android:id="@+id/addressEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="@string/address_hint"
             android:inputType="textPostalAddress"
-            android:hint="@string/address_hint" />
+            tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -63,8 +70,10 @@
             android:id="@+id/passwordEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="@string/password_hint"
             android:inputType="textPassword"
-            android:hint="@string/password_hint" />
+            tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -77,8 +86,10 @@
             android:id="@+id/emailEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="@string/email_hint"
             android:inputType="textEmailAddress"
-            android:hint="@string/email_hint" />
+            tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -91,7 +102,8 @@
             android:id="@+id/kidsSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/Number_Of_Kids" />
+            android:entries="@array/Number_Of_Kids"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -104,7 +116,8 @@
             android:id="@+id/maritalSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/Marital_Status" />
+            android:entries="@array/Marital_Status"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -117,7 +130,8 @@
             android:id="@+id/genderSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/Gender" />
+            android:entries="@array/Gender"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -131,7 +145,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/Languages"
-            />
+            tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -144,7 +158,8 @@
             android:id="@+id/religionSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/Religions" />
+            android:entries="@array/Religions"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <Button
             android:id="@+id/signUpBtn"
@@ -152,7 +167,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            android:text="Sign Up" />
+            android:text="@string/sign_up2" />
 
     </LinearLayout>
 </ScrollView>

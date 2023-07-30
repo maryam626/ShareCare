@@ -22,23 +22,24 @@
             android:id="@+id/filterToggleButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Filter"
-            android:layout_marginTop="10dp"
-            android:drawableLeft="@drawable/ic_filter"
-            android:background="@drawable/filter_button_background"
-            android:textColor="#FFFFFF"
+            android:layout_below="@id/groupNameTextView"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/groupNameTextView" />
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/teal_700"
+            android:drawableLeft="@drawable/ic_filter"
+            android:text="Filter"
+            android:textColor="#FFFFFF" />
 
         <!-- Create Activity Button (Right-aligned) -->
         <Button
             android:id="@+id/createActivityButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create Activity"
-            android:layout_marginTop="10dp"
+            android:layout_below="@id/groupNameTextView"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/groupNameTextView" />
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/teal_700"
+            android:text="Create Activity" />
 
         <!-- Rest of the layout remains the same -->
 

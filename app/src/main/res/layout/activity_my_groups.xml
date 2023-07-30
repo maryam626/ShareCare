@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -7,14 +8,16 @@
         android:id="@+id/createGroupButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Create New Group" />
+        android:backgroundTint="#24978C"
+        android:text="@string/create_new_group55"
+        tools:ignore="TextContrastCheck" />
 
     <TextView
         android:id="@+id/groupsTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Groups:"
+        android:text="@string/groups56"
         android:textStyle="bold" />
 
     <TableLayout

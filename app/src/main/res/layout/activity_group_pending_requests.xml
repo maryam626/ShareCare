@@ -10,17 +10,19 @@
         android:id="@+id/returnButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Return"
-        android:onClick="returnToPreviousActivity" />
+        android:backgroundTint="#24978C"
+        android:onClick="returnToPreviousActivity"
+        android:text="return"
+        tools:ignore="TextContrastCheck" />
 
     <!-- Table header -->
     <TableRow>
         <TextView
-            android:text="Username"
+            android:text="@string/username"
             android:textStyle="bold"
             android:padding="8dp" />
         <TextView
-            android:text="Request Date"
+            android:text="@string/request_date"
             android:textStyle="bold"
             android:padding="8dp" />
         <TextView
