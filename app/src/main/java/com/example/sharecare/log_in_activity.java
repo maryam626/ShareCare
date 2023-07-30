@@ -28,7 +28,6 @@ public class log_in_activity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
 
     private TextView messageTextView;
-    private TextView forgetTv;
     private TextView SignUpBtn;
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
@@ -63,7 +62,6 @@ public class log_in_activity extends AppCompatActivity {
 
 
         databaseHelper = new UsersSQLLiteDatabaseHelper(this);
-        forgetTv = (TextView) findViewById(R.id.forgetTv);
         EtPassword = (EditText) findViewById(R.id.EtPassword);
         EtEmail = (EditText) findViewById(R.id.EtEmail);
         messageTextView =  findViewById(R.id.messageTextView);
@@ -90,14 +88,6 @@ public class log_in_activity extends AppCompatActivity {
             // Attempt automatic login by calling the login method
             performLogin(savedEmail, savedPassword);
         }
-
-        forgetTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(log_in_activity.this, ForgetPasswordActivity.class);
-                startActivity(intent);
-            }
-        });
 
         SignUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
