@@ -59,39 +59,6 @@ public class my_children_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_children);
 
-        //here is the add child fragment code//
-        /*Button btnaddchild = findViewById(R.id.addChildbtn);
-        btnaddchild.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ///here is the transaction from one fragment to other when the button is clicked//
-                FragmentManager fragmentManager = getSupportFragmentManager();  //here we created java class for fragment manger and get a supported fragment manger//
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, addChildFragment.class, null)
-                        .setReorderingAllowed(true)
-                        .addToBackStack("name") // Name can be null
-                        .commit();
-
-            }
-        });*/
-
-
-        //here is the my children fragment code//
-         /*Button btnmychildren = findViewById(R.id.mychildrenbtn);
-        btnmychildren.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ///here is the transaction from one fragment to other when the button is clicked//
-                FragmentManager fragmentManager = getSupportFragmentManager();  //here we created java class for fragment manger and get a supported fragment manger//
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, myChildrenFragment.class, null)
-                        .setReorderingAllowed(true)
-                        .addToBackStack("name") // Name can be null
-                        .commit();
-
-            }
-        });*/
-
         kid1Btn = (Button) findViewById(R.id.kid1Btn);
         kid2Btn = (Button) findViewById(R.id.kid2Btn);
         kid3Btn = (Button) findViewById(R.id.kid3Btn);
@@ -326,9 +293,6 @@ public class my_children_activity extends AppCompatActivity {
                 for(int i = 0;i<queryDocumentSnapshots.getDocuments().size();i++) {
                     if(!queryDocumentSnapshots.getDocuments().get(i).get("name").equals("first kid")){
                     kidsMap.put(queryDocumentSnapshots.getDocuments().get(i).getData().get("name").toString(),queryDocumentSnapshots.getDocuments().get(i).getData());
-                    //queryDocumentSnapshots.getDocuments().get(i).getData().remove("first kid");
-                    //queryDocumentSnapshots.getDocuments().remove("first kid");
-                    //kidsMap.remove("first kid");
                     kidsButtons.get(i).setText(queryDocumentSnapshots.getDocuments().get(i).getData().get("name").toString());
                 }}
                 System.out.println(kidsMap);
