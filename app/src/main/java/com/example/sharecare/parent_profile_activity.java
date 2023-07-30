@@ -61,7 +61,6 @@ public class parent_profile_activity extends AppCompatActivity implements addChi
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
-
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +69,7 @@ public class parent_profile_activity extends AppCompatActivity implements addChi
 
         //Toolbar toolbar = findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
-        
+
         // Add the ChildFragment to the activity
         /*if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -82,7 +81,7 @@ public class parent_profile_activity extends AppCompatActivity implements addChi
         phoneEt1 = (EditText) findViewById(R.id.phoneEt1);
         emailEt1 = (EditText) findViewById(R.id.emailEt1);
         languageEt = (EditText) findViewById(R.id.LanguageEt);
-        religionEt =(EditText) findViewById(R.id.religionEt);
+        religionEt = (EditText) findViewById(R.id.religionEt);
         passwordEt1 = (EditText) findViewById(R.id.passwordEt1);
         addressEt3 = (EditText) findViewById(R.id.addressEt3);
         numKidsEt = (EditText) findViewById(R.id.numKidsEt);
@@ -124,9 +123,6 @@ public class parent_profile_activity extends AppCompatActivity implements addChi
         religionEt.setEnabled(false);
 
 
-
-
-
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,9 +159,9 @@ public class parent_profile_activity extends AppCompatActivity implements addChi
                 religionEt.setEnabled(false);
 
                 usersDatabaseHelper = new UsersSQLLiteDatabaseHelper(parent_profile_activity.this);
-                usersDatabaseHelper.updateUser(id, userNameTv.getText().toString(), phoneEt1.getText().toString(),emailEt1.getText().toString(), addressEt3.getText().toString(), passwordEt1.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
-                updateUserInFirebase(userNameTv.getText().toString(), phoneEt1.getText().toString(), addressEt3.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
-                updateParentInFirebase(userNameTv.getText().toString(), phoneEt1.getText().toString(), addressEt3.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
+                usersDatabaseHelper.updateUser(id, phoneEt1.getText().toString(), emailEt1.getText().toString(), addressEt3.getText().toString(), passwordEt1.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
+                updateUserInFirebase(phoneEt1.getText().toString(), addressEt3.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
+                updateParentInFirebase(phoneEt1.getText().toString(), addressEt3.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
 
             }
         });
@@ -173,8 +169,8 @@ public class parent_profile_activity extends AppCompatActivity implements addChi
 
     }
 
-    private void updateParentInFirebase(String username, String phone,String address,int numOfKids, String maritalStatus, String gender, String language, String religion) {
-        Map<String,Object> parentDetail = new HashMap<String, Object>();
+    private void updateParentInFirebase(String username, String phone, int numOfKids, String maritalStatus, String gender, String language, String religion) {
+        Map<String, Object> parentDetail = new HashMap<String, Object>();
         parentDetail.put("username", username);
         parentDetail.put("phoneNumber", phone);
         parentDetail.put("address", address);
@@ -185,42 +181,23 @@ public class parent_profile_activity extends AppCompatActivity implements addChi
         parentDetail.put("religion", religion);
 
 
+        db.collection("Parents").document(log_in_activity.id).update(parentDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
 
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
 
-        db.collection("Parents")
-                .whereEqualTo("email", emailEt1.getText().toString())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful() && !task.getResult().isEmpty()) {
+            }
+        });
 
-                            DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
-                            String documentId = documentSnapshot.getId();
-                            db.collection("Parents").document(documentId).update(parentDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-
-                                    Toast.makeText(parent_profile_activity.this, "details updated Successfully", Toast.LENGTH_SHORT).show();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(parent_profile_activity.this, "Some error happened", Toast.LENGTH_SHORT).show();
-
-                                }
-                            });
-
-                        }
-                        else {
-                            Log.d(TAG, "Error changing data", task.getException());
-
-                        }
-                    }
-                });
     }
 
-    private void updateUserInFirebase(String username, String phone, String address,int numOfKids, String maritalStatus, String gender, String language, String religion) {
+
+
+    private void updateUserInFirebase(String username, String phone, int numOfKids, String maritalStatus, String gender, String language, String religion) {
         Map<String,Object> userDetail = new HashMap<String, Object>();
         userDetail.put("username", username);
         userDetail.put("phoneNumber", phone);

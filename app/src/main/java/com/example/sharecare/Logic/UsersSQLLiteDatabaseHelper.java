@@ -128,4 +128,22 @@ public class UsersSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         db.update(TABLE_NAME, values, "id=?", new String[]{rowId});
         db.close();
     }
+
+    public void updateUser(String rowId,String phone, String email, String address, String password, int numKids, String marital, String gender, String language, String religion) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_PHONE_NUMBER, phone);
+        values.put(COLUMN_EMAIL, email);
+        values.put(COLUMN_ADDRESS, address);
+        values.put(COLUMN_PASSWORD, password);
+        values.put(COLUMN_NUMBER_OF_KIDS, numKids);
+        values.put(COLUMN_MARITAL_STATUS, marital);
+        values.put(COLUMN_GENDER, gender);
+        values.put(COLUMN_LANGUAGE, language);
+        values.put(COLUMN_RELIGION, religion);
+
+        db.update(TABLE_NAME, values, "id=?", new String[]{rowId});
+        db.close();
+    }
 }

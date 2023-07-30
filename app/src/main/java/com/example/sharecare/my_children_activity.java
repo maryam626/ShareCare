@@ -129,6 +129,7 @@ public class my_children_activity extends AppCompatActivity {
         kidsButtons.add(kid9Btn);
         kidsButtons.add(kid10Btn);
 
+        System.out.println(numberOfKids);
         for(int i = 0; i<Integer.parseInt(numberOfKids); i++){
             kidsButtons.get(i).setClickable(true);
             kidsButtons.get(i).setVisibility(View.VISIBLE);
@@ -323,12 +324,13 @@ public class my_children_activity extends AppCompatActivity {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for(int i = 0;i<queryDocumentSnapshots.getDocuments().size();i++) {
+                    if(!queryDocumentSnapshots.getDocuments().get(i).get("name").equals("first kid")){
                     kidsMap.put(queryDocumentSnapshots.getDocuments().get(i).getData().get("name").toString(),queryDocumentSnapshots.getDocuments().get(i).getData());
-                    queryDocumentSnapshots.getDocuments().get(i).getData().remove("first kid");
-                    queryDocumentSnapshots.getDocuments().remove("first kid");
-                    kidsMap.remove("first kid");
+                    //queryDocumentSnapshots.getDocuments().get(i).getData().remove("first kid");
+                    //queryDocumentSnapshots.getDocuments().remove("first kid");
+                    //kidsMap.remove("first kid");
                     kidsButtons.get(i).setText(queryDocumentSnapshots.getDocuments().get(i).getData().get("name").toString());
-                }
+                }}
                 System.out.println(kidsMap);
             }
         }).addOnFailureListener(new OnFailureListener() {
