@@ -13,7 +13,7 @@
         android:layout_marginTop="768dp"
         android:layout_marginEnd="128dp"
         android:backgroundTint="#24978C"
-        android:text="continue"
+        android:text="@string/continue111"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="TextContrastCheck" />
@@ -133,6 +133,6 @@
         android:layout_marginEnd="88dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

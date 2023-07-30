@@ -20,7 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="#24978C"
-            android:text="@string/add_child1" />
+            android:text="@string/add_child1"
+            tools:ignore="TextContrastCheck" />
 
         <Button
             android:id="@+id/mychildrenbtn"
