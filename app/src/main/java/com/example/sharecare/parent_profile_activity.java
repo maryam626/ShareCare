@@ -25,6 +25,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
+ import com.google.android.material.snackbar.Snackbar;
+
 public class parent_profile_activity extends AppCompatActivity implements addChildFragment.ChildFragmentListener {
     private static final String TAG = "profile activity";
 
@@ -136,6 +138,13 @@ public class parent_profile_activity extends AppCompatActivity implements addChi
                 languageEt.setEnabled(true);
                 religionEt.setEnabled(true);
 
+                // Find the view to anchor the Snackbar (e.g., the root view of your activity)
+                View rootView = findViewById(android.R.id.content);
+
+                // Create and show the Snackbar
+                Snackbar snackbar = Snackbar.make(rootView, "You are going to update your info", Snackbar.LENGTH_SHORT);
+                snackbar.show();
+
 
             }
         });
@@ -157,6 +166,7 @@ public class parent_profile_activity extends AppCompatActivity implements addChi
                 usersDatabaseHelper.updateUser(id, userNameTv.getText().toString(), phoneEt1.getText().toString(),emailEt1.getText().toString(), addressEt3.getText().toString(), passwordEt1.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
                 updateUserInFirebase(userNameTv.getText().toString(), phoneEt1.getText().toString(), addressEt3.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
                 updateParentInFirebase(userNameTv.getText().toString(), phoneEt1.getText().toString(), addressEt3.getText().toString(), Integer.parseInt(numKidsEt.getText().toString()), maritalEt.getText().toString(), genderEt.getText().toString(), languageEt.getText().toString(), religionEt.getText().toString());
+
             }
         });
 
