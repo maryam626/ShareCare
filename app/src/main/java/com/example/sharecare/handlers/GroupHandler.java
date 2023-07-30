@@ -16,6 +16,7 @@ import com.example.sharecare.models.Group;
 import com.example.sharecare.valdiators.CreateGroupValidator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -135,7 +136,7 @@ public class GroupHandler {
      * @param group Content values representing the group information.
      */
     public void addGroupToFirebase(long groupId, Group group) {
-        firebaseDb.collection("Groups")
+        Task<Void> task = firebaseDb.collection("Groups")
                 .document(String.valueOf(groupId))
                 .set(group)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -150,6 +151,10 @@ public class GroupHandler {
                         Log.w(TAG, "Error adding group to Firebase", e);
                     }
                 });
+
+        while(!task.isComplete()){
+
+        }
     }
 
     /**
@@ -196,7 +201,7 @@ public class GroupHandler {
      * @param values Content values representing the group participant information.
      */
     private void addGroupParticipantToFirebase(long groupParticipantId, ContentValues values) {
-        firebaseDb.collection("groupParticipants")
+        Task<Void> task = firebaseDb.collection("groupParticipants")
                 .document(String.valueOf(groupParticipantId))
                 .set(values)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -211,14 +216,17 @@ public class GroupHandler {
                         Log.w(TAG, "Error adding group participant to Firebase", e);
                     }
                 });
+        while(!task.isComplete()){
+
+        }
     }
 
     public List<String> getParticipantsExceptCurrent(int loggedInUserId) {
         List<String> participantList = new ArrayList<>();
-        firebaseDb.collection("Parents").whereNotEqualTo("id",loggedInUserId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        Task<QuerySnapshot> task = firebaseDb.collection("Parents").whereNotEqualTo("id", loggedInUserId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for(int i = 0;i< queryDocumentSnapshots.size();i++){
+                for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
                     participantList.add(queryDocumentSnapshots.getDocuments().get(i).get("username").toString());
                 }
             }
@@ -228,6 +236,10 @@ public class GroupHandler {
 
             }
         });
+
+        while(!task.isComplete()){
+
+        }
         return participantList;
 
         /*List<String> participantList = new ArrayList<>();

@@ -58,8 +58,6 @@ public class LogInFirebaseHandler {
         while(!task.isComplete()){
 
         }
-        System.out.println(results);
-        System.out.println(result);
         return results;
 
     }

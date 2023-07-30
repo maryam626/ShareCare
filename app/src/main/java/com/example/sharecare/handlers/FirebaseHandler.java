@@ -4,6 +4,7 @@ import com.example.sharecare.models.Activity;
 import com.example.sharecare.models.Host;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -29,10 +30,13 @@ public class FirebaseHandler {
         activityMap.put("ownerUserId", activity.getOwnerUserId());
         activityMap.put("groupId", activity.getGroupId());
 
-        firebaseDb.collection("Activities")
+        Task task = firebaseDb.collection("Activities")
                 .add(activityMap)
                 .addOnSuccessListener(successListener)
                 .addOnFailureListener(failureListener);
+        while(!task.isComplete()){
+
+        }
     }
 
     public void addingHostDataToFirebase(Host host, OnSuccessListener successListener, OnFailureListener failureListener){
@@ -50,9 +54,12 @@ public class FirebaseHandler {
         hostMap.put("religion", host.getReligion());
 
 
-        firebaseDb.collection("Hosts")
+        Task task = firebaseDb.collection("Hosts")
                 .add(hostMap)
                 .addOnSuccessListener(successListener)
                 .addOnFailureListener(failureListener);
+        while(!task.isComplete()){
+
+        }
     }
 }
