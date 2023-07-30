@@ -145,8 +145,8 @@ public class GroupHandler {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        addingActivityCollectionIntoGroupDocument(groupId);
-                        updateGroupId(groupId);
+                        //addingActivityCollectionIntoGroupDocument(groupId);
+                        //updateGroupId(groupId);
                         Log.d(TAG, "Group added to Firebase");
                     }
                 })
