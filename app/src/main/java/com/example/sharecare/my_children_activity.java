@@ -60,7 +60,7 @@ public class my_children_activity extends AppCompatActivity {
         setContentView(R.layout.activity_my_children);
 
         //here is the add child fragment code//
-        Button btnaddchild = findViewById(R.id.addChildbtn);
+        /*Button btnaddchild = findViewById(R.id.addChildbtn);
         btnaddchild.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,11 +73,11 @@ public class my_children_activity extends AppCompatActivity {
                         .commit();
 
             }
-        });
+        });*/
 
 
         //here is the my children fragment code//
-         Button btnmychildren = findViewById(R.id.mychildrenbtn);
+         /*Button btnmychildren = findViewById(R.id.mychildrenbtn);
         btnmychildren.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,7 +90,7 @@ public class my_children_activity extends AppCompatActivity {
                         .commit();
 
             }
-        });
+        });*/
 
         kid1Btn = (Button) findViewById(R.id.kid1Btn);
         kid2Btn = (Button) findViewById(R.id.kid2Btn);
