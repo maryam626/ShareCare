@@ -32,7 +32,8 @@
         android:id="@+id/returnButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Return"
-        android:onClick="returnToPreviousActivity" />
+        android:backgroundTint="#24978C"
+        android:onClick="returnToPreviousActivity"
+        android:text="Return" />
 
 </TableLayout>

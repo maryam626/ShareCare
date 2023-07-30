@@ -19,6 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="#24978C"
             android:text="@string/add_child1" />
 
         <Button
@@ -26,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="#24978C"
             android:text="@string/my_children1"
             tools:ignore="DuplicateSpeakableTextCheck" />
 
