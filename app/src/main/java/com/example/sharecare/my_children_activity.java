@@ -278,8 +278,8 @@ public class my_children_activity extends AppCompatActivity {
         addImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent(my_children_activity.this,CreateKidProfile.class);
-                startActivity(intent);*/
+                Intent intent = new Intent(my_children_activity.this,AddingNewKid.class);
+                startActivity(intent);
 
             }
         });
