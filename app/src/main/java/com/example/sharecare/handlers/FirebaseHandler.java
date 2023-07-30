@@ -1,17 +1,22 @@
 package com.example.sharecare.handlers;
 
+import androidx.annotation.NonNull;
+
 import com.example.sharecare.models.Activity;
 import com.example.sharecare.models.Host;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class FirebaseHandler {
     private FirebaseFirestore firebaseDb;
+    public static boolean isInFirebase;
+
 
     public FirebaseHandler(FirebaseFirestore db) {
         firebaseDb = db;
@@ -40,6 +45,9 @@ public class FirebaseHandler {
     }
 
     public void addingHostDataToFirebase(Host host, OnSuccessListener successListener, OnFailureListener failureListener){
+        boolean isInFirebase = checkIfTheHostIsAlreadyInFirebase(host);
+
+        if(!isInFirebase){
         Map<String, Object> hostMap = new HashMap<>();
         hostMap.put("id", "0");
         hostMap.put("username", host.getUsername());
@@ -60,6 +68,31 @@ public class FirebaseHandler {
                 .addOnFailureListener(failureListener);
         while(!task.isComplete()){
 
+        }}
+    }
+
+    private boolean checkIfTheHostIsAlreadyInFirebase(Host host) {
+        Task<QuerySnapshot> task = firebaseDb.collection("Hosts").whereEqualTo("email", host.getEmail()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if(queryDocumentSnapshots.size() > 0){
+                    FirebaseHandler.isInFirebase = true;
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                FirebaseHandler.isInFirebase = false;
+
+            }
+        });
+
+        while(!task.isComplete()){
+            System.out.print(1);
         }
+
+        System.out.println(FirebaseHandler.isInFirebase);
+
+        return FirebaseHandler.isInFirebase;
     }
 }

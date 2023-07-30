@@ -17,14 +17,17 @@ import com.example.sharecare.valdiators.CreateGroupValidator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * A handler class to manage group-related operations, including local database interactions and Firebase Firestore operations.
@@ -142,6 +145,8 @@ public class GroupHandler {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        addingActivityCollectionIntoGroupDocument(groupId);
+                        updateGroupId(groupId);
                         Log.d(TAG, "Group added to Firebase");
                     }
                 })
@@ -151,6 +156,47 @@ public class GroupHandler {
                         Log.w(TAG, "Error adding group to Firebase", e);
                     }
                 });
+
+        while(!task.isComplete()){
+
+        }
+    }
+
+    private void updateGroupId(long groupId) {
+        Map<String,Object> groupIdData = new HashMap<>();
+        groupIdData.put("id",String.valueOf(groupId));
+
+        Task<Void> task = firebaseDb.collection("Groups").document(String.valueOf(groupId)).update(groupIdData).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+        while(!task.isComplete()){
+
+        }
+    }
+
+    private void addingActivityCollectionIntoGroupDocument(long groupId) {
+        Map<String,Object> activityData = new HashMap<>();
+
+        Task<DocumentReference> task = firebaseDb.collection("Groups").document(String.valueOf(groupId)).collection("Activities").add(activityData).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
 
         while(!task.isComplete()){
 

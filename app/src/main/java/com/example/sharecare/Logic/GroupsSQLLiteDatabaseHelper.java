@@ -131,7 +131,7 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
     /** Fetch a list of all cities stored in the database */
     public List<String> loadCities() {
-        List<String> cityList = new ArrayList<>();
+        /*List<String> cityList = new ArrayList<>();
 
         firebaseDb.collection("Cities").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -146,9 +146,9 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
             }
         });
-        return cityList;
+        return cityList;*/
 
-        /*List<String> cityList = new ArrayList<>();
+        List<String> cityList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT DISTINCT name FROM cities ORDER BY name ASC", null);
 
@@ -162,13 +162,13 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        return cityList;*/
+        return cityList;
     }
 
     /** Fetch a list of all languages stored in the database */
     public List<String> loadLanguages() {
 
-        List<String> languagesList = new ArrayList<>();
+        /*List<String> languagesList = new ArrayList<>();
 
         firebaseDb.collection("Languages").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -183,9 +183,9 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
             }
         });
-        return languagesList;
+        return languagesList;*/
 
-        /*List<String> cityList = new ArrayList<>();
+        List<String> cityList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT DISTINCT name FROM languages ORDER BY name ASC", null);
 
@@ -199,13 +199,13 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        return cityList;*/
+        return cityList;
     }
 
     /** Fetch a list of all religions stored in the database */
     public List<String> loadReligions() {
 
-        List<String> religionsList = new ArrayList<>();
+        /*List<String> religionsList = new ArrayList<>();
 
         firebaseDb.collection("Religions").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -220,9 +220,9 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
             }
         });
-        return religionsList;
+        return religionsList;*/
 
-        /*List<String> cityList = new ArrayList<>();
+        List<String> cityList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT DISTINCT name FROM religions ORDER BY name ASC", null);
 
@@ -236,7 +236,7 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        return cityList;*/
+        return cityList;
     }
 
     /** Get the user ID based on the provided username */
