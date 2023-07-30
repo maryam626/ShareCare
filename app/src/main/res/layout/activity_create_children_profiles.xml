@@ -13,7 +13,7 @@
         android:layout_marginTop="768dp"
         android:layout_marginEnd="128dp"
         android:backgroundTint="#24978C"
-        android:text="@string/continue"
+        android:text="continue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="TextContrastCheck" />
