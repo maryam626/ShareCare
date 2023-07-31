@@ -59,6 +59,7 @@ public class AddingNewKid extends AppCompatActivity {
                         numKids++;
                         log_in_activity.numberOfKids = String.valueOf(numKids);
                         updatingNumberOfKidsFieldInFirebase();
+                        updateKidId(documentReference.getId());
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -76,6 +77,26 @@ public class AddingNewKid extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void updateKidId(String id) {
+        Map<String,Object> kidIdData = new HashMap<>();
+        kidIdData.put("id",id);
+        Task<Void> task = db.collection("Parents").document(log_in_activity.id).collection("myKids").document(id).update(kidIdData).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                //TODO
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //TODO
+            }
+        });
+
+        while(!task.isComplete()){
+
+        }
     }
 
     private void updatingNumberOfKidsFieldInFirebase() {
