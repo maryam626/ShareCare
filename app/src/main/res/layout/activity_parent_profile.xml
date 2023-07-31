@@ -21,7 +21,7 @@
                 android:background="#24978C"
                 android:elevation="4dp"
                 android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-                app:title="User Name" />
+                app:title="@string/user_name"  />
 
 
             <Button
