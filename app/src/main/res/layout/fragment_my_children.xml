@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:paddingTop="20dp"
-        android:text="My Children"
+        android:text="@string/my_children"
         android:textAlignment="center"
         android:textSize="34sp"
         android:textStyle="bold" />

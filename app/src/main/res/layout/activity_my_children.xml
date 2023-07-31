@@ -9,9 +9,6 @@
     android:rowCount="8"
     tools:context=".FillKidsInformation">
 
-
-
-
     <TextView
         android:id="@+id/myKidsTv"
         android:layout_width="match_parent"
@@ -163,6 +160,4 @@
         app:srcCompat="@android:drawable/ic_input_add"
         app:tint="#009688"
         tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck" />
-
-
 </GridLayout>

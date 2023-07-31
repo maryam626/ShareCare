@@ -9,15 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- Group Name TextView (Centered) -->
         <TextView
             android:id="@+id/groupNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Group Name: "
+            android:text="@string/group_name_with_dots"
             android:layout_centerHorizontal="true" />
 
-        <!-- Filter Toggle Button (Left-aligned) -->
         <Button
             android:id="@+id/filterToggleButton"
             android:layout_width="wrap_content"
@@ -27,10 +25,9 @@
             android:layout_marginTop="10dp"
             android:backgroundTint="@color/teal_700"
             android:drawableLeft="@drawable/ic_filter"
-            android:text="Filter"
+            android:text="@string/filter"
             android:textColor="#FFFFFF" />
 
-        <!-- Create Activity Button (Right-aligned) -->
         <Button
             android:id="@+id/createActivityButton"
             android:layout_width="wrap_content"
@@ -39,8 +36,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginTop="10dp"
             android:backgroundTint="@color/teal_700"
-            android:text="Create Activity" />
-
+            android:text="@string/create_activity" />
         <!-- Rest of the layout remains the same -->
 
         <LinearLayout
@@ -55,7 +51,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Activity Type"
+                android:text="@string/activity_type"
                 android:layout_marginBottom="5dp" />
 
             <Spinner
@@ -68,7 +64,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Capacity Range" />
+                android:text="@string/capacity_range" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -81,7 +77,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="number"
-                    android:hint="From" />
+                    android:hint="@string/from"  />
 
                 <EditText
                     android:id="@+id/capacityTo"
@@ -89,14 +85,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="number"
-                    android:hint="To" />
+                    android:hint="@string/to"  />
 
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Duration In Hours Range" />
+                android:text="@string/duration_in_hours95"  />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -109,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="number"
-                    android:hint="From" />
+                    android:hint="@string/from" />
 
                 <EditText
                     android:id="@+id/durationTo"
@@ -117,14 +113,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="number"
-                    android:hint="To" />
+                    android:hint="@string/to" />
 
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Age Range" />
+                android:text="@string/age_range" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -137,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="number"
-                    android:hint="From" />
+                    android:hint="@string/from" />
 
                 <EditText
                     android:id="@+id/ageTo"
@@ -145,14 +141,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="number"
-                    android:hint="To" />
+                    android:hint="@string/to" />
 
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Date Range"
+                android:text="@string/date_range"
                 android:layout_marginBottom="5dp" />
 
             <LinearLayout
@@ -165,19 +161,19 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Select Start Date" />
+                    android:text="@string/select_start_date" />
                 <Button
                     android:id="@+id/selectEndDateButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Select End Date" />
+                    android:text="@string/select_end_date"  />
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Time Range"
+                android:text="@string/time_range"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp" />
 
@@ -190,7 +186,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Select Start Time" />
+                    android:text="@string/select_start_time" />
 
 
                 <Button
@@ -198,14 +194,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Select End Time" />
+                    android:text="@string/select_end_time" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/submitFilterButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Submit Filter"
+                android:text="@string/submit_filter"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp" />
         </LinearLayout>

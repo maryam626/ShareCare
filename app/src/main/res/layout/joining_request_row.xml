@@ -38,6 +38,4 @@
         android:layout_below="@id/date"
         android:background="#817F7F"/>
 
-
-
 </RelativeLayout>
