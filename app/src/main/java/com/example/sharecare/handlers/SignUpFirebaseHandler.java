@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -85,7 +86,7 @@ public class SignUpFirebaseHandler {
      */
     public void addParentDataToFirebase(String id, String username, String phoneNumber, String email, String address, String password, int numberOfKids, String maritalStatus, String gender, String language, String religion, sign_up_activity activity) {
         Map<String, Object> parent = new HashMap<>();
-        parent.put("id", id);
+        parent.put("id", "0");
         parent.put("username", username);
         parent.put("phoneNumber", phoneNumber);
         parent.put("email", email);
@@ -97,24 +98,25 @@ public class SignUpFirebaseHandler {
         parent.put("language", language);
         parent.put("religion", religion);
 
-        Task<Void> task = db.collection("Parents").document(id).set(parent)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+        Task<DocumentReference> task = db.collection("Parents").add(parent).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        updateIdForParent(id, email, activity);
+                    public void onSuccess(DocumentReference documentReference) {
+                        updateIdForParent(documentReference.getId(), email, activity);
                         Map<String, Object> data = new HashMap<>();
                         data.put("name", "first kid");
                         db.collection("Parents").document(id).collection("myKids").add(data);
 
                         Log.d(TAG, "DocumentSnapshot added with ID: " + id);
+
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
+                }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error adding document", e);
+
                     }
                 });
+
         while(!task.isComplete()){
             
         }
