@@ -36,7 +36,7 @@ public class home_page_parent_activity extends AppCompatActivity {
 
     public static User loggedInUser;
 
-    private TextView nameTv;
+    private TextView textView10;
 
     private SharedPreferences sharedPreferences;
 
@@ -50,14 +50,14 @@ public class home_page_parent_activity extends AppCompatActivity {
 
         buttonSearchGroups = findViewById(R.id.buttonSearchGroups);
         myChildrenButton = findViewById(R.id.myChildrenButton);
+        textView10 = findViewById(R.id.textView10);
 
         buttonMyGroups = findViewById(R.id.buttonMyGroups);
         myProfileBtn = findViewById(R.id.myProfileBtn);
-        nameTv = (TextView) findViewById(R.id.nameTv);
         logOutIv = (ImageView) findViewById(R.id.logOutIv);
         id = getIntent().getStringExtra("id");
         userName = getIntent().getStringExtra("username");
-        nameTv.setText("     "+userName.substring(0,1).toUpperCase(Locale.ROOT) +  userName.substring(1));
+        textView10.setText("hello, "+userName.substring(0,1).toUpperCase(Locale.ROOT) +  userName.substring(1));
         phoneNumber = getIntent().getStringExtra("phone_number");
         email = getIntent().getStringExtra("email");
         address = getIntent().getStringExtra("address");
