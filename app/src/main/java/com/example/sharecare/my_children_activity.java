@@ -72,17 +72,17 @@ public class my_children_activity extends AppCompatActivity {
 
         addImageButton = (ImageButton) findViewById(R.id.addImageButton);
 
-        id = getIntent().getStringExtra("id");
-        userName = getIntent().getStringExtra("username");
-        phoneNumber = getIntent().getStringExtra("phone_number");
-        email = getIntent().getStringExtra("email");
-        address = getIntent().getStringExtra("address");
-        password = getIntent().getStringExtra("password");
-        numberOfKids = getIntent().getStringExtra("number_of_kids");
-        maritalStatus = getIntent().getStringExtra("marital_status");
-        gender = getIntent().getStringExtra("gender");
-        language = getIntent().getStringExtra("language");
-        religion = getIntent().getStringExtra("religion");
+        id = log_in_activity.id;
+        userName = log_in_activity.username;
+        phoneNumber = log_in_activity.phoneNumber;
+        email = log_in_activity.email;
+        address = log_in_activity.address;
+        password = log_in_activity.password;
+        numberOfKids = log_in_activity.numberOfKids;
+        maritalStatus = log_in_activity.maritalStatus;
+        gender = log_in_activity.gender;
+        language = log_in_activity.language;
+        religion = log_in_activity.religion;
 
         kidsButtons = new ArrayList<>();
         kidsButtons.add(kid1Btn);
