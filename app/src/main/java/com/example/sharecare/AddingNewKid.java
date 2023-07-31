@@ -12,6 +12,7 @@ import android.widget.Spinner;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -51,7 +52,7 @@ public class AddingNewKid extends AppCompatActivity {
                 kidDetails.put("schoolName", schoolNameEt.getText().toString());
 
 
-                db.collection("Parents").document(log_in_activity.id).collection("myKids").add(kidDetails).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                Task<DocumentReference> task = db.collection("Parents").document(log_in_activity.id).collection("myKids").add(kidDetails).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         int numKids = Integer.parseInt(log_in_activity.numberOfKids);
@@ -64,6 +65,10 @@ public class AddingNewKid extends AppCompatActivity {
 
                     }
                 });
+
+                while(!task.isComplete()){
+
+                }
 
                 Intent intent = new Intent(AddingNewKid.this,my_children_activity.class);
                 startActivity(intent);

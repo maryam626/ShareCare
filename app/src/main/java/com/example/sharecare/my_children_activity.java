@@ -97,7 +97,7 @@ public class my_children_activity extends AppCompatActivity {
         kidsButtons.add(kid10Btn);
 
         System.out.println(numberOfKids);
-        for(int i = 0; i<Integer.parseInt(numberOfKids); i++){
+        for(int i = 0; i<Integer.parseInt(log_in_activity.numberOfKids); i++){
             kidsButtons.get(i).setClickable(true);
             kidsButtons.get(i).setVisibility(View.VISIBLE);
         }
@@ -287,7 +287,7 @@ public class my_children_activity extends AppCompatActivity {
     }
 
     private void loadKidsData() {
-            Task<QuerySnapshot> task = db.collection("Parents").document(id).collection("myKids").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            Task<QuerySnapshot> task = db.collection("Parents").document(log_in_activity.id).collection("myKids").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for(int i = 0;i<queryDocumentSnapshots.getDocuments().size();i++) {
