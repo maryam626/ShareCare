@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.example.sharecare.handlers.CreateKidProfileFirebaseHandler;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -26,6 +27,7 @@ public class AddingNewKid extends AppCompatActivity {
     private Spinner genderSpinner1;
     private Button finishBtn;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    CreateKidProfileFirebaseHandler createKidProfileFirebaseHandler;
 
 
     @Override
@@ -39,6 +41,8 @@ public class AddingNewKid extends AppCompatActivity {
         genderSpinner1 = findViewById(R.id.genderSpinner1);
         finishBtn = findViewById(R.id.finishBtn);
 
+        createKidProfileFirebaseHandler = new CreateKidProfileFirebaseHandler();
+
 
         finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,8 +55,7 @@ public class AddingNewKid extends AppCompatActivity {
                 kidDetails.put("parent", log_in_activity.id);
                 kidDetails.put("schoolName", schoolNameEt.getText().toString());
 
-
-                Task<DocumentReference> task = db.collection("Parents").document(log_in_activity.id).collection("myKids").add(kidDetails).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                createKidProfileFirebaseHandler.addKidData(kidDetails, new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         int numKids = Integer.parseInt(log_in_activity.numberOfKids);
@@ -60,18 +63,33 @@ public class AddingNewKid extends AppCompatActivity {
                         log_in_activity.numberOfKids = String.valueOf(numKids);
                         updatingNumberOfKidsFieldInFirebase();
                         updateKidId(documentReference.getId());
+                        createKidProfileFirebaseHandler.addKidToParentCollection(log_in_activity.id, documentReference.getId(), kidDetails, new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                createKidProfileFirebaseHandler.addKidToUsersCollection(log_in_activity.id, documentReference.getId(), kidDetails, new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
 
+                                    }
+                                }, new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
+                            }
+                        }, new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
                     }
-                }).addOnFailureListener(new OnFailureListener() {
+                }, new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-
                     }
                 });
-
-                while(!task.isComplete()){
-
-                }
 
                 Intent intent = new Intent(AddingNewKid.this,my_children_activity.class);
                 startActivity(intent);
