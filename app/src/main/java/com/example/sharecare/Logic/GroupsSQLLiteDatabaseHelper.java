@@ -112,6 +112,23 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
     /** Fetch a list of unique cities where groups are based */
     public List<String> getGroupsDistinctCities() {
+        /*List<String> cityList = new ArrayList<>();
+        firebaseDb.collection("Cities").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(int i = 0; i<queryDocumentSnapshots.size();i++) {
+                    cityList.add(queryDocumentSnapshots.getDocuments().get(i).get("name").toString());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+        return cityList;*/
+
         List<String> cityList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("select distinct city as cityName from groups  ORDER BY city ASC", null);
