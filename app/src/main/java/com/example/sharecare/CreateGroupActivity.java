@@ -213,7 +213,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         List<String> participantList = groupHandler.getParticipantsExceptCurrent(loggedInUserId);
         groupHandler.close();
         if (participantList.isEmpty()) {
-            participantList.add("No other participants available");
+            participantList.add("please select");
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, participantList);
         participantsSpinner.setAdapter(adapter);
