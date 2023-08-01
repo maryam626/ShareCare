@@ -41,10 +41,10 @@ public class ActivityHandler {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            // This method is called on the UI thread after the background task is completed.
-            // You can add any UI updates or notifications here if needed.
         }
     }
+
+
 
     private ActivitySQLLiteDatabaseHelper databaseHelper;
     private FirebaseHandler firebaseHandler;
@@ -67,8 +67,6 @@ public class ActivityHandler {
         // Update the activity in Firebase
         firebaseHandler.updateActivityDataInFirebase(activity, successListener, failureListener);
     }
-
-
 
     //sync sqllite with firestore , this will run async (non blocking for ui)
     public void Sync()

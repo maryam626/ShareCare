@@ -15,7 +15,6 @@ public class ActivityDialog extends Dialog {
     private String date;
     private String time;
     private String capacity;
-
     private String duration;
     private String child_age_from;
     private String child_age_to;

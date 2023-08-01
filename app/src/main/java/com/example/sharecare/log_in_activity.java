@@ -12,16 +12,12 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.Logic.UsersSQLLiteDatabaseHelper;
 import com.example.sharecare.handlers.LogInFirebaseHandler;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import java.util.ArrayList;
 
 public class log_in_activity extends AppCompatActivity {
     private static final String TAG = "log in";
@@ -29,8 +25,6 @@ public class log_in_activity extends AppCompatActivity {
 
     private TextView messageTextView;
     private TextView SignUpBtn;
-    private AlertDialog.Builder dialogBuilder;
-    private AlertDialog dialog;
     private EditText EtEmail;
     private EditText EtPassword;
     private Button logInBtn;
@@ -51,7 +45,6 @@ public class log_in_activity extends AppCompatActivity {
     private LogInFirebaseHandler logInFirebaseHandler;
     private FirebaseFirestore db;
 
-    ArrayList<QueryDocumentSnapshot> result = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

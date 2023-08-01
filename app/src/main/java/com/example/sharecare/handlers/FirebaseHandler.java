@@ -24,7 +24,6 @@ public class FirebaseHandler {
     private FirebaseFirestore firebaseDb;
     public static boolean isInFirebase;
 
-
     public FirebaseHandler(FirebaseFirestore db) {
         firebaseDb = db;
     }
