@@ -27,7 +27,7 @@ import java.util.Map;
 
  import com.google.android.material.snackbar.Snackbar;
 
-public class parent_profile_activity extends AppCompatActivity implements addChildFragment.ChildFragmentListener {
+public class parent_profile_activity extends AppCompatActivity{
     private static final String TAG = "profile activity";
 
 
@@ -242,15 +242,6 @@ public class parent_profile_activity extends AppCompatActivity implements addChi
                 });
     }
 
-    @Override
-    public void onChildDataAdded(String name, int age, String gender, String schoolName) {
-         // Handle the data sent from the child fragment here
-        // You can do whatever you want with the data, e.g., save it to variables or display it
-        Log.d("MainActivity", "Child's Name: " + name);
-        Log.d("MainActivity", "Child's Age: " + age);
-        Log.d("MainActivity", "Child's Gender: " + gender);
-        Log.d("MainActivity", "Child's School Name: " + schoolName);
-    }
 
     private void setSupportActionBar(Toolbar toolbar) {
     }

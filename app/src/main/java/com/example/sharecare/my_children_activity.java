@@ -34,6 +34,9 @@ public class my_children_activity extends AppCompatActivity {
     private Button kid9Btn;
     private Button kid10Btn;
 
+    private Button myKidsBtn;
+    private Button addChildBtn;
+
     private ImageButton addImageButton;
 
     private ArrayList<Button> kidsButtons;
@@ -59,7 +62,26 @@ public class my_children_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_children);
 
-        kid1Btn = (Button) findViewById(R.id.kid1Btn);
+        myKidsBtn = findViewById(R.id.myKidsBtn);
+        addChildBtn = findViewById(R.id.addChildBtn);
+
+        myKidsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.fragmentContainerView2,myChildrenFragment.class,null).setReorderingAllowed(true).addToBackStack("name").commit();
+            }
+        });
+
+        addChildBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.fragmentContainerView2,addChildFragment.class,null).setReorderingAllowed(true).addToBackStack("name").commit();
+            }
+        });
+
+        /*kid1Btn = (Button) findViewById(R.id.kid1Btn);
         kid2Btn = (Button) findViewById(R.id.kid2Btn);
         kid3Btn = (Button) findViewById(R.id.kid3Btn);
         kid4Btn = (Button) findViewById(R.id.kid4Btn);
@@ -306,6 +328,6 @@ public class my_children_activity extends AppCompatActivity {
         });
         while(!task.isComplete()){
 
-        }
+        }*/
     }
 }
