@@ -55,6 +55,7 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
+        android:id="@+id/cityText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/select_city"/>
@@ -64,9 +65,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:entries="@array/Cities"
         android:minHeight="48dp"
         android:spinnerMode="dropdown"
         tools:ignore="SpeakableTextPresentCheck" />
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -84,6 +87,7 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
+        android:id="@+id/participantsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/select_participants"/>
@@ -120,6 +124,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:entries="@array/Religions"
         android:minHeight="48dp"
         android:minWidth="48dp"
         tools:ignore="SpeakableTextPresentCheck" />
@@ -129,7 +134,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#24978C"
-        android:text="@string/create"
+        android:text="@string/Save"
         tools:ignore="TextContrastCheck" />
 
     </LinearLayout>

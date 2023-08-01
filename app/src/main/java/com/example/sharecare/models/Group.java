@@ -1,8 +1,9 @@
 package com.example.sharecare.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Group {
+public class Group implements Serializable {
     private int id;
     private String groupName;
     private String briefInformation;
@@ -14,6 +15,9 @@ public class Group {
     private int ageTo;
     private String city;
     private String street;
+
+
+
     private String language;
     private String religion;
 
@@ -144,6 +148,14 @@ public class Group {
     public String getReligion(){return religion;}
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public void setReligion(String religion) {
+        this.religion = religion;
     }
 
     @Override
