@@ -1,5 +1,6 @@
 package com.example.sharecare.handlers;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -38,6 +39,31 @@ public class LogInFirebaseHandler {
     }
 
     public ArrayList<DocumentSnapshot> getParentData(String email, log_in_activity activity) {
+
+        Task<QuerySnapshot> task = db.collection("Parents").whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+
+                    results.add(task.getResult().getDocuments().get(0));
+                    result = task.getResult().getDocuments().get(0);
+                    log_in_activity.puttingDataInVariables(result);
+                    Log.d(TAG, results.get(0).getId() + " => " + results.get(0).getData());
+
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+        while(!task.isComplete()){
+
+        }
+        return results;
+
+    }
+
+    public ArrayList<DocumentSnapshot> getParentDataTwo(String email, Context activity) {
 
         Task<QuerySnapshot> task = db.collection("Parents").whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

@@ -1,5 +1,6 @@
 package com.example.sharecare.handlers;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -51,6 +52,30 @@ public class SignUpFirebaseHandler {
     public void registerUser(String email, String password, sign_up_activity activity) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(activity, "Successfully Registered", Toast.LENGTH_SHORT).show();
+                        } else {
+                            try {
+                                throw task.getException();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            Toast.makeText(activity, "Registration failed. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Registers a new user using email and password on Firebase.
+     * @param email User's email address.
+     * @param password User's password.
+     * @param activity The activity from which this method is called.
+     */
+    public void registerUserForFragment(String email, String password, Context activity) {
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -123,6 +148,60 @@ public class SignUpFirebaseHandler {
 
     }
 
+    /**
+     * Adds the parent's data to Firestore under the "Parents" collection.
+     * @param id Unique ID for the parent.
+     * @param username Username of the parent.
+     * @param phoneNumber Parent's phone number.
+     * @param email Parent's email address.
+     * @param address Parent's residential address.
+     * @param password Parent's password.
+     * @param numberOfKids Number of kids the parent has.
+     * @param maritalStatus Parent's marital status.
+     * @param gender Parent's gender.
+     * @param language Parent's primary language.
+     * @param religion Parent's religion.
+     * @param activity The activity from which this method is called.
+     */
+    public void addParentDataToFirebaseForFragment(String id, String username, String phoneNumber, String email, String address, String password, int numberOfKids, String maritalStatus, String gender, String language, String religion, Context activity) {
+        Map<String, Object> parent = new HashMap<>();
+        parent.put("id", "0");
+        parent.put("username", username);
+        parent.put("phoneNumber", phoneNumber);
+        parent.put("email", email);
+        parent.put("address", address);
+        parent.put("password", password);
+        parent.put("numberOfKids", String.valueOf(numberOfKids));
+        parent.put("maritalStatus", maritalStatus);
+        parent.put("gender", gender);
+        parent.put("language", language);
+        parent.put("religion", religion);
+
+        Task<DocumentReference> task = db.collection("Parents").add(parent).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                updateIdForParentForFragment(documentReference.getId(), email, activity);
+                Map<String, Object> data = new HashMap<>();
+                data.put("name", "first kid");
+                db.collection("Parents").document(id).collection("myKids").add(data);
+
+                Log.d(TAG, "DocumentSnapshot added with ID: " + id);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error adding document", e);
+
+            }
+        });
+
+        while(!task.isComplete()){
+
+        }
+
+    }
+
 
     /**
      * Updates the ID field for a parent in the "Parents" collection of Firestore.
@@ -131,6 +210,47 @@ public class SignUpFirebaseHandler {
      * @param activity The activity from which this method is called.
      */
     private void updateIdForParent(String id, String email, sign_up_activity activity) {
+        Map<String, Object> parentDetail = new HashMap<>();
+        parentDetail.put("id", id);
+
+        Task<QuerySnapshot> task = db.collection("Parents")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                            DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                            String documentId = documentSnapshot.getId();
+                            db.collection("Parents").document(documentId).update(parentDetail)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Toast.makeText(activity, "id updated Successfully", Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(activity, "Some error happened", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        } else {
+                            Log.d(TAG, "Error changing data", task.getException());
+                        }
+                    }
+                });
+        while(!task.isComplete()){
+
+        }
+    }
+    /**
+     * Updates the ID field for a parent in the "Parents" collection of Firestore.
+     * @param id Unique ID of the parent.
+     * @param email Parent's email address used to query the database.
+     * @param activity The activity from which this method is called.
+     */
+    private void updateIdForParentForFragment(String id, String email, Context activity) {
         Map<String, Object> parentDetail = new HashMap<>();
         parentDetail.put("id", id);
 

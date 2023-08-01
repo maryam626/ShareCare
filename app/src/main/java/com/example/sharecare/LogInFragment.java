@@ -1,31 +1,41 @@
 package com.example.sharecare;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-
 import com.example.sharecare.Logic.UsersSQLLiteDatabaseHelper;
 import com.example.sharecare.handlers.LogInFirebaseHandler;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-public class log_in_activity extends AppCompatActivity {
-    private static final String TAG = "log in";
+import java.util.ArrayList;
+
+public class LogInFragment extends Fragment {
+    private static final String TAG = "log in fragment";
     private SharedPreferences sharedPreferences;
 
     private TextView messageTextView;
     private TextView SignUpBtn;
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
     private EditText EtEmail;
     private EditText EtPassword;
     private Button logInBtn;
@@ -42,54 +52,34 @@ public class log_in_activity extends AppCompatActivity {
     public static String language;
     public static String religion;
 
-    private Button logInBtn2;
-    private Button signUpBtn2;
+    View view;
 
     private UsersSQLLiteDatabaseHelper databaseHelper;
     private LogInFirebaseHandler logInFirebaseHandler;
     private FirebaseFirestore db;
 
-
+    ArrayList<QueryDocumentSnapshot> result = new ArrayList<>();
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_log_in);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_log_in, container, false);
+
+        db = FirebaseFirestore.getInstance();
 
 
-        logInBtn2 = findViewById(R.id.logInBtn2);
-        signUpBtn2 = findViewById(R.id.signUpBtn2);
-
-        logInBtn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.fragmentContainerView3,LogInFragment.class,null).setReorderingAllowed(true).addToBackStack("name").commit();
-            }
-        });
-
-        signUpBtn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.fragmentContainerView3,SignUpFragment.class,null).setReorderingAllowed(true).addToBackStack("name").commit();
-            }
-        });
-
-        /*db = FirebaseFirestore.getInstance();
-
-
-        databaseHelper = new UsersSQLLiteDatabaseHelper(this);
-        EtPassword = (EditText) findViewById(R.id.EtPassword);
-        EtEmail = (EditText) findViewById(R.id.EtEmail);
-        messageTextView =  findViewById(R.id.messageTextView);
-        logInBtn = (Button) findViewById(R.id.logInBtn);
-        rememberCheckBox = (CheckBox) findViewById(R.id.rememberCheckBox);
-        SignUpBtn = (TextView) findViewById(R.id.SignUpBtn);
+        databaseHelper = new UsersSQLLiteDatabaseHelper(view.getContext());
+        EtPassword = (EditText) view.findViewById(R.id.EtPassword);
+        EtEmail = (EditText) view.findViewById(R.id.EtEmail);
+        messageTextView =  view.findViewById(R.id.messageTextView);
+        logInBtn = (Button) view.findViewById(R.id.logInBtn);
+        rememberCheckBox = (CheckBox) view.findViewById(R.id.rememberCheckBox);
+        SignUpBtn = (TextView) view.findViewById(R.id.SignUpBtn);
 
         logInFirebaseHandler = new LogInFirebaseHandler();
 
         // Initialize SharedPreferences
-        sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        sharedPreferences = view.getContext().getSharedPreferences("login_prefs", MODE_PRIVATE);
 
         // Check if rememberCheckBox state is saved and set it accordingly
         boolean rememberMeChecked = sharedPreferences.getBoolean("remember_me", false);
@@ -109,7 +99,7 @@ public class log_in_activity extends AppCompatActivity {
         SignUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(log_in_activity.this, sign_up_activity.class);
+                Intent intent = new Intent(view.getContext(), sign_up_activity.class);
                 startActivity(intent);
             }
         });
@@ -144,8 +134,8 @@ public class log_in_activity extends AppCompatActivity {
             }
         });
 
+        return view;
     }
-
 
     private void performLogin(String email, String password) {
         // Your login authentication logic here
@@ -153,9 +143,9 @@ public class log_in_activity extends AppCompatActivity {
         // If login fails, show an error message or handle accordingly
 
         if (validateCredentials(email, password)) {
-            Intent intent = new Intent(log_in_activity.this, home_page_parent_activity.class);
+            Intent intent = new Intent(view.getContext(), home_page_parent_activity.class);
             gettingUserData();
-            logInFirebaseHandler.getParentData(EtEmail.getText().toString(), log_in_activity.this);
+            logInFirebaseHandler.getParentDataTwo(EtEmail.getText().toString(),view.getContext());
             //puttingDataInVariables(logInFirebaseHandler.getParentData(EtEmail.getText().toString(),log_in_activity.this));
 
             //Sending Data To Home Page Using Bundle
@@ -174,13 +164,10 @@ public class log_in_activity extends AppCompatActivity {
 
             intent.putExtras(extras);
             startActivity(intent);
-            finish();
         } else {
             messageTextView.setVisibility(View.VISIBLE);
             messageTextView.setText("Email or password is incorrect");
         }
-    }*/
-
     }
     public static void puttingDataInVariables(DocumentSnapshot result) {
         address = result.get("address").toString();
@@ -211,7 +198,7 @@ public class log_in_activity extends AppCompatActivity {
 
     }
 
-    /*private void gettingUserData() {
+    private void gettingUserData() {
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         String[] columns = {"id","username","phone_number","email","address","password","number_of_kids","marital_status","gender", "language","religion"};
         String selection = "email = ? AND password = ?";
@@ -363,7 +350,5 @@ public class log_in_activity extends AppCompatActivity {
         db.close();
 
         return isValid;
-    }*/
-
-
+    }
 }
