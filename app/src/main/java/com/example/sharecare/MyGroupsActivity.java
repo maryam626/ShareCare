@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
+import com.example.sharecare.models.Group;
 import com.example.sharecare.models.GroupDataDTO;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -67,7 +68,7 @@ public class MyGroupsActivity extends AppCompatActivity {
     }
 
     private void loadGroups() {
-        List<GroupDataDTO> groupsList =getGroupsForUser(  getLoggedInUserId());
+        List<GroupDataDTO> groupsList =getGroupsForUser(getLoggedInUserId());
         addGroupsToTable(groupsList);
     }
 
@@ -75,19 +76,21 @@ public class MyGroupsActivity extends AppCompatActivity {
         List<GroupDataDTO> groupsList = new ArrayList<>();
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
 
-        String query = "SELECT distinct " +
-                "groups.id AS groupid, " +
-                "groups.groupName, " +
-                "CASE " +
-                "   WHEN groups.hostUserId = ? THEN 1 " +
-                "   ELSE 0 " +
-                "END AS iamhost " +
+        String query = "SELECT DISTINCT " +
+                "    groups.id AS groupid, groups.groupName, groups.description, groups.hostUserId, " +
+                "    groups.city, groups.street, groups.language, groups.religion," +
+                "    CASE " +
+                "        WHEN groups.hostUserId = ? THEN 1 " +
+                "        ELSE 0 " +
+                "    END AS iamhost " +
                 "FROM " +
-                "groups " +
+                "    groups " +
                 "LEFT JOIN " +
-                "groupsRequest ON groups.id = groupsRequest.groupid AND groupsRequest.userid = ? AND groupsRequest.isaccept = 1 " +
+                "    groupsRequest ON groups.id = groupsRequest.groupid AND groupsRequest.userid = ? AND groupsRequest.isaccept = 1 " +
                 "WHERE " +
-                "groups.hostUserId = ? OR groupsRequest.id IS NOT NULL";
+                "    groups.hostUserId = ? OR groupsRequest.id IS NOT NULL;";
+
+
 
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(currentUserId), String.valueOf(currentUserId), String.valueOf(currentUserId)});
 
@@ -95,9 +98,15 @@ public class MyGroupsActivity extends AppCompatActivity {
             do {
                 int groupId = cursor.getInt(cursor.getColumnIndex("groupid"));
                 String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
+                String briefInformation = cursor.getString(cursor.getColumnIndex("description"));
+                int hostUserId = cursor.getInt(cursor.getColumnIndex("hostUserId"));
+                String city = cursor.getString(cursor.getColumnIndex("city"));
+                String street = cursor.getString(cursor.getColumnIndex("street"));
+                String language = cursor.getString(cursor.getColumnIndex("language"));
+                String religion = cursor.getString(cursor.getColumnIndex("religion"));
                 boolean iamHost = cursor.getInt(cursor.getColumnIndex("iamhost")) == 1;
-
-                GroupDataDTO groupData = new GroupDataDTO(groupId, groupName, iamHost);
+                Group group = new Group(groupId, groupName, briefInformation, city, street, language, religion);
+                GroupDataDTO groupData = new GroupDataDTO(group, iamHost);
                 groupsList.add(groupData);
             } while (cursor.moveToNext());
         }
@@ -113,8 +122,8 @@ public class MyGroupsActivity extends AppCompatActivity {
     private void addGroupsToTable(List<GroupDataDTO> groupsList) {
 
         for (GroupDataDTO groupdata: groupsList) {
-                int groupId = groupdata.getGroupId();
-                String groupName = groupdata.getGroupName();
+                int groupId = groupdata.getGroup().getId();
+                String groupName = groupdata.getGroup().getGroupName();
                 boolean isIamHost = groupdata.isIamHost();
 
                 // Create a new row in the table
@@ -155,16 +164,31 @@ public class MyGroupsActivity extends AppCompatActivity {
                 if(isIamHost)
                 {
                     // Create buttons for delete, and manage requests
+
+
                     Button deleteButton = new Button(this);
                     deleteButton.setText("Delete");
-                  //  deleteButton.setPadding(2, 2, 2, 2);
                     row.addView(deleteButton);
 
-                    //for now we will not support edit button
-//                    Button editButton = new Button(this);
-//                    editButton.setText("Edit");
-//                    editButton.setPadding(8, 8, 8, 8);
-//                    row.addView(editButton);
+                    Button editButton = new Button(this);
+                    editButton.setText("Edit");
+                    editButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Intent intent = new Intent(MyGroupsActivity.this, CreateGroupActivity.class);
+                            Bundle extras = new Bundle();
+                            extras.putInt("userid", loggedInUserId);
+                            extras.putInt("groupid", groupId);
+                            extras.putString("username", loggedInUsername);
+                            extras.putInt("ishost", isIamHost ? 1 : 0);
+                            extras.putInt("isEdit", 1);
+                            extras.putSerializable("currentgroupdata", groupdata);
+                            intent.putExtras(extras);
+                            startActivity(intent);
+                        }
+                    });
+                    row.addView(editButton);
 
                     Button manageRequestsButton = new Button(this);
                     manageRequestsButton.setText("Manage Requests");

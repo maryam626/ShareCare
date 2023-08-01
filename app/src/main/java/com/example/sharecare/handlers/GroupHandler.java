@@ -132,6 +132,76 @@ public class GroupHandler {
         return groupId;
     }
 
+
+    /**
+     * Updates an existing group in the local database and then updates it in Firebase.
+     *
+     * @param groupId The ID of the group to be updated.
+     * @param groupName The new group name.
+     * @param description The new group description.
+     * @param city The new city for the group.
+     * @param street The new street for the group.
+     * @param language The new language for the group.
+     * @param religion The new religion for the group.
+     * @param hostUserId The host user ID of the group.
+     * @return true if the update was successful, false otherwise.
+     */
+    public boolean updateGroup(long groupId, String groupName, String description, String city, String street, String language, String religion, int hostUserId) {
+        if (!CreateGroupValidator.isGroupNameValid(groupName)) {
+            return false; // Invalid group name
+        }
+
+        if (!CreateGroupValidator.isDescriptionValid(description)) {
+            return false; // Invalid description
+        }
+
+        if (!CreateGroupValidator.isValidCity(city)) {
+            return false; // Invalid city
+        }
+
+        if (!CreateGroupValidator.isStreetValid(street)) {
+            return false; // Invalid street
+        }
+
+        SQLiteDatabase db = groupsDatabaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("groupName", groupName);
+        values.put("description", description);
+        values.put("city", city);
+        values.put("street", street);
+        values.put("language", language);
+        values.put("religion", religion);
+        values.put("hostUserId", hostUserId);
+
+        int rowsAffected = db.update("groups", values, "id = ?", new String[]{String.valueOf(groupId)});
+        db.close();
+
+        if (rowsAffected > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Updates the group data in Firebase Firestore.
+     *
+     * @param groupId The ID of the group to be updated in Firebase.
+     * @param updatedGroup The updated group object.
+     * @param successListener Listener to be called on success.
+     * @param failureListener Listener to be called on failure.
+     */
+    public void updateGroupInFirebase(long groupId, Group updatedGroup,
+                                       OnSuccessListener<Void> successListener,
+                                       OnFailureListener failureListener) {
+
+        firebaseDb.collection("Groups")
+                .document(String.valueOf(groupId))
+                .set(updatedGroup)
+                .addOnSuccessListener(successListener)
+                .addOnFailureListener(failureListener);
+    }
     /**
      * Adds group information to Firebase Firestore.
      *

@@ -1,25 +1,30 @@
 package com.example.sharecare.models;
 
-public class GroupDataDTO {
-    private int groupId;
-    private String groupName;
+import java.io.Serializable;
+
+public class GroupDataDTO implements Serializable {
+
+    private Group group;
     private boolean iamHost;
 
-    public GroupDataDTO(int groupId, String groupName, boolean iamHost) {
-        this.groupId = groupId;
-        this.groupName = groupName;
+    public GroupDataDTO(Group group, boolean iamHost) {
+        this.group = group;
         this.iamHost = iamHost;
     }
 
-    public int getGroupId() {
-        return groupId;
+    public Group getGroup() {
+        return group;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     public boolean isIamHost() {
         return iamHost;
+    }
+
+    public void setIamHost(boolean iamHost) {
+        this.iamHost = iamHost;
     }
 }
