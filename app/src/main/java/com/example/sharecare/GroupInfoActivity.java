@@ -4,8 +4,10 @@ import static com.example.sharecare.Logic.ActivitySQLLiteDatabaseHelper.REQUEST_
 import static com.example.sharecare.Logic.ActivitySQLLiteDatabaseHelper.REQUEST_STATUS_PENDING;
 import static com.example.sharecare.Logic.ActivitySQLLiteDatabaseHelper.REQUEST_STATUS_REJECTED;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.sharecare.handlers.GroupHandler;
 import com.example.sharecare.models.Activity;
 import com.example.sharecare.models.ActivityShareDTO;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -215,6 +218,32 @@ public class GroupInfoActivity extends AppCompatActivity {
         return hours * 60 + minutes;
     }
 
+    private void showSnackbar(String message) {
+        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void showDeleteConfirmationDialog(int activity_id, String activity_name) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Confirm Changes");
+        alertDialogBuilder.setMessage("Are you sure you want to delete the activity?");
+        alertDialogBuilder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                groupHandler.deleteActivity(activity_id);
+                showSnackbar("successfully deleted " + activity_name);
+              //  Toast.makeText(GroupInfoActivity.this, "successfully deleted " + activity_name, Toast.LENGTH_SHORT).show();
+                reloadGroupActivityData();
+            }
+        });
+        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        alertDialogBuilder.show();
+    }
+
     /**
      * Load and display group activity data.
      */
@@ -299,6 +328,8 @@ public class GroupInfoActivity extends AppCompatActivity {
                         int child_age_from = activity.getAgeFrom();
                         int child_age_to = activity.getAgeTo();
 
+
+                        Activity currentActivity = new Activity(activity_id,activity_name,activity_type,date,time,capacity,duration,child_age_from,child_age_to,groupId,loggedInUserId);
                         TableRow row = new TableRow(this);
 
                         TextView nameTextView = new TextView(this);
@@ -321,12 +352,29 @@ public class GroupInfoActivity extends AppCompatActivity {
                             deleteButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    groupHandler.deleteActivity(activity_id);
-                                    Toast.makeText(GroupInfoActivity.this, "successfully deleted " + activity_name, Toast.LENGTH_SHORT).show();
-                                    reloadGroupActivityData();
+                                    showDeleteConfirmationDialog(activity_id,activity_name);
                                 }
                             });
                             row.addView(deleteButton);
+
+                            Button editButton = new Button(this);
+                            editButton.setText("Edit");
+                            editButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    Intent intent = new Intent(GroupInfoActivity.this, ChildrenActivityCreateActivity.class);
+                                    Bundle extras = new Bundle();
+                                    extras.putInt("userid", loggedInUserId);
+                                    extras.putString("username", loggedInUsername);
+                                    extras.putInt("ishost", ishost);
+                                    extras.putInt("isEdit", 1);
+                                    extras.putSerializable("currentActivity", currentActivity);
+                                    intent.putExtras(extras);
+                                    startActivity(intent);
+                                }
+                            });
+                            row.addView(editButton);
 
                             Button manageRequestsButton = new Button(this);
                             manageRequestsButton.setText("Manage Requests");

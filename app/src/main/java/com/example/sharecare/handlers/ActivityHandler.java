@@ -24,6 +24,13 @@ public class ActivityHandler {
     public long insertActivity(Activity activity) {
         return databaseHelper.insertActivity(activity);
     }
+    public void updateActivity(Activity activity, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
+        // Update the activity in the SQLite database
+        databaseHelper.updateActivity(activity);
+
+        // Update the activity in Firebase
+        firebaseHandler.updateActivityDataInFirebase(activity, successListener, failureListener);
+    }
 
     public void addingActivityDataToFirebase(Activity activity, OnSuccessListener<DocumentReference> successListener, OnFailureListener failureListener) {
         firebaseHandler.addingActivityDataToFirebase(activity, successListener, failureListener);
