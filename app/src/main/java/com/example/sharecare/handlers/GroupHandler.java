@@ -13,6 +13,7 @@ import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
 import com.example.sharecare.models.Activity;
 import com.example.sharecare.models.ActivityShareDTO;
 import com.example.sharecare.models.Group;
+import com.example.sharecare.models.GroupDataDTO;
 import com.example.sharecare.valdiators.CreateGroupValidator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -133,6 +134,36 @@ public class GroupHandler {
     }
 
 
+    public void deleteGroup(long groupId) {
+        // Delete the group from the local SQLite database
+        SQLiteDatabase db = groupsDatabaseHelper.getWritableDatabase();
+        db.delete("groupsRequest", "groupid = ?", new String[]{String.valueOf(groupId)});
+        db.delete("groupParticipants", "groupId = ?", new String[]{String.valueOf(groupId)});
+        db.delete("groups", "id = ?", new String[]{String.valueOf(groupId)});
+        db.close();
+        deleteGroupFromFirebase(groupId);
+
+    }
+    private void deleteGroupFromFirebase(long groupId) {
+
+        Task<Void> task = firebaseDb.collection("Groups").document(String.valueOf(groupId)).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "DocumentSnapshot successfully deleted!");
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error deleting document", e);
+
+            }
+        });
+        while(!task.isComplete()){
+
+        }
+
+    }
     /**
      * Updates an existing group in the local database and then updates it in Firebase.
      *
@@ -182,6 +213,52 @@ public class GroupHandler {
         }
 
         return false;
+    }
+
+    public List<GroupDataDTO> getGroupsForUser(int currentUserId) {
+        List<GroupDataDTO> groupsList = new ArrayList<>();
+        SQLiteDatabase db = groupsDatabaseHelper.getWritableDatabase();
+        String query = "SELECT DISTINCT " +
+                "    groups.id AS groupid, groups.groupName, groups.description, groups.hostUserId, " +
+                "    groups.city, groups.street, groups.language, groups.religion," +
+                "    CASE " +
+                "        WHEN groups.hostUserId = ? THEN 1 " +
+                "        ELSE 0 " +
+                "    END AS iamhost " +
+                "FROM " +
+                "    groups " +
+                "LEFT JOIN " +
+                "    groupsRequest ON groups.id = groupsRequest.groupid AND groupsRequest.userid = ? AND groupsRequest.isaccept = 1 " +
+                "WHERE " +
+                "    groups.hostUserId = ? OR groupsRequest.id IS NOT NULL;";
+
+
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(currentUserId), String.valueOf(currentUserId), String.valueOf(currentUserId)});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int groupId = cursor.getInt(cursor.getColumnIndex("groupid"));
+                String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
+                String briefInformation = cursor.getString(cursor.getColumnIndex("description"));
+                int hostUserId = cursor.getInt(cursor.getColumnIndex("hostUserId"));
+                String city = cursor.getString(cursor.getColumnIndex("city"));
+                String street = cursor.getString(cursor.getColumnIndex("street"));
+                String language = cursor.getString(cursor.getColumnIndex("language"));
+                String religion = cursor.getString(cursor.getColumnIndex("religion"));
+                boolean iamHost = cursor.getInt(cursor.getColumnIndex("iamhost")) == 1;
+                Group group = new Group(groupId, groupName, briefInformation, city, street, language, religion);
+                GroupDataDTO groupData = new GroupDataDTO(group, iamHost);
+                groupsList.add(groupData);
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        db.close();
+        return groupsList;
     }
 
     /**

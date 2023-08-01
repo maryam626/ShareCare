@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,7 +22,6 @@ import com.example.sharecare.handlers.UserHandler;
 import com.example.sharecare.models.Group;
 import com.example.sharecare.models.GroupDataDTO;
 import com.example.sharecare.models.Host;
-import com.example.sharecare.models.Parent;
 import com.example.sharecare.valdiators.CreateGroupValidator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,6 +35,7 @@ public class CreateGroupActivity extends AppCompatActivity {
     private static final String TAG = "Create Group";
 
     private EditText groupNameEditText, descriptionEditText, streetEditText;
+    private TextView participantsText,cityText;
     private Spinner participantsSpinner, CitySpinner, languageSpinner, religionSpinner;
     private Button createButton;
     private GroupHandler groupHandler;
@@ -60,8 +61,12 @@ public class CreateGroupActivity extends AppCompatActivity {
         groupNameEditText = findViewById(R.id.groupNameEditText);
         descriptionEditText = findViewById(R.id.descriptionEditText);
         streetEditText = findViewById(R.id.streetEditText);
+        participantsText= findViewById(R.id.participantsText);
+                cityText= findViewById(R.id.cityText);
 
         participantsSpinner = findViewById(R.id.participantsSpinner);
+
+
         CitySpinner = findViewById(R.id.CitySpinner);
         languageSpinner = findViewById(R.id.LanguagesSpinner);
         religionSpinner = findViewById(R.id.ReligionsSpinner);
@@ -69,6 +74,10 @@ public class CreateGroupActivity extends AppCompatActivity {
         loggedInUserId = getIntent().getIntExtra("userid", -1);
         loggedInUsername = getIntent().getStringExtra("username");
 
+        participantsSpinner.setVisibility(View.VISIBLE);
+        participantsText.setVisibility(View.VISIBLE);
+        CitySpinner.setVisibility(View.VISIBLE);
+        cityText.setVisibility(View.VISIBLE);
 
         int isEditModeAsInt = getIntent().getIntExtra("isEdit", 0);
         if (isEditModeAsInt == 1) {
@@ -132,25 +141,24 @@ public class CreateGroupActivity extends AppCompatActivity {
         groupNameEditText.setText(currentGroup.getGroupName());
         descriptionEditText.setText(currentGroup.getBriefInformation());
         streetEditText.setText(currentGroup.getStreet());
-
+        participantsText= findViewById(R.id.participantsText);
+        cityText= findViewById(R.id.cityText);
 
         // Participants Spinner
-        ArrayList<Parent> participantsList = currentGroup.getParticipants();
-        Spinner participantsSpinner = findViewById(R.id.participantsSpinner);
-        ArrayAdapter<Parent> participantsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, participantsList);
-        participantsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        participantsSpinner.setAdapter(participantsAdapter);
-        // Find the position of the selected participant in the spinner and set it
-        int selectedParticipantPosition = participantsList.indexOf(currentGroup.getHost());
-        participantsSpinner.setSelection(selectedParticipantPosition);
+        participantsSpinner.setVisibility(View.GONE);
+        participantsText.setVisibility(View.GONE);
+        CitySpinner.setVisibility(View.GONE);
+        cityText.setVisibility(View.GONE);
+
 
         // City Spinner
-        String[] cities = {currentGroup.getCity()}; // Assuming getCity() returns a single city as a string
+        List<String> cities = new ArrayList<>();
+        cities.add(currentGroup.getCity());
         Spinner citySpinner = findViewById(R.id.CitySpinner);
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cities);
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         citySpinner.setAdapter(cityAdapter);
-        // Find the position of the selected city in the spinner and set it (if needed)
+
 
         // Language Spinner
         String[] languages = {currentGroup.getLanguage()}; // Assuming getLanguage() returns a single language as a string
@@ -233,10 +241,15 @@ public class CreateGroupActivity extends AppCompatActivity {
     /** Create a new group with the provided data, validate the input,
      * insert the group into the local database, and display appropriate messages. */
     private boolean createGroup(boolean isEditMode) {
+        String participant="",city="";
         String groupName = groupNameEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
-        String participant = participantsSpinner.getSelectedItem().toString();
-        String city = CitySpinner.getSelectedItem().toString();
+        if(!isEditMode)
+        {
+            participant = participantsSpinner.getSelectedItem().toString();
+            city = CitySpinner.getSelectedItem().toString();
+        }
+
         String street = streetEditText.getText().toString();
         String language = languageSpinner.getSelectedItem().toString();
         String religion = religionSpinner.getSelectedItem().toString();
@@ -261,7 +274,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         if (isEditMode) {
             // Update the group data in SQLite database
             long groupId = groupObjectToEdit.getGroup().getId(); // Assuming you have a method to get the group ID
-            boolean isUpdateSuccessful = groupHandler.updateGroup(groupId, groupName, description, city, street, language, religion, loggedInUserId);
+            boolean isUpdateSuccessful = groupHandler.updateGroup(groupId, groupName, description, groupObjectToEdit.getGroup().getCity(), street, language, religion, loggedInUserId);
 
             if (isUpdateSuccessful) {
                 // Update the group data in Firebase Firestore
