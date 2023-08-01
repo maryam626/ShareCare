@@ -66,6 +66,11 @@
                 android:minHeight="48dp"
                 tools:ignore="SpeakableTextPresentCheck" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Select_Cityav"/>
+
         </LinearLayout>
     </ScrollView>
 
