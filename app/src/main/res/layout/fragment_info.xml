@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="20dp"
+    tools:context=".InfoFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="sans-serif-condensed"
+        android:lineSpacingExtra="14sp"
+        android:paddingTop="150dp"
+        android:text="@string/this_application_is_developed_by_mariam_hanan_nasim_and_karam_and_it_is_an_application_that_helps_parents_find_foster_parents_and_neighbors_who_are_able_to_take_care_of_their_children_while_they_are_busy"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="453dp"
+        android:fontFamily="sans-serif-condensed"
+        android:lineSpacingExtra="16sp"
+        android:paddingTop="50dp"
+        android:text="@string/what_is_this_app"
+        android:textAlignment="center"
+        android:textSize="34sp"
+        android:textStyle="bold" />
+
+</FrameLayout>

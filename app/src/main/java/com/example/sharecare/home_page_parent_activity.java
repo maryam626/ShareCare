@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.sharecare.models.User;
 
@@ -21,6 +22,12 @@ public class home_page_parent_activity extends AppCompatActivity {
     private Button buttonSearchGroups;
     private Button myChildrenButton;
     private ImageView logOutIv;
+    private Button homePageFragment;
+    private Button infoFragment;
+    private TextView textView10;
+    private TextView nameTv2;
+
+
 
     public static String id;
     public static String userName;
@@ -36,8 +43,6 @@ public class home_page_parent_activity extends AppCompatActivity {
 
     public static User loggedInUser;
 
-    private TextView textView10;
-
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -51,6 +56,9 @@ public class home_page_parent_activity extends AppCompatActivity {
         buttonSearchGroups = findViewById(R.id.buttonSearchGroups);
         myChildrenButton = findViewById(R.id.myChildrenButton);
         textView10 = findViewById(R.id.textView10);
+        homePageFragment = findViewById(R.id.homePageFragment);
+        infoFragment = findViewById(R.id.infoFragment);
+        nameTv2 = findViewById(R.id.nameTv2);
 
         buttonMyGroups = findViewById(R.id.buttonMyGroups);
         myProfileBtn = findViewById(R.id.myProfileBtn);
@@ -160,6 +168,37 @@ public class home_page_parent_activity extends AppCompatActivity {
             }
         });
 
+        homePageFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.fragmentContainerView,HomeFragment.class,null).setReorderingAllowed(true).addToBackStack("name").commit();
+                buttonMyGroups.setVisibility(View.VISIBLE);
+                myProfileBtn.setVisibility(View.VISIBLE);
+                buttonSearchGroups.setVisibility(View.VISIBLE);
+                myChildrenButton.setVisibility(View.VISIBLE);
+                logOutIv.setVisibility(View.VISIBLE);
+                textView10.setVisibility(View.VISIBLE);
+                nameTv2.setVisibility(View.VISIBLE);
+            }
+        });
+
+        infoFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.fragmentContainerView,InfoFragment.class,null).setReorderingAllowed(true).addToBackStack("name").commit();
+                buttonMyGroups.setVisibility(View.INVISIBLE);
+                myProfileBtn.setVisibility(View.INVISIBLE);
+                buttonSearchGroups.setVisibility(View.INVISIBLE);
+                myChildrenButton.setVisibility(View.INVISIBLE);
+                logOutIv.setVisibility(View.INVISIBLE);
+                textView10.setVisibility(View.INVISIBLE);
+                nameTv2.setVisibility(View.INVISIBLE);
+
+            }
+        });
     }
 
 

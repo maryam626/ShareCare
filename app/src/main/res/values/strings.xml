@@ -13,91 +13,91 @@
         <item>Hebrew</item>
     </string-array>
     <string-array name="Cities">
-                <item>Jerusalem</item>
-                <item>Tel Aviv</item>
-                <item>Haifa</item>
-                <item>Rishon LeZion</item>
-                <item>Petah Tikva</item>
-                <item>Ashdod</item>
-                <item>Netanya</item>
-                <item>Beersheba</item>
-                <item>Holon</item>
-                <item>Bnei Brak</item>
-                <item>Ramat Gan</item>
-                <item>Rehovot</item>
-                <item>Bat Yam</item>
-                <item>Ashkelon</item>
-                <item>Jaffa</item>
-                <item>Modiin-Maccabim-Reut</item>
-                <item>Herzliya</item>
-                <item>Kfar Saba</item>
-                <item>Raanana</item>
-                <item>Bet Shemesh</item>
-                <item>Lod</item>
-                <item>Nahariya</item>
-                <item>Hadera</item>
-                <item>Beit Shemesh</item>
-                <item>Kiryat Ata</item>
-                <item>Kiryat Gat</item>
-                <item>Givaatayim</item>
-                <item>Ramat HaSharon</item>
-                <item>Yavne</item>
-                <item>Modiin Illit</item>
-                <item>Tiberias</item>
-                <item>Hod HaSharon</item>
-                <item>Qiryat Motzkin</item>
-                <item>Eilat</item>
-                <item>Raas al-Ein</item>
-                <item>Nablus</item>
-                <item>Ariel</item>
-                <item>Qiryat Yam</item>
-                <item>Kiryat Bialik</item>
-                <item>Qiryat Ono</item>
-                <item>Or Yehuda</item>
-                <item>Qiryat Shemona</item>
-                <item>Kiryat Malakhi</item>
-                <item>Dimona</item>
-                <item>Yehud-Monosson</item>
-                <item>Sderot</item>
-                <item>Tirat Carmel</item>
-                <item>Rosh HaAyin</item>
-                <item>Arad</item>
-                <item>Kiryat Shmona</item>
-                <item>Hod HaSharon</item>
-                <item>Nazareth</item>
-                <item>Qalansawe</item>
-                <item>Karmiel</item>
-                <item>Netivot</item>
-                <item>Nesher</item>
-                <item>Nahariya</item>
-                <item>Ofakim</item>
-                <item>Qiryat Gat</item>
-                <item>Qiryat Ata</item>
-                <item>Umm al-Fahm</item>
-                <item>Tamra</item>
-                <item>Migdal HaEmek</item>
-                <item>Acre</item>
-                <item>Yokneam</item>
-                <item>Tayibe</item>
-                <item>Beit Jann</item>
-                <item>Qalqilya</item>
-                <item>Shaghur</item>
-                <item>Kafr Qasim</item>
-                <item>Daliyat al-Karmel</item>
-                <item>Afula</item>
-                <item>Rahat</item>
-                <item>Sakhnin</item>
-                <item>Sderot</item>
-                <item>Kiryat Yam</item>
-                <item>Tuba-Zangariyye</item>
-                <item>Beit Sheaan</item>
-                <item>Shoham</item>
-                <item>Kafr Manda</item>
-                <item>Ofaqim</item>
-                <item>Metula</item>
-                <item>Ramat Yishai</item>
-                <item>Sakhnin</item>
-                <item>Nof HaGalil</item>
+        <item>Jerusalem</item>
+        <item>Tel Aviv</item>
+        <item>Haifa</item>
+        <item>Rishon LeZion</item>
+        <item>Petah Tikva</item>
+        <item>Ashdod</item>
+        <item>Netanya</item>
+        <item>Beersheba</item>
+        <item>Holon</item>
+        <item>Bnei Brak</item>
+        <item>Ramat Gan</item>
+        <item>Rehovot</item>
+        <item>Bat Yam</item>
+        <item>Ashkelon</item>
+        <item>Jaffa</item>
+        <item>Modiin-Maccabim-Reut</item>
+        <item>Herzliya</item>
+        <item>Kfar Saba</item>
+        <item>Raanana</item>
+        <item>Bet Shemesh</item>
+        <item>Lod</item>
+        <item>Nahariya</item>
+        <item>Hadera</item>
+        <item>Beit Shemesh</item>
+        <item>Kiryat Ata</item>
+        <item>Kiryat Gat</item>
+        <item>Givaatayim</item>
+        <item>Ramat HaSharon</item>
+        <item>Yavne</item>
+        <item>Modiin Illit</item>
+        <item>Tiberias</item>
+        <item>Hod HaSharon</item>
+        <item>Qiryat Motzkin</item>
+        <item>Eilat</item>
+        <item>Raas al-Ein</item>
+        <item>Nablus</item>
+        <item>Ariel</item>
+        <item>Qiryat Yam</item>
+        <item>Kiryat Bialik</item>
+        <item>Qiryat Ono</item>
+        <item>Or Yehuda</item>
+        <item>Qiryat Shemona</item>
+        <item>Kiryat Malakhi</item>
+        <item>Dimona</item>
+        <item>Yehud-Monosson</item>
+        <item>Sderot</item>
+        <item>Tirat Carmel</item>
+        <item>Rosh HaAyin</item>
+        <item>Arad</item>
+        <item>Kiryat Shmona</item>
+        <item>Hod HaSharon</item>
+        <item>Nazareth</item>
+        <item>Qalansawe</item>
+        <item>Karmiel</item>
+        <item>Netivot</item>
+        <item>Nesher</item>
+        <item>Nahariya</item>
+        <item>Ofakim</item>
+        <item>Qiryat Gat</item>
+        <item>Qiryat Ata</item>
+        <item>Umm al-Fahm</item>
+        <item>Tamra</item>
+        <item>Migdal HaEmek</item>
+        <item>Acre</item>
+        <item>Yokneam</item>
+        <item>Tayibe</item>
+        <item>Beit Jann</item>
+        <item>Qalqilya</item>
+        <item>Shaghur</item>
+        <item>Kafr Qasim</item>
+        <item>Daliyat al-Karmel</item>
+        <item>Afula</item>
+        <item>Rahat</item>
+        <item>Sakhnin</item>
+        <item>Sderot</item>
+        <item>Kiryat Yam</item>
+        <item>Tuba-Zangariyye</item>
+        <item>Beit Sheaan</item>
+        <item>Shoham</item>
+        <item>Kafr Manda</item>
+        <item>Ofaqim</item>
+        <item>Metula</item>
+        <item>Ramat Yishai</item>
+        <item>Sakhnin</item>
+        <item>Nof HaGalil</item>
     </string-array>
     <string name="user_name">User Name</string>
     <string name="password">Password</string>
@@ -121,7 +121,6 @@
     <string name="gender">Gender :</string>
     <string name="search_loading">Search...</string>
     <string name="select_religion"> Select Religion</string>
-
 
 
     <string name="first_name">first name</string>
@@ -190,12 +189,11 @@
     <string name="group_name">Group Name</string>
 
 
-        <!-- Add your existing strings here if any -->
+    <!-- Add your existing strings here if any -->
 
-        <string name="search_screen">Search Screen</string>
-        <string name="search_button">Search</string>
-        <string name="location_label">Location</string>
-
+    <string name="search_screen">Search Screen</string>
+    <string name="search_button">Search</string>
+    <string name="location_label">Location</string>
 
 
     <string name="description">Description</string>
@@ -354,6 +352,11 @@
     <string name="ages_from93">Ages From :</string>
     <string name="to92">To :</string>
     <string name="close91">Close</string>
+    <string name="profile1">Profile</string>
+    <string name="home1">Home</string>
+    <string name="info">Info</string>
+    <string name="what_is_this_app">What is this app</string>
+    <string name="this_application_is_developed_by_mariam_hanan_nasim_and_karam_and_it_is_an_application_that_helps_parents_find_foster_parents_and_neighbors_who_are_able_to_take_care_of_their_children_while_they_are_busy">This application is developed by Mariam Hanan Nasim and Karam, and it is an application that helps parents find foster parents and neighbors who are able to take care of their children while they are busy</string>
 
 
 </resources>

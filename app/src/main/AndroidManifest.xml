@@ -63,13 +63,6 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".create_children_profiles_activity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".my_children_activity"
             android:exported="false">
             <meta-data
