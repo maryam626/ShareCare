@@ -8,6 +8,29 @@ public class PendingActivityRequestDTO {
     private String requestDate;
     private String activityName;
 
+
+    private int groupid;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getGroupid() {
+        return groupid;
+    }
+
+    public void setGroupid(int groupid) {
+        this.groupid = groupid;
+    }
+
+
+
+
     // Constructors
     public PendingActivityRequestDTO() {
     }

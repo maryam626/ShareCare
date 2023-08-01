@@ -4,9 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Group implements Serializable {
+
+
+
     private int id;
     private String groupName;
-    private String briefInformation;
+    private String description;
     private Host host;
     private ArrayList<Parent> participants;
     private ArrayList<Activity> activities;
@@ -15,15 +18,18 @@ public class Group implements Serializable {
     private int ageTo;
     private String city;
     private String street;
-
-
-
+    private int hostUserId;
     private String language;
     private String religion;
 
-    public Group(String groupName, String briefInformation, Host host, ArrayList<Parent> participants, ArrayList<Activity> activities, int capacity, int ageFrom, int ageTo, String city, String street) {
+
+
+    public Group() {
+        // Empty constructor required for Firebase deserialization
+    }
+    public Group(String groupName, String description, Host host, ArrayList<Parent> participants, ArrayList<Activity> activities, int capacity, int ageFrom, int ageTo, String city, String street) {
         this.groupName = groupName;
-        this.briefInformation = briefInformation;
+        this.description = description;
         this.host = host;
         this.participants = participants;
         this.activities = activities;
@@ -33,9 +39,9 @@ public class Group implements Serializable {
         this.city = city;
         this.street = street;
     }
-    public Group(String groupName, String briefInformation, Host host,String city, String street,String language, String religion) {
+    public Group(String groupName, String description, Host host,String city, String street,String language, String religion) {
         this.groupName = groupName;
-        this.briefInformation = briefInformation;
+        this.description = description;
         this.host = host;
         this.city = city;
         this.street = street;
@@ -45,7 +51,7 @@ public class Group implements Serializable {
 
     public Group(int groupId, String groupName, String description, String city, String street) {
         this.groupName = groupName;
-        this.briefInformation = description;
+        this.description = description;
         this.city = city;
         this.street = street;
     }
@@ -53,12 +59,26 @@ public class Group implements Serializable {
     public Group(int groupId, String groupName, String description, String city, String street, String language, String religion) {
         this.id = groupId;
         this.groupName = groupName;
-        this.briefInformation = description;
+        this.description = description;
         this.city = city;
         this.street = street;
         this.language = language;
         this.religion= religion;
     }
+    public Group(int id, String groupName, String description, String city, String street, String language, String religion, int hostUserId) {
+        this.id = id;
+        this.groupName = groupName;
+        this.description = description;
+        this.city = city;
+        this.street = street;
+        this.language = language;
+        this.religion = religion;
+        this.hostUserId = hostUserId;
+    }
+
+
+
+
 
     public int getId() {
         return id;
@@ -76,12 +96,12 @@ public class Group implements Serializable {
         this.groupName = groupName;
     }
 
-    public String getBriefInformation() {
-        return briefInformation;
+    public String getDescription() {
+        return description;
     }
 
-    public void setBriefInformation(String briefInformation) {
-        this.briefInformation = briefInformation;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Host getHost() {
@@ -99,7 +119,13 @@ public class Group implements Serializable {
     public void setParticipants(ArrayList<Parent> participants) {
         this.participants = participants;
     }
+    public int getHostUserId() {
+        return hostUserId;
+    }
 
+    public void setHostUserId(int hostUserId) {
+        this.hostUserId = hostUserId;
+    }
     public ArrayList<Activity> getActivities() {
         return activities;
     }
@@ -162,7 +188,7 @@ public class Group implements Serializable {
     public String toString() {
         return "Group{" +
                 "groupName='" + groupName + '\'' +
-                ", briefInformation='" + briefInformation + '\'' +
+                ", description='" + description + '\'' +
                 ", host=" + host +
                 ", participants=" + participants +
                 ", activities=" + activities +

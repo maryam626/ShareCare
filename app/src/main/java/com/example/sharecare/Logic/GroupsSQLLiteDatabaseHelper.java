@@ -1,30 +1,30 @@
 package com.example.sharecare.Logic;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.example.sharecare.models.Group;
+import com.example.sharecare.models.GroupRequest;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
-
+    FirebaseFirestore firebaseDb;
     private static final String DATABASE_NAME = "ShareCare.db";
     private static final int DATABASE_VERSION = 1;
-    private FirebaseFirestore firebaseDb = FirebaseFirestore.getInstance();
-
 
     public GroupsSQLLiteDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.firebaseDb=FirebaseFirestore.getInstance();
     }
 
     private void DropTablesForDebug(SQLiteDatabase db)
@@ -112,25 +112,8 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
     /** Fetch a list of unique cities where groups are based */
     public List<String> getGroupsDistinctCities() {
-        /*List<String> cityList = new ArrayList<>();
-        firebaseDb.collection("Cities").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for(int i = 0; i<queryDocumentSnapshots.size();i++) {
-                    cityList.add(queryDocumentSnapshots.getDocuments().get(i).get("name").toString());
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
-
-        return cityList;*/
-
         List<String> cityList = new ArrayList<>();
-        /*SQLiteDatabase db = getReadableDatabase();
+         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("select distinct city as cityName from groups  ORDER BY city ASC", null);
 
         if (cursor.moveToFirst()) {
@@ -141,66 +124,38 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();*/
+        db.close();
 
         return cityList;
     }
 
     /** Fetch a list of all cities stored in the database */
-    public List<String> loadCities() {
-        List<String> cityList = new ArrayList<>();
+    public List<String> getAllCities() {
+        List<String> citiesList = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
 
-        /*firebaseDb.collection("Cities").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for(int i = 0; i<queryDocumentSnapshots.size();i++) {
-                    cityList.add(queryDocumentSnapshots.getDocuments().get(i).get("name").toString());
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
+        // Query to select all cities from the cities table
+        String query = "SELECT name FROM cities";
 
-            }
-        });
-        return cityList;*/
-
-        /*List<String> cityList = new ArrayList<>();
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT DISTINCT name FROM cities ORDER BY name ASC", null);
-
-        if (cursor.moveToFirst()) {
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor != null && cursor.moveToFirst()) {
             do {
-                String city = cursor.getString(cursor.getColumnIndex("name"));
-                cityList.add(city);
+                // Get the city name from the cursor and add it to the list
+                String cityName = cursor.getString(cursor.getColumnIndex("name"));
+                citiesList.add(cityName);
             } while (cursor.moveToNext());
         }
 
-        cursor.close();
-        db.close();*/
+        // Close the cursor and database
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
 
-        return cityList;
+        return citiesList;
     }
-
     /** Fetch a list of all languages stored in the database */
     public List<String> loadLanguages() {
-
-        /*List<String> languagesList = new ArrayList<>();
-
-        firebaseDb.collection("Languages").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for(int i = 0; i<queryDocumentSnapshots.size();i++) {
-                    languagesList.add(queryDocumentSnapshots.getDocuments().get(i).get("name").toString());
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
-        return languagesList;*/
 
         List<String> cityList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -221,24 +176,6 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
     /** Fetch a list of all religions stored in the database */
     public List<String> loadReligions() {
-
-        /*List<String> religionsList = new ArrayList<>();
-
-        firebaseDb.collection("Religions").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for(int i = 0; i<queryDocumentSnapshots.size();i++) {
-                    religionsList.add(queryDocumentSnapshots.getDocuments().get(i).get("name").toString());
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
-        return religionsList;*/
-
         List<String> cityList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT DISTINCT name FROM religions ORDER BY name ASC", null);
@@ -270,6 +207,191 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return userId;
     }
+
+    public List<Group> getAllGroups() {
+        List<Group> groupsList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+
+        try {
+            // Query the "groups" table and get all rows
+            cursor = db.query("groups", null, null, null, null, null, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    int groupId = cursor.getInt(cursor.getColumnIndex("id"));
+                    String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
+                    String description = cursor.getString(cursor.getColumnIndex("description"));
+                    String city = cursor.getString(cursor.getColumnIndex("city"));
+                    String street = cursor.getString(cursor.getColumnIndex("street"));
+                    String language = cursor.getString(cursor.getColumnIndex("language"));
+                    String religion = cursor.getString(cursor.getColumnIndex("religion"));
+                    int hostUserId = cursor.getInt(cursor.getColumnIndex("hostUserId"));
+
+                    Group group = new Group(groupId, groupName, description, city, street, language, religion, hostUserId);
+                    groupsList.add(group);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            // Close the cursor and database
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
+        }
+
+        return groupsList;
+    }
+
+    public void syncGroupsFromSQLiteToFirebase() {
+        SQLiteDatabase db = getReadableDatabase();
+        List<Group> groups = getAllGroups();
+        for (Group group : groups) {
+            firebaseDb.collection("groups")
+                    .document(String.valueOf(group.getId()))
+                    .set(group)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // Update successful
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Update failed
+                        }
+                    });
+        }
+    }
+
+    /**
+     * Synchronize group requests from Firebase to SQLite.
+     * @param groupRequests List of GroupRequest objects received from Firebase.
+     */
+    public void syncGroupRequestsFromFirebase(List<GroupRequest> groupRequests) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            // Start a transaction
+            db.beginTransaction();
+
+            // Clear the existing groupRequests table to replace it with the updated data
+            db.delete("groupsRequest", null, null);
+
+            // Insert or update group requests in the database
+            for (GroupRequest groupRequest : groupRequests) {
+                ContentValues values = new ContentValues();
+                values.put("id", groupRequest.getId());
+                values.put("userid", groupRequest.getUserId());
+                values.put("groupid", groupRequest.getGroupId());
+                values.put("requestDate", groupRequest.getRequestDate());
+                values.put("isaccept", groupRequest.isAccepted() ? 1 : 0);
+
+                db.insert("groupsRequest", null, values);
+            }
+
+            // Set the transaction as successful and end it
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+         } finally {
+            // End the transaction
+            db.endTransaction();
+        }
+
+        // Close the database
+        db.close();
+    }
+    public List<GroupRequest> getAllGroupRequests() {
+        List<GroupRequest> groupRequests = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM groupsRequest", null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                int userId = cursor.getInt(cursor.getColumnIndex("userid"));
+                int groupId = cursor.getInt(cursor.getColumnIndex("groupid"));
+                String requestDate = cursor.getString(cursor.getColumnIndex("requestDate"));
+                int isAcceptInt = cursor.getInt(cursor.getColumnIndex("isaccept"));
+                boolean isAccepted = isAcceptInt == 1;
+
+                GroupRequest groupRequest = new GroupRequest(id, userId, groupId, requestDate, isAccepted);
+                groupRequests.add(groupRequest);
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        db.close();
+        return groupRequests;
+    }
+    public void syncGroupRequestsFromSQLiteToFirebase() {
+        List<GroupRequest> groupRequests =  getAllGroupRequests();
+        for (GroupRequest groupRequest : groupRequests) {
+            firebaseDb.collection("GroupsRequest")
+                    .document(String.valueOf(groupRequest.getId()))
+                    .set(groupRequest)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // Update successful
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Update failed
+                        }
+                    });
+        }
+    }
+
+
+
+    /**
+     * Synchronize groups from Firebase to SQLite.
+     * @param groups List of Group objects received from Firebase.
+     */
+    public void syncGroupsFromFirebase(List<Group> groups) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            // Start a transaction
+            db.beginTransaction();
+
+            // Clear the existing groups table to replace it with the updated data
+            db.delete("groups", null, null);
+
+            // Insert or update groups in the database
+            for (Group group : groups) {
+                ContentValues values = new ContentValues();
+                values.put("id", group.getId());
+                values.put("groupName", group.getGroupName());
+                values.put("description", group.getDescription());
+                values.put("city", group.getCity());
+                values.put("street", group.getStreet());
+                values.put("language", group.getLanguage());
+                values.put("religion", group.getReligion());
+                values.put("hostUserId", group.getHost().getId());
+
+                db.insert("groups", null, values);
+            }
+
+            // Set the transaction as successful and end it
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+        } finally {
+            // End the transaction
+            db.endTransaction();
+        }
+
+        // Close the database
+        db.close();
+    }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.handlers.ActivityHandler;
 import com.example.sharecare.models.PendingActivityRequestDTO;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class PendingRequestsActivity extends AppCompatActivity {
         groupId = intent.getIntExtra("groupid", -1);
         loggedInUserId = getIntent().getIntExtra("userid", -1);
         loggedInUsername = getIntent().getStringExtra("username");
-         activityHandler = new ActivityHandler(this,  FirebaseFirestore.getInstance());
+         activityHandler = new ActivityHandler(this);
 
         tableLayout = findViewById(R.id.tableLayout);
         loadPendingRequests();

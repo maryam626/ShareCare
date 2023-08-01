@@ -23,7 +23,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -92,7 +91,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
 
         // Initialize activity options
         activityOptions = getResources().getStringArray(R.array.activity_options);
-        activityHandler = new ActivityHandler(this,FirebaseFirestore.getInstance());
+        activityHandler = new ActivityHandler(this);
 
         // Set up spinner with activity options
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
@@ -286,6 +285,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
                     new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            activityHandler.Sync();
                             // Show success message using Snackbar
                             showSnackbar("Activity data updated successfully!");
 
@@ -321,7 +321,7 @@ public class ChildrenActivityCreateActivity extends AppCompatActivity implements
                     new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
-                            // Successful message
+                            activityHandler.Sync();
                             showSnackbar("Creation Was Successful!");
                          }
                     },
