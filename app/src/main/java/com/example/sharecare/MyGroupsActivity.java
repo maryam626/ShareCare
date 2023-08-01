@@ -190,7 +190,8 @@ public class MyGroupsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Perform the delete operation here
-                         groupHandler.deleteGroup(groupId);
+                        groupHandler.deleteGroup(groupId);
+                        groupHandler.Sync();
                         Toast.makeText(MyGroupsActivity.this, "successfully deleted " + groupName, Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(MyGroupsActivity.this, MyGroupsActivity.class);
                         Bundle extras = new Bundle();

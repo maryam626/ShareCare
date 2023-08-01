@@ -4,22 +4,23 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.sharecare.Logic.ActivitySQLLiteDatabaseHelper;
 import com.example.sharecare.Logic.GroupsSQLLiteDatabaseHelper;
-import com.example.sharecare.models.Activity;
-import com.example.sharecare.models.ActivityShareDTO;
 import com.example.sharecare.models.Group;
 import com.example.sharecare.models.GroupDataDTO;
+import com.example.sharecare.models.GroupRequest;
 import com.example.sharecare.valdiators.CreateGroupValidator;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
@@ -38,8 +39,39 @@ public class GroupHandler {
     private static final String TAG = "GroupHandler";
     private GroupsSQLLiteDatabaseHelper groupsDatabaseHelper;
     private FirebaseFirestore firebaseDb;
-    private ActivitySQLLiteDatabaseHelper activityDatabaseHelper;
 
+
+    private class SyncTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try{
+            // Run the synchronization task in the background (async)
+            syncGroupsFromFirebaseToSQLite(groupsDatabaseHelper);
+            syncGroupRequestsFromFirebaseToSQLite(groupsDatabaseHelper);
+            groupsDatabaseHelper.syncGroupRequestsFromSQLiteToFirebase();
+            groupsDatabaseHelper.syncGroupsFromSQLiteToFirebase();
+
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            // This method is called on the UI thread after the background task is completed.
+            // You can add any UI updates or notifications here if needed.
+        }
+    }
+
+    //sync sqllite with firestore , this will run async (non blocking for ui)
+    public void Sync()
+    {
+        new SyncTask().execute();
+    }
 
     /**
      * Constructor to initialize database helpers and Firestore instance.
@@ -50,7 +82,6 @@ public class GroupHandler {
     public GroupHandler(Context context, FirebaseFirestore firebaseDb) {
         groupsDatabaseHelper = new GroupsSQLLiteDatabaseHelper(context);
         this.firebaseDb = firebaseDb;
-        activityDatabaseHelper = new ActivitySQLLiteDatabaseHelper(context);
     }
 
     /**
@@ -59,8 +90,8 @@ public class GroupHandler {
      * @param context Android context.
      */
     public GroupHandler(Context context) {
+        this.firebaseDb=FirebaseFirestore.getInstance();
         groupsDatabaseHelper = new GroupsSQLLiteDatabaseHelper(context);
-        activityDatabaseHelper = new ActivitySQLLiteDatabaseHelper(context);
     }
 
     public void open() {
@@ -72,7 +103,7 @@ public class GroupHandler {
     }
 
     public List<String> getAllCities() {
-        return groupsDatabaseHelper.loadCities();
+        return groupsDatabaseHelper.getAllCities();
     }
 
     public List<String> getGroupsDistinctCities() {
@@ -146,7 +177,7 @@ public class GroupHandler {
     }
     private void deleteGroupFromFirebase(long groupId) {
 
-        Task<Void> task = firebaseDb.collection("Groups").document(String.valueOf(groupId)).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+        Task<Void> task = firebaseDb.collection("groups").document(String.valueOf(groupId)).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 Log.d(TAG, "DocumentSnapshot successfully deleted!");
@@ -240,14 +271,14 @@ public class GroupHandler {
             do {
                 int groupId = cursor.getInt(cursor.getColumnIndex("groupid"));
                 String groupName = cursor.getString(cursor.getColumnIndex("groupName"));
-                String briefInformation = cursor.getString(cursor.getColumnIndex("description"));
+                String description = cursor.getString(cursor.getColumnIndex("description"));
                 int hostUserId = cursor.getInt(cursor.getColumnIndex("hostUserId"));
                 String city = cursor.getString(cursor.getColumnIndex("city"));
                 String street = cursor.getString(cursor.getColumnIndex("street"));
                 String language = cursor.getString(cursor.getColumnIndex("language"));
                 String religion = cursor.getString(cursor.getColumnIndex("religion"));
                 boolean iamHost = cursor.getInt(cursor.getColumnIndex("iamhost")) == 1;
-                Group group = new Group(groupId, groupName, briefInformation, city, street, language, religion);
+                Group group = new Group(groupId, groupName, description, city, street, language, religion);
                 GroupDataDTO groupData = new GroupDataDTO(group, iamHost);
                 groupsList.add(groupData);
             } while (cursor.moveToNext());
@@ -273,12 +304,14 @@ public class GroupHandler {
                                        OnSuccessListener<Void> successListener,
                                        OnFailureListener failureListener) {
 
-        firebaseDb.collection("Groups")
+        firebaseDb.collection("groups")
                 .document(String.valueOf(groupId))
                 .set(updatedGroup)
                 .addOnSuccessListener(successListener)
                 .addOnFailureListener(failureListener);
     }
+
+
     /**
      * Adds group information to Firebase Firestore.
      *
@@ -286,7 +319,7 @@ public class GroupHandler {
      * @param group Content values representing the group information.
      */
     public void addGroupToFirebase(long groupId, Group group) {
-        Task<Void> task = firebaseDb.collection("Groups")
+        Task<Void> task = firebaseDb.collection("groups")
                 .document(String.valueOf(groupId))
                 .set(group)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -313,7 +346,7 @@ public class GroupHandler {
         Map<String,Object> groupIdData = new HashMap<>();
         groupIdData.put("id",String.valueOf(groupId));
 
-        Task<Void> task = firebaseDb.collection("Groups").document(String.valueOf(groupId)).update(groupIdData).addOnSuccessListener(new OnSuccessListener<Void>() {
+        Task<Void> task = firebaseDb.collection("groups").document(String.valueOf(groupId)).update(groupIdData).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
 
@@ -333,7 +366,7 @@ public class GroupHandler {
     private void addingActivityCollectionIntoGroupDocument(long groupId) {
         Map<String,Object> activityData = new HashMap<>();
 
-        Task<DocumentReference> task = firebaseDb.collection("Groups").document(String.valueOf(groupId)).collection("Activities").add(activityData).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        Task<DocumentReference> task = firebaseDb.collection("groups").document(String.valueOf(groupId)).collection("Activities").add(activityData).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
 
@@ -434,21 +467,6 @@ public class GroupHandler {
 
         }
         return participantList;
-
-        /*List<String> participantList = new ArrayList<>();
-        SQLiteDatabase db = groupsDatabaseHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT username FROM users WHERE id <> ?", new String[]{String.valueOf(loggedInUserId)});
-
-        if (cursor.moveToFirst()) {
-            do {
-                String username = cursor.getString(cursor.getColumnIndex("username"));
-                participantList.add(username);
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
-        return participantList;*/
     }
 
     public List<Group> getGroups(List<String> selectedCities, int loggedInUserId) {
@@ -517,65 +535,8 @@ public class GroupHandler {
         return group;
     }
 
-    public List<ActivityShareDTO> getActivitiesForGroup(int groupId, int loggedInUserId) {
-        List<ActivityShareDTO> activityShareList = new ArrayList<>();
-        SQLiteDatabase db = activityDatabaseHelper.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery(
-                "SELECT a.id, a.groupid, a.activity_name, a.activity_type, a.date, a.time, a.capacity," +
-                        " a.duration, a.owner_user_id, a.child_age_from, a.child_age_to," +
-                        "ar.isaccept as requestStatusCode," +
-                        " CASE WHEN a.owner_user_id = ? THEN 1 ELSE 0 END AS IAmOwner" +
-                        " FROM activities AS a " +
-                        "LEFT JOIN activitiesRequest AS ar " +
-                        "ON a.id = ar.activityid WHERE a.groupid = ?;\n",
-                new String[]{String.valueOf(loggedInUserId),String.valueOf(groupId)}
-        );
-
-        while (cursor.moveToNext()) {
-            int id = cursor.getInt(cursor.getColumnIndex("id"));
-            int groupid = cursor.getInt(cursor.getColumnIndex("groupid"));
-            String activityName = cursor.getString(cursor.getColumnIndex("activity_name"));
-            String selectedActivity = cursor.getString(cursor.getColumnIndex("activity_type"));
-            String selectedDate = cursor.getString(cursor.getColumnIndex("date"));
-            String selectedTime = cursor.getString(cursor.getColumnIndex("time"));
-            int capacity = cursor.getInt(cursor.getColumnIndex("capacity"));
-            int duration = cursor.getInt(cursor.getColumnIndex("duration"));
-            int ageFrom = cursor.getInt(cursor.getColumnIndex("child_age_from"));
-            int ageTo = cursor.getInt(cursor.getColumnIndex("child_age_to"));
-            int ownerUserId = cursor.getInt(cursor.getColumnIndex("owner_user_id"));
-            Activity activity = new Activity(id, activityName, selectedActivity, selectedDate, selectedTime, capacity, duration,ageFrom, ageTo, groupId, ownerUserId);
-            activity.setGroupId(groupid);
-            ActivityShareDTO sharedto = new ActivityShareDTO(activity);
-            sharedto.setRequestStatusCode(cursor.getInt(cursor.getColumnIndex("requestStatusCode")));
-            sharedto.setiAmOwner(cursor.getInt(cursor.getColumnIndex("IAmOwner")) ==1);
-            activityShareList.add(sharedto);
-        }
-
-        cursor.close();
-        db.close();
-        return activityShareList;
-    }
-
-    public void insertActivityRequest(int userId, int activityId,int groupid) {
-        SQLiteDatabase db = activityDatabaseHelper.getReadableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("userid", userId);
-        values.put("groupid", groupid);
-        values.put("activityid", activityId);
-
-        // Get the current date in the desired format (e.g., "yyyy-MM-dd HH:mm:ss")
-        String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-
-        values.put("requestDate", currentDate);
-        values.put("isaccept", 0);
-
-        db.insert("activitiesRequest", null, values);
-        db.close();
-    }
-
     public String getGroupNameById(int groupId) {
-        SQLiteDatabase db = activityDatabaseHelper.getReadableDatabase();
+        SQLiteDatabase db = groupsDatabaseHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT groupName FROM groups WHERE id = ?", new String[]{String.valueOf(groupId)});
         String groupName = null;
         if (cursor.moveToFirst()) {
@@ -586,12 +547,7 @@ public class GroupHandler {
         return groupName;
     }
 
-    // Add the deleteActivity method
-    public void deleteActivity(int activityId) {
-        SQLiteDatabase db = activityDatabaseHelper.getReadableDatabase();
-        db.delete("activities", "id = ?", new String[]{String.valueOf(activityId)});
-        db.close();
-    }
+
 
     //query to all according to all filters
     public ArrayList<Group> getGroupsResult(List<String> selectedCities,String language, String religion, int loggedInUserId) {
@@ -834,5 +790,87 @@ public class GroupHandler {
         db.close();
 
         return groupList;
+    }
+    public void syncGroupRequestsFromFirebaseToSQLite(GroupsSQLLiteDatabaseHelper databaseHelper) {
+        firebaseDb.collection("GroupsRequest")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<GroupRequest> groupRequests = queryDocumentSnapshots.toObjects(GroupRequest.class);
+                        databaseHelper.syncGroupRequestsFromFirebase(groupRequests);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle the failure if needed
+                    }
+                });
+    }
+
+    public void clearFirebaseGroups() {
+        FirebaseFirestore firebaseDb = FirebaseFirestore.getInstance();
+        firebaseDb.collection("Groups")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                document.getReference().delete();
+                            }
+                            // The "Groups" collection is now cleared in Firebase Firestore
+                        } else {
+                            // Handle the failure if needed
+                        }
+                    }
+                });
+        clearSQLiteGroups();
+    }
+
+
+    public void clearSQLiteGroups() {
+
+        SQLiteDatabase db = groupsDatabaseHelper.getWritableDatabase();
+        db.delete("groups", null, null);
+        db.close();
+        // The "groups" table is now cleared in the SQLite database
+    }
+
+    // Add a method to synchronize groupsRequest from Firebase to SQLite
+    public void syncGroupsFromFirebaseToSQLite(GroupsSQLLiteDatabaseHelper databaseHelper) {
+
+        firebaseDb.collection("groups")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<Group> groups = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            try{
+                                Group group = document.toObject(Group.class);
+                                groups.add(group);
+                            }catch (Exception ex)
+                            {
+                                System.out.println(ex.getCause());
+                            }
+
+
+                        }
+
+                        try {
+                            databaseHelper.syncGroupsFromFirebase(groups);
+                        } catch (Exception ex) {
+                            System.out.println(ex.getCause());
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle the failure if needed
+                    }
+                });
     }
 }

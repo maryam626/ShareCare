@@ -62,7 +62,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         descriptionEditText = findViewById(R.id.descriptionEditText);
         streetEditText = findViewById(R.id.streetEditText);
         participantsText= findViewById(R.id.participantsText);
-                cityText= findViewById(R.id.cityText);
+        cityText= findViewById(R.id.cityText);
 
         participantsSpinner = findViewById(R.id.participantsSpinner);
 
@@ -112,6 +112,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                         groupHandler.close();
 
                         if (isParticipantInserted) {
+                            groupHandler.Sync();
                             // Successful message
                             Toast.makeText(CreateGroupActivity.this, "successfully created group", Toast.LENGTH_SHORT).show();
                         } else {
@@ -132,14 +133,12 @@ public class CreateGroupActivity extends AppCompatActivity {
     }
 
 
-
-
     /** Set up the fields for edit mode by pre-filling them with existing data. */
     private void fillFieldsForEditMode(GroupDataDTO groupDataDTO) {
 
         Group currentGroup =groupDataDTO.getGroup();
         groupNameEditText.setText(currentGroup.getGroupName());
-        descriptionEditText.setText(currentGroup.getBriefInformation());
+        descriptionEditText.setText(currentGroup.getDescription());
         streetEditText.setText(currentGroup.getStreet());
         participantsText= findViewById(R.id.participantsText);
         cityText= findViewById(R.id.cityText);
@@ -280,7 +279,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                 // Update the group data in Firebase Firestore
                 Group currentGroupToEdit = groupObjectToEdit.getGroup();
                 currentGroupToEdit.setGroupName(groupName);
-                currentGroupToEdit.setBriefInformation(description);
+                currentGroupToEdit.setDescription(description);
                 currentGroupToEdit.setCity(city);
                 currentGroupToEdit.setStreet(street);
                 currentGroupToEdit.setLanguage(language);
@@ -290,6 +289,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                         new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
+                                groupHandler.Sync();
                                 // Show success message using Snackbar
                                 showSnackbar("Group data updated successfully!");
 
@@ -326,6 +326,7 @@ public class CreateGroupActivity extends AppCompatActivity {
             firebaseHandler.addingHostDataToFirebase(host, new OnSuccessListener() {
                 @Override
                 public void onSuccess(Object o) {
+                    groupHandler.Sync();
                     Log.d(TAG, "Host added to Firebase");
 
                 }

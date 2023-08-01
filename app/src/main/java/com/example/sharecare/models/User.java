@@ -1,5 +1,7 @@
 package com.example.sharecare.models;
 public class User {
+
+
     private int id;
     private String username;
     private String phoneNumber;
@@ -25,6 +27,18 @@ public class User {
         this.gender = gender;
         this.language = language;
         this.religion = religion;
+    }
+
+    public User() {
+
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
     public String getUsername() {
         return username;

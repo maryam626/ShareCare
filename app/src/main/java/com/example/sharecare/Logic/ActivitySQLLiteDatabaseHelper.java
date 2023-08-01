@@ -105,6 +105,62 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
         return rowId;
     }
 
+    public void syncActivitiesFromFirebase(List<Activity> activities) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        for (Activity activity : activities) {
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_ID, activity.getId());
+            values.put(COLUMN_ACTIVITY_NAME, activity.getActivityName());
+            values.put(COLUMN_ACTIVITY_TYPE, activity.getSelectedActivity());
+            values.put(COLUMN_ACTIVITY_DATE, activity.getSelectedDate());
+            values.put(COLUMN_ACTIVITY_TIME, activity.getSelectedTime());
+            values.put(COLUMN_CAPACITY, activity.getCapacity());
+            values.put(COLUMN_DURATION, activity.getDuration());
+            values.put(COLUMN_AGE_FROM, activity.getAgeFrom());
+            values.put(COLUMN_AGE_TO, activity.getAgeTo());
+            values.put(GROUP_ID, activity.getGroupId());
+            values.put(OWNER_ID, activity.getOwnerUserId());
+
+            // Try to update the activity in the database, if it exists
+            int rowsAffected = db.update(ACTIVITIES_TABLE_NAME, values, COLUMN_ID + "=?", new String[]{String.valueOf(activity.getId())});
+            if (rowsAffected == 0) {
+                // If the activity does not exist in the database, insert it
+                db.insert(ACTIVITIES_TABLE_NAME, null, values);
+            }
+        }
+        db.close();
+    }
+
+    // Add a method to fetch all activities from the local database
+    public List<Activity> getAllActivities() {
+        List<Activity> activities = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(ACTIVITIES_TABLE_NAME, null, null, null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                Activity activity = new Activity();
+                activity.setId(cursor.getInt(cursor.getColumnIndex(COLUMN_ID)));
+                activity.setActivityName(cursor.getString(cursor.getColumnIndex(COLUMN_ACTIVITY_NAME)));
+                activity.setSelectedActivity(cursor.getString(cursor.getColumnIndex(COLUMN_ACTIVITY_TYPE)));
+                activity.setSelectedDate(cursor.getString(cursor.getColumnIndex(COLUMN_ACTIVITY_DATE)));
+                activity.setSelectedTime(cursor.getString(cursor.getColumnIndex(COLUMN_ACTIVITY_TIME)));
+                activity.setCapacity(cursor.getInt(cursor.getColumnIndex(COLUMN_CAPACITY)));
+                activity.setDuration(cursor.getInt(cursor.getColumnIndex(COLUMN_DURATION)));
+                activity.setAgeFrom(cursor.getInt(cursor.getColumnIndex(COLUMN_AGE_FROM)));
+                activity.setAgeTo(cursor.getInt(cursor.getColumnIndex(COLUMN_AGE_TO)));
+                activity.setGroupId(cursor.getInt(cursor.getColumnIndex(GROUP_ID)));
+                activity.setOwnerUserId(cursor.getInt(cursor.getColumnIndex(OWNER_ID)));
+
+                activities.add(activity);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        db.close();
+        return activities;
+    }
+
     public void updateActivity(Activity activity) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -178,4 +234,52 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
         db.close();
     }
+
+    // Add a method to synchronize activitiesRequest from Firebase
+    public void syncActivitiesRequestFromFirebase(List<PendingActivityRequestDTO> requests) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        for (PendingActivityRequestDTO request : requests) {
+            ContentValues values = new ContentValues();
+            values.put("id", request.getId());
+            values.put("userid", request.getUserId());
+            values.put("groupid", request.getGroupid());
+            values.put("activityid", request.getActivityId());
+            values.put("requestDate", request.getRequestDate());
+            values.put("isaccept", request.getIsAccept());
+
+            // Try to update the request in the database, if it exists
+            int rowsAffected = db.update("activitiesRequest", values, "id=?", new String[]{String.valueOf(request.getId())});
+            if (rowsAffected == 0) {
+                // If the request does not exist in the database, insert it
+                db.insert("activitiesRequest", null, values);
+            }
+        }
+        db.close();
+    }
+
+    // Add a method to fetch all activitiesRequest from the local database
+    public List<PendingActivityRequestDTO> getAllPendingActivityRequests() {
+        List<PendingActivityRequestDTO> requests = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query("activitiesRequest", null, null, null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                PendingActivityRequestDTO request = new PendingActivityRequestDTO();
+                request.setId(cursor.getInt(cursor.getColumnIndex("id")));
+                request.setGroupid(cursor.getInt(cursor.getColumnIndex("groupid")));
+                request.setUserId(cursor.getInt(cursor.getColumnIndex("userid")));
+                request.setActivityId(cursor.getInt(cursor.getColumnIndex("activityid")));
+                request.setRequestDate(cursor.getString(cursor.getColumnIndex("requestDate")));
+                request.setIsAccept(cursor.getInt(cursor.getColumnIndex("isaccept")));
+
+                requests.add(request);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        db.close();
+        return requests;
+    }
+
 }

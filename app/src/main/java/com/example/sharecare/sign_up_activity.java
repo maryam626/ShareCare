@@ -120,7 +120,7 @@ public class sign_up_activity extends AppCompatActivity {
                         // Add user data to Firebase
                         firebaseHandler.addParentDataToFirebase(String.valueOf(rowId), username, phoneNumber, email, address,
                                 password, numberOfKids, maritalStatus, gender, language, religion, sign_up_activity.this);
-
+                        userHandler.Sync();
                         // Start the next activity
                         Intent intent = new Intent(sign_up_activity.this, FillKidsInformation.class);
                         // Sending Data To Home Page Using Bundle

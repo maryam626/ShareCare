@@ -2,10 +2,14 @@ package com.example.sharecare.Logic;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.sharecare.models.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UsersSQLLiteDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "ShareCare.db";
@@ -145,5 +149,61 @@ public class UsersSQLLiteDatabaseHelper extends SQLiteOpenHelper {
 
         db.update(TABLE_NAME, values, "id=?", new String[]{rowId});
         db.close();
+    }
+
+    public void syncUsersFromFirebase(List<User> users) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        for (User user : users) {
+            ContentValues values = new ContentValues();
+            values.put("id", user.getId());
+            values.put("username", user.getUsername());
+            values.put("phone_number", user.getPhoneNumber());
+            values.put("email", user.getEmail());
+            values.put("address", user.getAddress());
+            values.put("password", user.getPassword());
+            values.put("number_of_kids", user.getNumberOfKids());
+            values.put("marital_status", user.getMaritalStatus());
+            values.put("gender", user.getGender());
+            values.put("language", user.getLanguage());
+            values.put("religion", user.getReligion());
+
+            // Try to update the user in the database, if it exists
+            int rowsAffected = db.update("users", values, "id=?", new String[]{String.valueOf(user.getId())});
+            if (rowsAffected == 0) {
+                // If the user does not exist in the database, insert it
+                db.insert("users", null, values);
+            }
+        }
+        db.close();
+    }
+
+    // Add a method to fetch all users from the local database
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query("users", null, null, null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                User user = new User();
+                user.setId(cursor.getInt(cursor.getColumnIndex("id")));
+                user.setUsername(cursor.getString(cursor.getColumnIndex("username")));
+                user.setPhoneNumber(cursor.getString(cursor.getColumnIndex("phone_number")));
+                user.setEmail(cursor.getString(cursor.getColumnIndex("email")));
+                user.setAddress(cursor.getString(cursor.getColumnIndex("address")));
+                user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
+                user.setNumberOfKids(cursor.getInt(cursor.getColumnIndex("number_of_kids")));
+                user.setMaritalStatus(cursor.getString(cursor.getColumnIndex("marital_status")));
+                user.setGender(cursor.getString(cursor.getColumnIndex("gender")));
+                user.setLanguage(cursor.getString(cursor.getColumnIndex("language")));
+                user.setReligion(cursor.getString(cursor.getColumnIndex("religion")));
+
+                users.add(user);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        db.close();
+        return users;
     }
 }

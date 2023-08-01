@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.handlers.GroupHandler;
 import com.example.sharecare.models.Group;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -42,7 +41,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_results);
 
         resultTable = findViewById(R.id.resultTable);
-        groupHandler = new GroupHandler(this, FirebaseFirestore.getInstance()); // Initialize GroupHandler
+        groupHandler = new GroupHandler(this); // Initialize GroupHandler
 
         Intent intent = getIntent();
         loggedInUserId = intent.getIntExtra("userid", -1);
@@ -161,7 +160,7 @@ public class SearchResultsActivity extends AppCompatActivity {
             row.addView(groupNameTextView);
 
             TextView descriptionTextView = new TextView(this);
-            descriptionTextView.setText(group.getBriefInformation());
+            descriptionTextView.setText(group.getDescription());
             descriptionTextView.setPadding(8, 8, 8, 8);
             row.addView(descriptionTextView);
 

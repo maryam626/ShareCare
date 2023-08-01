@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sharecare.handlers.ActivityHandler;
 import com.example.sharecare.handlers.GroupHandler;
 import com.example.sharecare.models.Activity;
 import com.example.sharecare.models.ActivityShareDTO;
@@ -44,6 +45,7 @@ import java.util.List;
  */
 public class GroupInfoActivity extends AppCompatActivity {
     private GroupHandler groupHandler;
+    private ActivityHandler activityHandler;
     private int ishost;
     private TableLayout tableLayout;
     private Button createActivityButton;
@@ -67,6 +69,7 @@ public class GroupInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_info);
 
         groupHandler = new GroupHandler(this);
+        activityHandler = new ActivityHandler(this);
 
         tableLayout = findViewById(R.id.tableLayout);
 
@@ -229,9 +232,9 @@ public class GroupInfoActivity extends AppCompatActivity {
         alertDialogBuilder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                groupHandler.deleteActivity(activity_id);
+                activityHandler.deleteActivity(activity_id);
+                activityHandler.Sync();
                 showSnackbar("successfully deleted " + activity_name);
-              //  Toast.makeText(GroupInfoActivity.this, "successfully deleted " + activity_name, Toast.LENGTH_SHORT).show();
                 reloadGroupActivityData();
             }
         });
@@ -296,7 +299,7 @@ public class GroupInfoActivity extends AppCompatActivity {
         String selectedActivityType = activityTypes.getSelectedItem().toString();
 
 
-        List<ActivityShareDTO> activityList = groupHandler.getActivitiesForGroup(groupId, loggedInUserId);
+        List<ActivityShareDTO> activityList = activityHandler.getActivitiesForGroup(groupId, loggedInUserId);
         for (ActivityShareDTO activityShare : activityList) {
             try {
                 Activity activity=activityShare.getActivity();
@@ -410,7 +413,7 @@ public class GroupInfoActivity extends AppCompatActivity {
                             joinButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    groupHandler.insertActivityRequest(loggedInUserId, activity_id,groupId);
+                                    activityHandler.insertActivityRequest(loggedInUserId, activity_id,groupId);
                                     Toast.makeText(GroupInfoActivity.this, "Your request submitted to activity owner ", Toast.LENGTH_SHORT).show();
                                 }
                             });
