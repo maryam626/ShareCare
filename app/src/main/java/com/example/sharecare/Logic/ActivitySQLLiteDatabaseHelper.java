@@ -105,6 +105,26 @@ public class ActivitySQLLiteDatabaseHelper extends SQLiteOpenHelper {
         return rowId;
     }
 
+    public void updateActivity(Activity activity) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ACTIVITY_NAME, activity.getActivityName());
+        values.put(COLUMN_ACTIVITY_TYPE, activity.getSelectedActivity());
+        values.put(COLUMN_ACTIVITY_DATE, activity.getSelectedDate());
+        values.put(COLUMN_ACTIVITY_TIME, activity.getSelectedTime());
+        values.put(COLUMN_CAPACITY, activity.getCapacity());
+        values.put(COLUMN_DURATION, activity.getDuration());
+        values.put(COLUMN_AGE_FROM, activity.getAgeFrom());
+        values.put(COLUMN_AGE_TO, activity.getAgeTo());
+
+
+        String whereClause = COLUMN_ID + " = ?";
+        String[] whereArgs = {String.valueOf(activity.getId())};
+
+        db.update(ACTIVITIES_TABLE_NAME, values, whereClause, whereArgs);
+        db.close();
+    }
+
     public List<PendingActivityRequestDTO> getPendingActivityRequestsByGroupId(int groupId) {
         List<PendingActivityRequestDTO> pendingRequests = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
