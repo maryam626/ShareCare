@@ -340,7 +340,7 @@ public class GroupInfoActivity extends AppCompatActivity {
                         row.addView(nameTextView);
 
                         Button moreInfoButton = new Button(this);
-                        moreInfoButton.setText("More Info");
+                        moreInfoButton.setText("Info");
                         moreInfoButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -358,6 +358,7 @@ public class GroupInfoActivity extends AppCompatActivity {
                                     showDeleteConfirmationDialog(activity_id,activity_name);
                                 }
                             });
+
                             row.addView(deleteButton);
 
                             Button editButton = new Button(this);
@@ -377,10 +378,12 @@ public class GroupInfoActivity extends AppCompatActivity {
                                     startActivity(intent);
                                 }
                             });
+
                             row.addView(editButton);
 
+
                             Button manageRequestsButton = new Button(this);
-                            manageRequestsButton.setText("Manage Requests");
+                            manageRequestsButton.setText("Manage");
                             manageRequestsButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

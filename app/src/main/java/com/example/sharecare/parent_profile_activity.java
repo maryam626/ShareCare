@@ -1,8 +1,5 @@
 package com.example.sharecare;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,19 +10,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.sharecare.Logic.UsersSQLLiteDatabaseHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
-
- import com.google.android.material.snackbar.Snackbar;
 
 public class parent_profile_activity extends AppCompatActivity{
     private static final String TAG = "profile activity";
@@ -205,8 +204,6 @@ public class parent_profile_activity extends AppCompatActivity{
         userDetail.put("gender", gender);
         userDetail.put("language", language);
         userDetail.put("religion", religion);
-
-
 
 
         db.collection("Users")

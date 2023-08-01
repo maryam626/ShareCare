@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+//TODO : this development related to support children and parent editing
+// it is in backlog for now
 public class myChildrenFragment extends Fragment {
     private static final String TAG = "my children fragment";
 

@@ -1,16 +1,18 @@
 package com.example.sharecare.handlers;
 
+import androidx.annotation.NonNull;
+
+import com.example.sharecare.log_in_activity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class CreateKidProfileFirebaseHandler {
-
-    private static final String TAG = "FirebaseHandler";
 
     private FirebaseFirestore db;
 
@@ -23,6 +25,48 @@ public class CreateKidProfileFirebaseHandler {
                 .add(kid)
                 .addOnSuccessListener(successListener)
                 .addOnFailureListener(failureListener);
+        while(!task.isComplete()){
+
+        }
+    }
+
+
+    public void updateKidId(String id) {
+        Map<String,Object> kidIdData = new HashMap<>();
+        kidIdData.put("id",id);
+        Task<Void> task = db.collection("Parents").document(log_in_activity.id).collection("myKids").document(id).update(kidIdData).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                //TODO
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //TODO
+            }
+        });
+
+        while(!task.isComplete()){
+
+        }
+    }
+
+
+    public void updatingNumberOfKidsFieldInFirebase() {
+        Map<String,Object> numberOfKidsData = new HashMap<>();
+        numberOfKidsData.put("numberOfKids", log_in_activity.numberOfKids);
+        Task<Void> task = db.collection("Parents").document(log_in_activity.id).update(numberOfKidsData).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                //TODO
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //TODO
+            }
+        });
+
         while(!task.isComplete()){
 
         }

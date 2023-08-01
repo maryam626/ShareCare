@@ -1,16 +1,13 @@
 package com.example.sharecare;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.firebase.firestore.FirebaseFirestore;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class KidsInfo extends AppCompatActivity {
 
@@ -28,8 +25,6 @@ public class KidsInfo extends AppCompatActivity {
     private String name;
     private String parent;
     private String schoolName;
-
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
