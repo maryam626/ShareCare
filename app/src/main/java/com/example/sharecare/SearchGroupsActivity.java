@@ -10,10 +10,15 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sharecare.handlers.GroupHandler;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -31,7 +36,12 @@ public class SearchGroupsActivity extends AppCompatActivity {
     private Button searchButton;
 
     private List<String> selectedCities = new ArrayList<>();
+    private ArrayList<String> GroupsIds = new ArrayList<>();
+
     private Spinner languagesSpinner, religionsSpinner;
+    private FirebaseFirestore firebaseDb;
+    private Spinner citySpinner;
+
     private GroupHandler groupHandler; // New instance of GroupHandler class
 
     private int loggedInUserId;
@@ -51,6 +61,9 @@ public class SearchGroupsActivity extends AppCompatActivity {
         searchButton = findViewById(R.id.searchButton);
         languagesSpinner = findViewById(R.id.LanguagesSpinner);
         religionsSpinner = findViewById(R.id.ReligionsSpinner);
+        citySpinner = findViewById(R.id.citySpinner);
+
+        firebaseDb = FirebaseFirestore.getInstance();
 
         city_box_is_checked= false;
         language_spinner_is_on = false;
@@ -139,6 +152,35 @@ public class SearchGroupsActivity extends AppCompatActivity {
      * to display search results.
      */
     private void performSearch() {
+
+        /*Bundle extras = new Bundle();
+        extras.putInt("userid", loggedInUserId);
+        extras.putString("username", loggedInUsername);
+
+        Task<QuerySnapshot> task = firebaseDb.collection("Groups").whereEqualTo("language", languagesSpinner.getSelectedItem().toString()).whereEqualTo("religion", religionsSpinner.getSelectedItem().toString()).whereEqualTo("city", citySpinner.getSelectedItem().toString()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(int i=0;i<queryDocumentSnapshots.getDocuments().size();i++)
+                {
+                    GroupsIds.add(queryDocumentSnapshots.getDocuments().get(i).getId());
+                }
+                System.out.println(GroupsIds);
+                extras.putStringArrayList("Groups",GroupsIds);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+        while(!task.isComplete()){
+
+        }
+        Intent intent = new Intent(SearchGroupsActivity.this, SearchResultsActivity.class);
+        intent.putExtras(extras);
+        startActivity(intent);*/
+
 
         Bundle extras = new Bundle();
         extras.putInt("userid", loggedInUserId);

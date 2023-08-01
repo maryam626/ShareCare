@@ -169,9 +169,8 @@ public class parent_profile_activity extends AppCompatActivity implements addChi
 
     }
 
-    private void updateParentInFirebase(String username, String phone, int numOfKids, String maritalStatus, String gender, String language, String religion) {
+    private void updateParentInFirebase(String phone,String address, int numOfKids, String maritalStatus, String gender, String language, String religion) {
         Map<String, Object> parentDetail = new HashMap<String, Object>();
-        parentDetail.put("username", username);
         parentDetail.put("phoneNumber", phone);
         parentDetail.put("address", address);
         parentDetail.put("numberOfKids", numOfKids);
@@ -197,9 +196,8 @@ public class parent_profile_activity extends AppCompatActivity implements addChi
 
 
 
-    private void updateUserInFirebase(String username, String phone, int numOfKids, String maritalStatus, String gender, String language, String religion) {
+    private void updateUserInFirebase(String phone,String address ,int numOfKids, String maritalStatus, String gender, String language, String religion) {
         Map<String,Object> userDetail = new HashMap<String, Object>();
-        userDetail.put("username", username);
         userDetail.put("phoneNumber", phone);
         userDetail.put("address", address);
         userDetail.put("numberOfKids", numOfKids);
