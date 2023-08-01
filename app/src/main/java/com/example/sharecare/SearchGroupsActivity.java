@@ -80,22 +80,22 @@ public class SearchGroupsActivity extends AppCompatActivity {
         }
     }
     private void loadLanguages() {
-        groupHandler.open();
+        /*groupHandler.open();
         List<String>  languagesList = groupHandler.getAllLanguages();
         groupHandler.close();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, languagesList);
         setSpinnersDefaultValues(languagesSpinner, languagesList);
-        languagesSpinner.setAdapter(adapter);
+        languagesSpinner.setAdapter(adapter);*/
     }
 
 
     private void loadReligions() {
-        groupHandler.open();
+        /*groupHandler.open();
         List<String>  religionsList = groupHandler.getAllReligions();
         groupHandler.close();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, religionsList);
         setSpinnersDefaultValues(religionsSpinner, religionsList);
-        religionsSpinner.setAdapter(adapter);
+        religionsSpinner.setAdapter(adapter);*/
     }
 
     public void setSpinnersDefaultValues(Spinner spinner,List<String> spinnerValues){
