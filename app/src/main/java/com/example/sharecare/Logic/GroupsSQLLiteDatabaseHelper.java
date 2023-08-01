@@ -130,7 +130,7 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         return cityList;*/
 
         List<String> cityList = new ArrayList<>();
-        SQLiteDatabase db = getReadableDatabase();
+        /*SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("select distinct city as cityName from groups  ORDER BY city ASC", null);
 
         if (cursor.moveToFirst()) {
@@ -141,16 +141,16 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        db.close();*/
 
         return cityList;
     }
 
     /** Fetch a list of all cities stored in the database */
     public List<String> loadCities() {
-        /*List<String> cityList = new ArrayList<>();
+        List<String> cityList = new ArrayList<>();
 
-        firebaseDb.collection("Cities").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        /*firebaseDb.collection("Cities").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for(int i = 0; i<queryDocumentSnapshots.size();i++) {
@@ -165,7 +165,7 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         });
         return cityList;*/
 
-        List<String> cityList = new ArrayList<>();
+        /*List<String> cityList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT DISTINCT name FROM cities ORDER BY name ASC", null);
 
@@ -177,7 +177,7 @@ public class GroupsSQLLiteDatabaseHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        db.close();*/
 
         return cityList;
     }
